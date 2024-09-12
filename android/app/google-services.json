@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "776234242790",
+    "project_id": "virtualfitnessph-579eb",
+    "storage_bucket": "virtualfitnessph-579eb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:776234242790:android:09e9c00592313d2b9ce127",
+        "android_client_info": {
+          "package_name": "com.vfph.virtualfitnessph"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA1__M314M8iEyFxQ9LpF-jYfL5fTxugrU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
