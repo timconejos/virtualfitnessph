@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:virtualfitnessph/screens/main_page_screen.dart';
 import 'package:virtualfitnessph/screens/login_screen.dart';
+import 'package:virtualfitnessph/screens/splash_screen.dart';
 import 'package:virtualfitnessph/services/permissions_service.dart';
 import 'package:virtualfitnessph/services/auth_service.dart';
 
@@ -35,27 +36,52 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: FutureBuilder(
-        future: _authService.isUserLoggedIn(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Scaffold(
-              body: Center(
-                child: CircularProgressIndicator(),
-              ),
-            );
-          } else if (snapshot.hasError) {
-            return Scaffold(
-              body: Center(
-                child: Text('Error: ${snapshot.error}'),
-              ),
-            );
-          } else {
-            bool isLoggedIn = snapshot.data as bool;
-            return isLoggedIn ? const MainPageScreen() : const LoginScreen();
-          }
-        },
-      ),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => SplashScreen(),
+        '/home': (context) => FutureBuilder(
+            future: _authService.isUserLoggedIn(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Scaffold(
+                  body: Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                );
+              } else if (snapshot.hasError) {
+                return Scaffold(
+                  body: Center(
+                    child: Text('Error: ${snapshot.error}'),
+                  ),
+                );
+              } else {
+                bool isLoggedIn = snapshot.data as bool;
+                return isLoggedIn ? const MainPageScreen() : const LoginScreen();
+              }
+            },
+          ),
+      },
+      // home: FutureBuilder(
+      //   future: _authService.isUserLoggedIn(),
+      //   builder: (context, snapshot) {
+      //     if (snapshot.connectionState == ConnectionState.waiting) {
+      //       return const Scaffold(
+      //         body: Center(
+      //           child: CircularProgressIndicator(),
+      //         ),
+      //       );
+      //     } else if (snapshot.hasError) {
+      //       return Scaffold(
+      //         body: Center(
+      //           child: Text('Error: ${snapshot.error}'),
+      //         ),
+      //       );
+      //     } else {
+      //       bool isLoggedIn = snapshot.data as bool;
+      //       return isLoggedIn ? const MainPageScreen() : const LoginScreen();
+      //     }
+      //   },
+      // ),
     );
   }
 }

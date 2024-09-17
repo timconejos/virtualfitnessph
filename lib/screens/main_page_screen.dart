@@ -8,6 +8,7 @@ import 'package:virtualfitnessph/screens/add_social_post_screen.dart';
 import 'package:virtualfitnessph/screens/pages/race_page.dart';
 import '../services/auth_service.dart';
 import 'login_screen.dart';
+import 'package:virtualfitnessph/styles/app_styles.dart';
 
 class MainPageScreen extends StatefulWidget {
   const MainPageScreen({super.key});
@@ -253,8 +254,8 @@ class _MainPageScreenState extends State<MainPageScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
+        backgroundColor: AppStyles.primaryColor,
+        foregroundColor: AppStyles.primaryForeground,
         title: const Text('Virtual Fitness PH'),
         actions: [
           IconButton(
@@ -325,8 +326,9 @@ class _MainPageScreenState extends State<MainPageScreen> {
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blue,
+        selectedItemColor: AppStyles.buttonColor,
         unselectedItemColor: Colors.grey,
+        backgroundColor: AppStyles.primaryColor,
         onTap: _onItemTapped,
         type: BottomNavigationBarType.fixed,
       ),

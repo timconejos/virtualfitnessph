@@ -5,10 +5,13 @@ import 'package:virtualfitnessph/services/auth_service.dart';
 //import 'package:virtualfitnessph/services/notification_service.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:crypto/crypto.dart';
+import 'package:virtualfitnessph/styles/app_styles.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'register_screen.dart';
 import 'forgot_password_screen.dart';
+import 'package:virtualfitnessph/components/primary_text_field.dart';
+import 'package:virtualfitnessph/components/primary_button.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -144,26 +147,16 @@ class _LoginScreenState extends State<LoginScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Image.asset('assets/login.jpg', height: 200), // Add your image asset here
-
-              const SizedBox(height: 20),
-
-              TextField(
-                controller: _usernameController,
-                decoration: const InputDecoration(
-                  labelText: 'Username',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-
-              const SizedBox(height: 10),
-
-              TextField(
-                controller: _passwordController,
-                obscureText: !_showPassword,
-                decoration: InputDecoration(
-                  labelText: 'Password',
-                  border: const OutlineInputBorder(),
-                  suffixIcon: IconButton(
+              SizedBox(height: 40),
+              PrimaryTextField(
+                labelText: 'Username', 
+                controller: _usernameController),
+              SizedBox(height: 20),
+              PrimaryTextField(
+                labelText: 'Password', 
+                controller: _passwordController, 
+                isPassword: !_showPassword,
+                suffixIcon_: IconButton(
                     icon: Icon(
                       _showPassword ? Icons.visibility : Icons.visibility_off,
                     ),
@@ -172,22 +165,13 @@ class _LoginScreenState extends State<LoginScreen> {
                         _showPassword = !_showPassword;
                       });
                     },
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 20),
-
+                  )),
+              SizedBox(height: 20),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: _isLoading ? null : _login,
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16.0),
-                    textStyle: const TextStyle(fontSize: 18),
-                    foregroundColor: Colors.white,
-                    backgroundColor: Colors.blue.shade700,
-                  ),
+                  style: AppStyles.primaryButtonStyle,
                   child: _isLoading
                       ? const CircularProgressIndicator(
                     color: Colors.white,
@@ -196,7 +180,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
 
-              const SizedBox(height: 20),
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -214,7 +197,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 ],
               ),
 
-              const SizedBox(height: 20),
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
