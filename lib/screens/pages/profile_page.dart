@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:virtualfitnessph/screens/followers_following_screen.dart';
 import 'package:virtualfitnessph/services/auth_service.dart';
+import 'package:virtualfitnessph/styles/app_styles.dart';
+import 'package:virtualfitnessph/components/outline_button.dart';
 import '../all_races_screen.dart';
 import '../edit_profile_screen.dart';
 import '../login_screen.dart';
@@ -45,6 +47,7 @@ class _ProfilePageState extends State<ProfilePage> {
   final AuthService _authService = AuthService();
   String? userId;
   String? userName;
+  String? fullName;
   String? _profilePicUrl;
   String totalDistance = "00 KM";
   String pace = "0:00:00";
@@ -98,6 +101,7 @@ class _ProfilePageState extends State<ProfilePage> {
       if (response.statusCode == 200) {
         setState(() {
           profileData = json.decode(response.body);
+          fullName = profileData['firstName'] + ' ' + profileData['lastName'];
         });
         await _loadStats(); // Load stats after profile data
       } else {
@@ -250,21 +254,20 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppStyles.scaffoldBgColor,
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : RefreshIndicator(
               onRefresh: _loadAllData,
               child: SingleChildScrollView(
                 child: Padding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.all(0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       _buildProfileHeader(),
-                      const SizedBox(height: 10),
+                      _buildBadgesSection2(),
                       _buildStatsSection(),
-                      _buildBadgesSection(),
                       //_buildTrophiesSection(),
                       _buildJoinedRacesSection(),
                       _buildPhotosSection(),
@@ -276,11 +279,11 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Widget _buildProfileHeader() {
+  Widget _buildProfileHeader2() {
     return GestureDetector(
       child: Card(
-        elevation: 2,
-        margin: const EdgeInsets.all(8),
+        elevation: 0,
+        margin: const EdgeInsets.all(0),
         color: Colors.white,
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -359,6 +362,122 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
+  Widget _buildProfileHeader() {
+    return Container(
+      height: 200,
+      padding: EdgeInsets.only(left: 25, right: 25, top: 25, bottom: 5),
+      decoration: BoxDecoration(color: AppStyles.primaryColor,
+          gradient: LinearGradient(
+          colors: [AppStyles.primaryColor, AppStyles.unselectedColor],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        )
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(children: [
+            Column(
+              children: [
+                  Container(
+                    padding: EdgeInsets.all(4.0),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: AppStyles.darkerPrimary
+                    ),
+                    child: 
+                      _profilePicUrl == null
+                          ? CircleAvatar(
+                        radius: 45,
+                        backgroundColor: Colors.red.shade200,
+                        child: const Icon(Icons.person, size: 45),
+                      )
+                          : CircleAvatar(
+                        radius: 45,
+                        backgroundImage: NetworkImage(_profilePicUrl!),
+                      ),
+                  )
+              ]
+            ),
+            Column(
+              children: [
+                Container(
+                  padding: EdgeInsets.all(20),
+                  child: Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                          Text(
+                            fullName ?? 'Unknown User',
+                            style: const TextStyle(
+                                fontSize: 20, color: AppStyles.primaryForeground, fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            userName ?? 'Unknown User',
+                            style: const TextStyle(
+                                fontSize: 16, color: AppStyles.primaryForeground),
+                          )
+                      ]
+                      )
+                    ),
+                  )
+              ]
+            )
+          ],),
+          const SizedBox(height: 15),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    _buildStatColumn(
+                      "Followers",
+                      profileData['followersCount']?.toString() ?? '0',
+                          () => _navigateToList(
+                          context, 'Followers', mockedFollowers),
+                    ),
+                    SizedBox(width: 16),
+                    _buildStatColumn(
+                      "Following",
+                      profileData['followingCount']?.toString() ?? '0',
+                          () => _navigateToList(
+                          context, 'Following', mockedFollowing),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            Column(
+              children: [
+                // const Text("Don't have an account? ")
+                OutlineButton(
+                  text: 'Edit profile',
+                  icon: Icons.edit,
+                  onPressed: () async {
+                      final result = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              EditProfileScreen(profileData: profileData),
+                        ),
+                      );
+                      if (result == true) {
+                        _loadAllData();
+                      }
+                    },)
+              ],
+            )
+          ],)
+
+        ],
+      )
+       
+    );
+  }
+
   Widget _buildStatColumn(String label, String count, VoidCallback onTap) {
     return GestureDetector(
       onTap: onTap,
@@ -367,11 +486,11 @@ class _ProfilePageState extends State<ProfilePage> {
         children: [
           Text(
             count,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold,  color: AppStyles.primaryForeground),
           ),
           Text(
             label,
-            style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
+            style: TextStyle(fontSize: 12, color: AppStyles.primaryForeground),
           ),
         ],
       ),
@@ -487,6 +606,120 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildBadgesSection2() {
+    return (
+      Container(
+        padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                 const Text(
+                  'My Badges',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ViewAllBadgesScreen(
+                          badges: badges,
+                        ),
+                      ),
+                    );
+                  },
+                  child: const Text('View All',
+                      style: TextStyle(color: Colors.blue)),
+                ),
+              ],
+              
+            ),
+           SizedBox(
+              width: double.infinity,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  badges.isEmpty
+                    ? const SizedBox(
+                      height: 100,
+                      width: double.infinity,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.badge, size: 48, color: Colors.blue),
+                          SizedBox(height: 10),
+                          Text('No badges earned yet.'),
+                        ],
+                      ),
+                    )
+                    : Column(
+                        children: [
+                          GridView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 3,
+                              mainAxisSpacing: 10,
+                              crossAxisSpacing: 10,
+                              childAspectRatio: 1,
+                            ),
+                            itemCount: min(badges.length, 6),
+                            itemBuilder: (context, index) {
+                              return Stack(
+                                children: [
+                                  Card(
+                                    color: Colors.white,
+                                    // elevation: 2,
+                                    margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                                    child: Padding(padding: EdgeInsets.all(12),
+                                    child: CircleAvatar(
+                                    radius: 50,
+                                    backgroundColor: Colors.transparent,
+                                    child: Column(
+                                      children: [
+                                         ClipOval(
+                                      child: Image.network(
+                                        'http://97.74.90.63:8080/races/badges/${badges[index]['badgesPicturePath']}',
+                                        width: 100,
+                                        height: 100,
+                                        fit: BoxFit.cover,
+                                        errorBuilder:
+                                            (context, error, stackTrace) {
+                                          return Image.network(
+                                            'https://via.placeholder.com/100x100',
+                                            width: 100,
+                                            height: 100,
+                                            fit: BoxFit.cover,
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              ],
+                              );
+                            },
+                          ),
+                          
+                        ],
+                      ),
+                ],
+              ),
+            ),
+      
+          ],
+        ),
+      )
     );
   }
 

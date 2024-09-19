@@ -9,6 +9,7 @@ import 'package:virtualfitnessph/screens/pages/race_page.dart';
 import '../services/auth_service.dart';
 import 'login_screen.dart';
 import 'package:virtualfitnessph/styles/app_styles.dart';
+import 'package:virtualfitnessph/components/primary_app_bar.dart';
 
 class MainPageScreen extends StatefulWidget {
   const MainPageScreen({super.key});
@@ -18,19 +19,23 @@ class MainPageScreen extends StatefulWidget {
 }
 
 class _MainPageScreenState extends State<MainPageScreen> {
-  int _selectedIndex = 0;
+  int _selectedIndex = 4;
+  String _appBarTitle = 'Virtual Fitness PH';
   final AuthService _authService = AuthService();
 
   static final List<Widget> _widgetOptions = <Widget>[
-    const ProfilePage(),
     const FeedPage(),
     const RacePage(),
+    const RacePage(), // TODO: create rewards page
     const ActivityPage(),
+    const ProfilePage(),
   ];
 
   void _onItemTapped(int index) {
+    const tabs  = ['Home', 'Races', 'Rewards', 'Activity', 'Profile'];
     setState(() {
       _selectedIndex = index;
+      _appBarTitle = index > 0 ? tabs[index] : _appBarTitle;
     });
   }
 
@@ -253,26 +258,26 @@ class _MainPageScreenState extends State<MainPageScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: AppStyles.primaryColor,
-        foregroundColor: AppStyles.primaryForeground,
-        title: const Text('Virtual Fitness PH'),
-        actions: [
+      appBar: PrimaryAppBar(
+        title: _appBarTitle,
+        centerTitle: false,
+         actions: [
           IconButton(
             icon: const Icon(Icons.notifications),
             onPressed: _showNotifications,
           ),
-          Builder(
-            builder: (context) => IconButton(
-              icon: const Icon(Icons.menu),
-              onPressed: () {
-                Scaffold.of(context).openEndDrawer();
-              },
-            ),
-          ),
+          // Builder(
+          //   builder: (context) => IconButton(
+          //     icon: const Icon(Icons.menu),
+          //     onPressed: () {
+          //       Scaffold.of(context).openDrawer();
+          //     },
+          //   ),
+          // ),
         ],
-      ),
-      endDrawer: Drawer(
+        ),
+      drawer: Drawer(
+        backgroundColor: Colors.white,
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
@@ -299,39 +304,52 @@ class _MainPageScreenState extends State<MainPageScreen> {
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _showAddOptions(context),
-        tooltip: 'Add Options',
-        foregroundColor: Colors.black,
-        backgroundColor: Colors.blue.shade600,
-        child: const Icon(Icons.add),
+      floatingActionButton: Container(
+        height: 70,
+        width: 70,
+        child: FloatingActionButton(
+          onPressed: () => _showAddOptions(context),
+          tooltip: 'Add Options',
+          foregroundColor: AppStyles.primaryForeground,
+          backgroundColor: AppStyles.secondaryColor,
+          child: const Icon(Icons.add),
+          shape: CircleBorder(),
+          elevation: 6.0,
+        ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.feed),
-            label: 'Feed',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_today),
-            label: 'Races',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.directions_run),
-            label: 'Activity',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: AppStyles.buttonColor,
-        unselectedItemColor: Colors.grey,
-        backgroundColor: AppStyles.primaryColor,
-        onTap: _onItemTapped,
-        type: BottomNavigationBarType.fixed,
-      ),
+      bottomNavigationBar: Container(
+        height: 60,
+        child:  BottomNavigationBar(
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.calendar_today),
+              label: 'Races',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.military_tech),
+              label: 'Rewards',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.directions_run),
+              label: 'Activity',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: 'Profile',
+            ),
+          ],
+          currentIndex: _selectedIndex,
+          selectedItemColor: AppStyles.buttonColor,
+          unselectedItemColor: Colors.grey,
+          backgroundColor: AppStyles.primaryColor,
+          onTap: _onItemTapped,
+          type: BottomNavigationBarType.fixed,
+        ),
+      )
     );
   }
 }

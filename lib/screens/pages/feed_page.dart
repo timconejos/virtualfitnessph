@@ -256,10 +256,6 @@ class _FeedPageState extends State<FeedPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: const Text("Feed"),
-        backgroundColor: Colors.white,
-      ),
       body: RefreshIndicator(
         onRefresh: _refreshFeed,
         child: _feedItems.isEmpty

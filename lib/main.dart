@@ -5,6 +5,7 @@ import 'package:virtualfitnessph/screens/login_screen.dart';
 import 'package:virtualfitnessph/screens/splash_screen.dart';
 import 'package:virtualfitnessph/services/permissions_service.dart';
 import 'package:virtualfitnessph/services/auth_service.dart';
+import 'package:virtualfitnessph/styles/app_styles.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,6 +36,7 @@ class MyApp extends StatelessWidget {
       title: 'Virtual Fitness PH',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        scaffoldBackgroundColor: AppStyles.scaffoldBgColor,
       ),
       initialRoute: '/',
       routes: {
