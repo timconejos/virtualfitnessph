@@ -55,7 +55,7 @@ dependencies:
   crypto: any
 dev_dependencies:
   flutter_launcher_icons: ^0.13.1
-  flutter_native_splash: ^2.0.4
+  # flutter_native_splash: ^2.0.4
   flutter_test:
     sdk: flutter
 
@@ -110,6 +110,12 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+  fonts:
+    - family: NunitoSans
+      fonts:
+        - asset: assets/fonts/NunitoSans.ttf
+        - asset: assets/fonts/NunitoSans-Italic.ttf
+          style: italic
 
 flutter_icons:
   android: true
