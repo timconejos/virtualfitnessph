@@ -5,25 +5,40 @@ class OutlineButton extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;
   final Color color;
-  final double fontSize;
   final IconData? icon;
   final IconAlignment? iconAlignment;
-  final double iconSize;
+  final String size; 
 
   const OutlineButton({
     Key? key,
     required this.text,
     required this.onPressed,
     this.color = AppStyles.primaryForeground,
-    this.fontSize = 12,
     this.icon,
     this.iconAlignment = IconAlignment.start,
-    this.iconSize = 15
+    this.size = 'normal'
   }) : super(key: key); 
 
 
   @override
   Widget build(BuildContext context) {
+    double fontSize = 14;
+    double iconSize = 16; 
+    double hPadding = 15.0;
+    double vPadding = 2;
+
+    if (size=='small') {
+      fontSize = 13;
+      iconSize = 15;  
+      hPadding = 12;
+      vPadding = 8;
+    } else if (size == 'large') {
+      fontSize = 20;
+      iconSize = 22;  
+      hPadding = 16;
+      vPadding = 5;
+    }
+
     return OutlinedButton(
       onPressed: onPressed,
       style: OutlinedButton.styleFrom(
@@ -31,7 +46,8 @@ class OutlineButton extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8.0), 
         ),
-        padding: EdgeInsets.symmetric(horizontal: 15.0), 
+        padding: EdgeInsets.symmetric(horizontal: hPadding, vertical: vPadding), 
+        minimumSize: Size(0,0),
         textStyle: TextStyle(
           fontSize: fontSize,
           color: color, 

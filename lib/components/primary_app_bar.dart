@@ -12,7 +12,7 @@ class PrimaryAppBar extends StatelessWidget implements PreferredSizeWidget{
     required this.title,
     this.backgroundColor = AppStyles.primaryColor, // Default color if not provided
     this.actions,
-    this.centerTitle = true, // Default to center the title
+    this.centerTitle = false, // Default to center the title
     this.leading,
   });
 
@@ -21,13 +21,13 @@ class PrimaryAppBar extends StatelessWidget implements PreferredSizeWidget{
     return AppBar(
       title: Text(
         title,
-        style: TextStyle(color: AppStyles.primaryForeground), // Default text style
+        style: Theme.of(context).textTheme.headlineMedium?.copyWith(color: AppStyles.primaryForeground), // Default text style
       ),
       backgroundColor: backgroundColor,
       foregroundColor: AppStyles.primaryForeground,
       actions: actions,
       centerTitle: centerTitle, // Center the title by default
-      leading: leading, // Optionally set the leading widget
+      leading: leading, // Optionally set the leading widget  
       // flexibleSpace: Container(
       //   alignment: Alignment.centerLeft, 
       //   padding: EdgeInsets.only(top: 20.0), 

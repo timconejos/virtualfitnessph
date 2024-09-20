@@ -37,6 +37,13 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
         scaffoldBackgroundColor: AppStyles.scaffoldBgColor,
+        textTheme: AppStyles.vifitTextTheme,
+        appBarTheme: AppBarTheme(
+          backgroundColor: AppStyles.primaryColor,
+          foregroundColor: AppStyles.primaryForeground,
+          centerTitle: false, 
+          titleTextStyle: AppStyles.vifitTextTheme.headlineMedium
+        )
       ),
       initialRoute: '/',
       routes: {

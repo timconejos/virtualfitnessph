@@ -5,6 +5,7 @@ import 'package:virtualfitnessph/screens/followers_following_screen.dart';
 import 'package:virtualfitnessph/services/auth_service.dart';
 import 'package:virtualfitnessph/styles/app_styles.dart';
 import 'package:virtualfitnessph/components/outline_button.dart';
+import 'package:virtualfitnessph/components/primary_button.dart';
 import '../all_races_screen.dart';
 import '../edit_profile_screen.dart';
 import '../login_screen.dart';
@@ -256,7 +257,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return Scaffold(
       backgroundColor: AppStyles.scaffoldBgColor,
       body: isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator(color: AppStyles.primaryColor))
           : RefreshIndicator(
               onRefresh: _loadAllData,
               child: SingleChildScrollView(
@@ -266,8 +267,10 @@ class _ProfilePageState extends State<ProfilePage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       _buildProfileHeader(),
+                      // _buildTextDisplay(),
                       _buildBadgesSection2(),
-                      _buildStatsSection(),
+                      _buildStatsSection2(),
+                      _buildRewardSection(),
                       //_buildTrophiesSection(),
                       _buildJoinedRacesSection(),
                       _buildPhotosSection(),
@@ -409,13 +412,11 @@ class _ProfilePageState extends State<ProfilePage> {
                       children: [
                           Text(
                             fullName ?? 'Unknown User',
-                            style: const TextStyle(
-                                fontSize: 20, color: AppStyles.primaryForeground, fontWeight: FontWeight.bold),
+                            style: AppStyles.vifitTextTheme.titleLarge?.copyWith(color: AppStyles.primaryForeground),
                           ),
                           Text(
                             userName ?? 'Unknown User',
-                            style: const TextStyle(
-                                fontSize: 16, color: AppStyles.primaryForeground),
+                            style: AppStyles.vifitTextTheme.titleMedium?.copyWith(color: AppStyles.primaryForeground),
                           )
                       ]
                       )
@@ -456,6 +457,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 OutlineButton(
                   text: 'Edit profile',
                   icon: Icons.edit,
+                  size: 'small',
                   onPressed: () async {
                       final result = await Navigator.push(
                         context,
@@ -486,11 +488,11 @@ class _ProfilePageState extends State<ProfilePage> {
         children: [
           Text(
             count,
-            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold,  color: AppStyles.primaryForeground),
+            style: AppStyles.vifitTextTheme.labelLarge?.copyWith(color: AppStyles.primaryForeground),
           ),
           Text(
             label,
-            style: TextStyle(fontSize: 12, color: AppStyles.primaryForeground),
+            style: AppStyles.vifitTextTheme.labelSmall?.copyWith(color: AppStyles.primaryForeground),
           ),
         ],
       ),
@@ -521,7 +523,165 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Widget _buildStatsSection() {
+  Widget _buildRewardSection() {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text(
+                'Get rewarded',
+                style: AppStyles.vifitTextTheme.headlineSmall,
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Expanded(child: Container(
+                margin: EdgeInsets.all(1),
+                padding: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(13),
+                  color: AppStyles.primaryColor,
+                    gradient: LinearGradient(
+                    colors: [const Color.fromARGB(255, 61, 61, 255), const Color.fromARGB(128, 130, 130, 250)],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  )
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Column(children: [
+                      CircleAvatar(
+                        radius: 60,
+                        backgroundColor: const Color.fromRGBO(249, 249, 5, 1),
+                        child: const Icon(Icons.monetization_on, size: 60),
+                      )
+                    ],),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                         const Text(
+                          'Vifit coins: 975',
+                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                        ),
+                      ],),
+                      Row(children: [
+                        PrimaryButton(text: 'Redeem', color: AppStyles.buttonColor, textColor: AppStyles.buttonTextColor, onPressed: () => null),
+                        PrimaryButton(text: 'Pass points',color: AppStyles.buttonColor, textColor: AppStyles.buttonTextColor, onPressed: () => null),
+                      ],)
+                    ],)
+                  ]
+                ),
+              ),
+            ),
+          ],
+        ),
+      ]
+      )
+    );
+  }
+
+  Widget _buildStatsSection2() {
+    return Container(
+       padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+       child: Column(
+         crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text(
+                  'Stats overview',
+                  style: AppStyles.vifitTextTheme.headlineSmall,
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Expanded(child: Container(
+                  margin: EdgeInsets.all(1),
+                  padding: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(13),
+                    color: AppStyles.primaryColor,
+                      gradient: LinearGradient(
+                      colors: [const Color.fromARGB(255, 61, 61, 255), const Color.fromARGB(128, 130, 130, 250)],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                    )
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [ 
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          _buildStatCard(
+                            icon: Icons.location_on,
+                            value: totalDistance,
+                            label: 'Distance (km)',
+                            color: Colors.orange,
+                          ),
+                          _buildStatCard(
+                            icon: Icons.timer,
+                            value: pace,
+                            label: 'Pace (min/km)',
+                            color: Colors.orange,
+                          ),
+                          _buildStatCard(
+                            icon: Icons.directions_run,
+                            value: totalRuns,
+                            label: 'Runs',
+                            color: Colors.orange,
+                          ),
+                        ],
+                      ),
+                  ],),
+                )
+              )
+            ],
+            )
+          ]
+       )
+    );
+  }
+
+  Widget _buildTextDisplay() {
+    return Column(
+            children: [
+
+            Text('displayLarge', style: AppStyles.vifitTheme.textTheme.displayLarge?.copyWith(color: Colors.black)),
+            Text('displayMedium', style: AppStyles.vifitTheme.textTheme.displayMedium?.copyWith(color: Colors.black)),
+            Text('displaySmall', style: AppStyles.vifitTheme.textTheme.displaySmall?.copyWith(color: Colors.black)),
+            Text('headlineLarge', style: AppStyles.vifitTheme.textTheme.headlineLarge?.copyWith(color: Colors.black)),
+            Text('headlineMedium', style: AppStyles.vifitTheme.textTheme.headlineMedium?.copyWith(color: Colors.black)),
+            Text('headlineSmall', style: AppStyles.vifitTheme.textTheme.headlineSmall?.copyWith(color: Colors.black)),
+            Text('titleLarge', style: AppStyles.vifitTheme.textTheme.titleLarge?.copyWith(color: Colors.black)),
+            Text('titleMedium', style: AppStyles.vifitTheme.textTheme.titleMedium?.copyWith(color: Colors.black)),
+            Text('titleSmall', style: AppStyles.vifitTheme.textTheme.titleSmall?.copyWith(color: Colors.black)),
+            Text('bodyLarge', style: AppStyles.vifitTheme.textTheme.bodyLarge?.copyWith(color: Colors.black)),
+            Text('bodyMedium', style: AppStyles.vifitTheme.textTheme.bodyMedium?.copyWith(color: Colors.black)),
+            Text('bodySmall', style: AppStyles.vifitTheme.textTheme.bodySmall?.copyWith(color: Colors.black)),
+            Text('labelLarge', style: AppStyles.vifitTheme.textTheme.labelLarge?.copyWith(color: Colors.black)),
+            Text('labelMedium', style: AppStyles.vifitTheme.textTheme.labelMedium?.copyWith(color: Colors.black)),
+            Text('labelSmall', style: AppStyles.vifitTheme.textTheme.labelSmall?.copyWith(color: Colors.black)),
+
+            const SizedBox(height: 10),
+    ],);
+  }
+Widget _buildStatsSection() {
     return Card(
       color: Colors.white,
       elevation: 2,
@@ -574,34 +734,37 @@ class _ProfilePageState extends State<ProfilePage> {
     return Container(
       width: 100,
       padding: const EdgeInsets.symmetric(vertical: 16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
-            spreadRadius: 2,
-            blurRadius: 5,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      ),
+      // decoration: BoxDecoration(
+      //   color: Colors.white,
+      //   borderRadius: BorderRadius.circular(8),
+      //   boxShadow: [
+      //     BoxShadow(
+      //       color: Colors.grey.withOpacity(0.2),
+      //       spreadRadius: 2,
+      //       blurRadius: 5,
+      //       offset: const Offset(0, 3),
+      //     ),
+      //   ],
+      // ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, size: 32, color: color),
+          Icon(icon, size: 50, 
+            color: AppStyles.primaryForeground, 
+            shadows: [Shadow(
+              color: Colors.black.withOpacity(0.3),  
+              blurRadius: 10,                       
+              offset: Offset(5, 5),                  
+            ),],),
           const SizedBox(height: 8),
           Text(
             value,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
+            style: AppStyles.vifitTextTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: 1),
           Text(
             label,
-            style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
+            style: AppStyles.vifitTextTheme.labelSmall,
             textAlign: TextAlign.center,
           ),
         ],
@@ -619,9 +782,9 @@ class _ProfilePageState extends State<ProfilePage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                 const Text(
+                Text(
                   'My Badges',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                  style: AppStyles.vifitTextTheme.headlineSmall,
                 ),
                 TextButton(
                   onPressed: () {
@@ -652,7 +815,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.badge, size: 48, color: Colors.blue),
+                          Icon(Icons.badge, size: 48, color: Colors.grey),
                           SizedBox(height: 10),
                           Text('No badges earned yet.'),
                         ],
@@ -668,7 +831,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               crossAxisCount: 3,
                               mainAxisSpacing: 10,
                               crossAxisSpacing: 10,
-                              childAspectRatio: 1,
+                               childAspectRatio: 1,
                             ),
                             itemCount: min(badges.length, 6),
                             itemBuilder: (context, index) {
@@ -678,17 +841,18 @@ class _ProfilePageState extends State<ProfilePage> {
                                     color: Colors.white,
                                     // elevation: 2,
                                     margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-                                    child: Padding(padding: EdgeInsets.all(12),
+                                    child: Padding(padding: EdgeInsets.all(8),
                                     child: CircleAvatar(
-                                    radius: 50,
-                                    backgroundColor: Colors.transparent,
+                                    radius: 40,
+                                    // backgroundColor: Colors.transparent,
+                                    backgroundColor: Colors.grey,
                                     child: Column(
                                       children: [
                                          ClipOval(
                                       child: Image.network(
                                         'http://97.74.90.63:8080/races/badges/${badges[index]['badgesPicturePath']}',
-                                        width: 100,
-                                        height: 100,
+                                        width: 80,
+                                        height: 80,
                                         fit: BoxFit.cover,
                                         errorBuilder:
                                             (context, error, stackTrace) {
@@ -771,7 +935,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               children: [
                                 CircleAvatar(
                                   radius: 50,
-                                  backgroundColor: Colors.transparent,
+                                  // backgroundColor: Colors.transparent,
                                   child: ClipOval(
                                     child: Image.network(
                                       'http://97.74.90.63:8080/races/badges/${badges[index]['badgesPicturePath']}',
