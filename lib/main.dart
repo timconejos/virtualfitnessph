@@ -45,52 +45,52 @@ class MyApp extends StatelessWidget {
           titleTextStyle: AppStyles.vifitTextTheme.headlineMedium
         )
       ),
-      initialRoute: '/',
-      routes: {
-        '/': (context) => SplashScreen(),
-        '/home': (context) => FutureBuilder(
-            future: _authService.isUserLoggedIn(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Scaffold(
-                  body: Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                );
-              } else if (snapshot.hasError) {
-                return Scaffold(
-                  body: Center(
-                    child: Text('Error: ${snapshot.error}'),
-                  ),
-                );
-              } else {
-                bool isLoggedIn = snapshot.data as bool;
-                return isLoggedIn ? const MainPageScreen() : const LoginScreen();
-              }
-            },
-          ),
-      },
-      // home: FutureBuilder(
-      //   future: _authService.isUserLoggedIn(),
-      //   builder: (context, snapshot) {
-      //     if (snapshot.connectionState == ConnectionState.waiting) {
-      //       return const Scaffold(
-      //         body: Center(
-      //           child: CircularProgressIndicator(),
-      //         ),
-      //       );
-      //     } else if (snapshot.hasError) {
-      //       return Scaffold(
-      //         body: Center(
-      //           child: Text('Error: ${snapshot.error}'),
-      //         ),
-      //       );
-      //     } else {
-      //       bool isLoggedIn = snapshot.data as bool;
-      //       return isLoggedIn ? const MainPageScreen() : const LoginScreen();
-      //     }
-      //   },
-      // ),
+      // initialRoute: '/',
+      // routes: {
+      //   '/': (context) => SplashScreen(),
+      //   '/home': (context) => FutureBuilder(
+      //       future: _authService.isUserLoggedIn(),
+      //       builder: (context, snapshot) {
+      //         if (snapshot.connectionState == ConnectionState.waiting) {
+      //           return const Scaffold(
+      //             body: Center(
+      //               child: CircularProgressIndicator(),
+      //             ),
+      //           );
+      //         } else if (snapshot.hasError) {
+      //           return Scaffold(
+      //             body: Center(
+      //               child: Text('Error: ${snapshot.error}'),
+      //             ),
+      //           );
+      //         } else {
+      //           bool isLoggedIn = snapshot.data as bool;
+      //           return isLoggedIn ? const MainPageScreen() : const LoginScreen();
+      //         }
+      //       },
+      //     ),
+      // },
+      home: FutureBuilder(
+        future: _authService.isUserLoggedIn(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Scaffold(
+              body: Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
+          } else if (snapshot.hasError) {
+            return Scaffold(
+              body: Center(
+                child: Text('Error: ${snapshot.error}'),
+              ),
+            );
+          } else {
+            bool isLoggedIn = snapshot.data as bool;
+            return isLoggedIn ? const MainPageScreen() : const LoginScreen();
+          }
+        },
+      ),
     );
   }
 }

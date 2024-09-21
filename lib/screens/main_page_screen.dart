@@ -318,7 +318,7 @@ class _MainPageScreenState extends State<MainPageScreen> {
         ),
       ),
       bottomNavigationBar: Container(
-        height: 60,
+        height: 70,
         child:  BottomNavigationBar(
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
@@ -347,6 +347,7 @@ class _MainPageScreenState extends State<MainPageScreen> {
           unselectedItemColor: Colors.grey,
           backgroundColor: AppStyles.primaryColor,
           onTap: _onItemTapped,
+          iconSize: 35,
           type: BottomNavigationBarType.fixed,
         ),
       )

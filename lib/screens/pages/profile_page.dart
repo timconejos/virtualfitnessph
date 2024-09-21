@@ -6,6 +6,7 @@ import 'package:virtualfitnessph/services/auth_service.dart';
 import 'package:virtualfitnessph/styles/app_styles.dart';
 import 'package:virtualfitnessph/components/outline_button.dart';
 import 'package:virtualfitnessph/components/primary_button.dart';
+import 'package:virtualfitnessph/components/circular_progress_bar.dart';
 import '../all_races_screen.dart';
 import '../edit_profile_screen.dart';
 import '../login_screen.dart';
@@ -267,13 +268,14 @@ class _ProfilePageState extends State<ProfilePage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       _buildProfileHeader(),
+                      // _buildCircularProgressBar(),
                       // _buildTextDisplay(),
                       _buildBadgesSection2(),
                       _buildStatsSection2(),
                       _buildRewardSection(),
                       //_buildTrophiesSection(),
-                      _buildJoinedRacesSection(),
-                      _buildPhotosSection(),
+                      _buildJoinedRacesSection2(),
+                      _buildPhotosSection2(),
                     ],
                   ),
                 ),
@@ -544,12 +546,13 @@ class _ProfilePageState extends State<ProfilePage> {
             children: [
               Expanded(child: Container(
                 margin: EdgeInsets.all(1),
-                padding: EdgeInsets.all(10),
+                padding: EdgeInsets.all(15),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(13),
+                  // color: Color(0xFFB4D7FF),
                   color: AppStyles.primaryColor,
                     gradient: LinearGradient(
-                    colors: [const Color.fromARGB(255, 61, 61, 255), const Color.fromARGB(128, 130, 130, 250)],
+                    colors: [Color(0x80FFDB03), Color(0x30FFDB03)],
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                   )
@@ -558,12 +561,32 @@ class _ProfilePageState extends State<ProfilePage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Column(children: [
-                      CircleAvatar(
-                        radius: 60,
-                        backgroundColor: const Color.fromRGBO(249, 249, 5, 1),
-                        child: const Icon(Icons.monetization_on, size: 60),
-                      )
+                      Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,  // Make the container circular
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),  // Shadow color
+                              spreadRadius: 1,   // How far the shadow spreads
+                              blurRadius: 0,     // Softness of the shadow
+                              offset: Offset(1, 1),  // Position of the shadow (x, y)
+                            ),
+                          ],
+                        ),
+                        child: CircleAvatar(
+                          radius: 50,
+                          backgroundColor: AppStyles.buttonColor,
+                          child: const Icon(Icons.monetization_on, size: 50),
+                          // backgroundImage: NetworkImage('https://example.com/image.jpg'), // Add your image URL
+                        ),
+                      ),
+                      // CircleAvatar(
+                      //   radius: 50,
+                      //   backgroundColor: AppStyles.buttonColor,
+                      //   child: const Icon(Icons.monetization_on, size: 50),
+                      // ),
                     ],),
+                    const SizedBox(width: 10),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -577,6 +600,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       ],),
                       Row(children: [
                         PrimaryButton(text: 'Redeem', color: AppStyles.buttonColor, textColor: AppStyles.buttonTextColor, onPressed: () => null),
+                        const SizedBox(width: 7),
                         PrimaryButton(text: 'Pass points',color: AppStyles.buttonColor, textColor: AppStyles.buttonTextColor, onPressed: () => null),
                       ],)
                     ],)
@@ -615,9 +639,10 @@ class _ProfilePageState extends State<ProfilePage> {
                   padding: EdgeInsets.all(10),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(13),
+                    // color: Color(0xFFB4D7FF),
                     color: AppStyles.primaryColor,
                       gradient: LinearGradient(
-                      colors: [const Color.fromARGB(255, 61, 61, 255), const Color.fromARGB(128, 130, 130, 250)],
+                      colors: [Color(0x80FFDB03), Color(0x30FFDB03)],
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                     )
@@ -750,12 +775,13 @@ Widget _buildStatsSection() {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(icon, size: 50, 
-            color: AppStyles.primaryForeground, 
-            shadows: [Shadow(
-              color: Colors.black.withOpacity(0.3),  
-              blurRadius: 10,                       
-              offset: Offset(5, 5),                  
-            ),],),
+            color: AppStyles.primaryColor, 
+            // shadows: [Shadow(
+            //   color: Colors.black.withOpacity(0.3),  
+            //   blurRadius: 10,                       
+            //   offset: Offset(5, 5),                  
+            // ),],
+          ),
           const SizedBox(height: 8),
           Text(
             value,
@@ -1029,6 +1055,70 @@ Widget _buildStatsSection() {
     );
   }
 
+  Widget _buildJoinedRacesSection2() {
+    List<dynamic> incompleteRaces = joinedRaces
+        .where((race) => race['registration']['completed'] == false)
+        .toList();
+
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Races joined',
+                style: AppStyles.vifitTextTheme.headlineSmall,
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const AllRacesScreen(),
+                    ),
+                  );
+                },
+                child: const Text('View All',
+                    style: TextStyle(color: Colors.blue)),
+              ),
+            ]
+          ),
+          SizedBox(
+            width: double.infinity,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                incompleteRaces.isEmpty?
+                  const SizedBox(
+                    height: 100,
+                    width: double.infinity,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.directions_run, size: 48, color: Colors.grey),
+                        SizedBox(height: 10),
+                        Text('No in-progress races yet. Start your journey now!'),
+                      ],
+                    ),
+                  ) : Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,  
+                    children: incompleteRaces
+                      .take(3)
+                      .map((race) => _buildCircularProgressBar(race))
+                      .toList(),
+                  )
+
+              ]
+            )
+          )
+        ],
+      )
+    );
+  }
+
   Widget _buildJoinedRacesSection() {
     List<dynamic> incompleteRaces = joinedRaces
         .where((race) => race['registration']['completed'] == false)
@@ -1063,7 +1153,7 @@ Widget _buildStatsSection() {
               Column(
                 children: incompleteRaces
                     .take(3)
-                    .map((race) => _buildProgressCard(race))
+                    .map((race) => _buildCircularProgressBar(race))
                     .toList(),
               ),
             TextButton(
@@ -1080,6 +1170,90 @@ Widget _buildStatsSection() {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildPhotosSection2() {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+      child: Column (
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text(
+                'My Photos',
+                style: AppStyles.vifitTextTheme.headlineSmall,
+              ),
+            ]
+          ),
+          const SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Expanded(child: Container(
+                margin: EdgeInsets.all(1),
+                padding: EdgeInsets.all(15),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(13),
+                  color: Color(0x80FFDB03),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    photos.isEmpty
+                        ? const SizedBox(
+                      height: 100,
+                      width: double.infinity,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.photo, size: 48, color: Colors.grey),
+                          SizedBox(height: 10),
+                          Text('No photos uploaded yet.'),
+                        ],
+                      ),
+                    )
+                        : GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                        mainAxisSpacing: 10,
+                        crossAxisSpacing: 10,
+                        childAspectRatio: 1,
+                      ),
+                      itemCount: photos.length,
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          onTap: () {
+                            _showImageDialog(
+                                'http://97.74.90.63:8080/feed/images/${photos[index]['imagePath']}');
+                          },
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8.0),
+                            child: Image.network(
+                              'http://97.74.90.63:8080/feed/images/${photos[index]['imagePath']}',
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Image.network(
+                                  'https://via.placeholder.com/100x100',
+                                  fit: BoxFit.cover,
+                                );
+                              },
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ]
+                )
+              ))
+            ]
+          )
+        ]
+      )
     );
   }
 
@@ -1212,6 +1386,51 @@ Widget _buildStatsSection() {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildCircularProgressBar(Map<String, dynamic> race) {
+    
+    double screenWidth = MediaQuery.of(context).size.width;
+    double halfScreenWidth = screenWidth / 2.6;
+
+    double progress = race['registration']['distanceProgress'] /
+        race['registration']['raceDistance'];
+    progress = min(progress, 1.0); // Ensure progress does not overflow past 1.0
+
+
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => RaceDetailScreen(race: race),
+          ),
+        );
+      },
+      child: Container(
+      padding: const EdgeInsets.symmetric(vertical: 3.0, horizontal: 15),
+      constraints: BoxConstraints(
+        maxWidth: halfScreenWidth,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          CustomCircularProgressBar(
+            progress: progress, // Percentage value (0-100)
+            size: halfScreenWidth,    // Diameter of the progress bar
+            strokeWidth: 12,  // Thickness of the progress bar
+            color: AppStyles.primaryColor, // Color of the progress bar
+          ),
+          const SizedBox(height: 5),
+          Text(
+            race['race']['raceName'],
+            textAlign: TextAlign.center,
+            style: AppStyles.vifitTextTheme.labelMedium,
+          ),
+        ]
+      )
+    )
     );
   }
 
