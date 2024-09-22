@@ -7,20 +7,37 @@ import 'package:crypto/crypto.dart';
 import 'dart:convert';
 
 class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({super.key});
+  const RegisterScreen({Key? key}) : super(key: key);
 
   @override
   _RegisterScreenState createState() => _RegisterScreenState();
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
+  // Controllers for text fields
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
-  bool _isLoading = false; // Track loading state
+
+  // Loading state for the registration button
+  bool _isLoading = false;
+
+  // Password validation state
   bool _isPasswordValid = false;
+
+  // Authentication service instance
   final _authService = AuthService();
+
+  @override
+  void dispose() {
+    // Dispose controllers when the widget is removed from the widget tree
+    _emailController.dispose();
+    _usernameController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
+  }
 
   void _register() async {
     if (!_validateFields()) return; // Validate fields before proceeding
@@ -43,7 +60,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
       if (response.statusCode == 200) {
         String userId = response.body;
         await _authService.sendVerificationEmail(_emailController.text, userId);
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const VerificationScreen()));
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const VerificationScreen()),
+        );
       } else {
         _showSnackBar('Registration failed: ${response.body}');
       }
@@ -54,10 +74,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
   }
 
-  Map<String, String> _encryptData({required String username, required String email, required String password}) {
-    final key = encrypt.Key.fromUtf8(sha256.convert(utf8.encode('my32lengthsupersecretnooneknows1')).toString().substring(0, 32));
+  Map<String, String> _encryptData({
+    required String username,
+    required String email,
+    required String password,
+  }) {
+    final keyString = sha256
+        .convert(utf8.encode('my32lengthsupersecretnooneknows1'))
+        .toString()
+        .substring(0, 32);
+    final key = encrypt.Key.fromUtf8(keyString);
     final iv = encrypt.IV.fromUtf8('myivforvrphtimco');
-    final encrypter = encrypt.Encrypter(encrypt.AES(key, mode: encrypt.AESMode.cbc, padding: 'PKCS7'));
+    final encrypter = encrypt.Encrypter(
+      encrypt.AES(key, mode: encrypt.AESMode.cbc, padding: 'PKCS7'),
+    );
 
     final encryptedUsername = encrypter.encrypt(username, iv: iv).base64;
     final encryptedEmail = encrypter.encrypt(email, iv: iv).base64;
@@ -95,8 +125,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   bool _validateEmail(String email) {
-    final emailRegExp = RegExp(r'^[^@]+@[^@]+\.[^@]+');
+    final emailRegExp = RegExp(r'^[^@]+@[^@]+\.[^@]+$');
     return emailRegExp.hasMatch(email);
+  }
+
+  void _onPasswordChanged(String value) {
+    setState(() {
+      _isPasswordValid = _validatePassword(value);
+    });
+  }
+
+  bool _validatePassword(String password) {
+    final passwordRegExp = RegExp(r'^(?=.*[a-z])(?=.*\d).{7,}$');
+    return passwordRegExp.hasMatch(password);
   }
 
   void _showSnackBar(String message) {
@@ -105,77 +146,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  bool _validatePassword(String password) {
-    final passwordRegExp = RegExp(
-        r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#\$&*~]).{7,}$');
-    return passwordRegExp.hasMatch(password);
-  }
-
-  void _onPasswordChanged() {
-    setState(() {
-      _isPasswordValid = _validatePassword(_passwordController.text);
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: BackButton(onPressed: () => Navigator.pop(context)),
-        title: const Text('Register'),
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: _emailController,
-              decoration: const InputDecoration(labelText: 'Enter your email', border: OutlineInputBorder()),
-            ),
-            const SizedBox(height: 10),
-            TextField(
-              controller: _usernameController,
-              decoration: const InputDecoration(labelText: 'Enter a username', border: OutlineInputBorder()),
-            ),
-            const SizedBox(height: 10),
-            TextField(
-              controller: _passwordController,
-              obscureText: true,
-              onChanged: (_) => _onPasswordChanged(),
-              decoration: const InputDecoration(
-                labelText: 'Enter a password',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 10),
-            TextField(
-              controller: _confirmPasswordController,
-              obscureText: true,
-              decoration: const InputDecoration(
-                labelText: 'Confirm Password',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 10),
-            _buildPasswordRequirements(),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _isLoading ? null : _register,
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 16.0), backgroundColor: _isLoading ? Colors.grey : Colors.blue,
-                textStyle: const TextStyle(fontSize: 18),
-              ),
-              child: _isLoading ? const Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  CircularProgressIndicator(color: Colors.white),
-                  SizedBox(width: 20),
-                  Text('Please wait...')
-                ],
-              ) : const Text('Register'),
-            ),
-          ],
-        ),
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String labelText,
+    bool obscureText = false,
+    void Function(String)? onChanged,
+  }) {
+    return TextField(
+      controller: controller,
+      obscureText: obscureText,
+      onChanged: onChanged,
+      decoration: InputDecoration(
+        labelText: labelText,
+        border: const OutlineInputBorder(),
       ),
     );
   }
@@ -194,20 +177,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
           _passwordController.text.length >= 7,
         ),
         _buildPasswordRequirement(
-          'An uppercase letter',
-          _passwordController.text.contains(RegExp(r'[A-Z]')),
-        ),
-        _buildPasswordRequirement(
           'A lowercase letter',
           _passwordController.text.contains(RegExp(r'[a-z]')),
         ),
         _buildPasswordRequirement(
           'A number',
           _passwordController.text.contains(RegExp(r'\d')),
-        ),
-        _buildPasswordRequirement(
-          'A special character (e.g., !@#\$&*~)',
-          _passwordController.text.contains(RegExp(r'[!@#\$&*~]')),
         ),
       ],
     );
@@ -224,6 +199,70 @@ class _RegisterScreenState extends State<RegisterScreen> {
         const SizedBox(width: 10),
         Text(requirement),
       ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        leading: BackButton(onPressed: () => Navigator.pop(context)),
+        title: const Text('Register'),
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            _buildTextField(
+              controller: _emailController,
+              labelText: 'Enter your email',
+            ),
+            const SizedBox(height: 10),
+            _buildTextField(
+              controller: _usernameController,
+              labelText: 'Enter a username',
+            ),
+            const SizedBox(height: 10),
+            _buildTextField(
+              controller: _passwordController,
+              labelText: 'Enter a password',
+              obscureText: true,
+              onChanged: _onPasswordChanged,
+            ),
+            const SizedBox(height: 10),
+            _buildTextField(
+              controller: _confirmPasswordController,
+              labelText: 'Confirm password',
+              obscureText: true,
+            ),
+            const SizedBox(height: 10),
+            _buildPasswordRequirements(),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: _isLoading ? null : _register,
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                backgroundColor: _isLoading ? Colors.grey : null,
+                textStyle: const TextStyle(fontSize: 18),
+              ),
+              child: _isLoading
+                  ? const Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(color: Colors.white),
+                  ),
+                  SizedBox(width: 20),
+                  Text('Please wait...')
+                ],
+              )
+                  : const Text('Register'),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
