@@ -225,7 +225,7 @@ class _AddRaceDataScreenState extends State<AddRaceDataScreen> {
                         controller: _distanceController,
                         decoration:
                             const InputDecoration(labelText: 'Distance (in km)'),
-                        keyboardType: TextInputType.number,
+                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
                         validator: (value) =>
                             value!.isEmpty ? 'Please enter distance' : null,
                       ),
