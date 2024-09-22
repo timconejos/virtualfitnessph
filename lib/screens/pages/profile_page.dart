@@ -268,14 +268,11 @@ class _ProfilePageState extends State<ProfilePage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       _buildProfileHeader(),
-                      // _buildCircularProgressBar(),
-                      // _buildTextDisplay(),
-                      _buildBadgesSection2(),
-                      _buildStatsSection2(),
+                      _buildBadgesSection(),
+                      _buildStatsSection(),
                       _buildRewardSection(),
-                      //_buildTrophiesSection(),
-                      _buildJoinedRacesSection2(),
-                      _buildPhotosSection2(),
+                      _buildJoinedRacesSection(),
+                      _buildPhotosSection(),
                     ],
                   ),
                 ),
@@ -283,90 +280,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
     );
   }
-
-  Widget _buildProfileHeader2() {
-    return GestureDetector(
-      child: Card(
-        elevation: 0,
-        margin: const EdgeInsets.all(0),
-        color: Colors.white,
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  _profilePicUrl == null
-                      ? CircleAvatar(
-                    radius: 60,
-                    backgroundColor: Colors.red.shade200,
-                    child: const Icon(Icons.person, size: 60),
-                  )
-                      : CircleAvatar(
-                    radius: 60,
-                    backgroundImage: NetworkImage(_profilePicUrl!),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          userName ?? 'Unknown User',
-                          style: const TextStyle(
-                              fontSize: 24, fontWeight: FontWeight.bold),
-                        ),
-                        SizedBox(height: 8),
-                        Row(
-                          children: [
-                            _buildStatColumn(
-                              "Followers",
-                              profileData['followersCount']?.toString() ?? '0',
-                                  () => _navigateToList(
-                                  context, 'Followers', mockedFollowers),
-                            ),
-                            SizedBox(width: 16),
-                            _buildStatColumn(
-                              "Following",
-                              profileData['followingCount']?.toString() ?? '0',
-                                  () => _navigateToList(
-                                  context, 'Following', mockedFollowing),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.edit, color: Colors.blue),
-                    onPressed: () async {
-                      final result = await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              EditProfileScreen(profileData: profileData),
-                        ),
-                      );
-                      if (result == true) {
-                        _loadAllData();
-                      }
-                    },
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
+  
   Widget _buildProfileHeader() {
     return Container(
       height: 200,
@@ -580,11 +494,6 @@ class _ProfilePageState extends State<ProfilePage> {
                           // backgroundImage: NetworkImage('https://example.com/image.jpg'), // Add your image URL
                         ),
                       ),
-                      // CircleAvatar(
-                      //   radius: 50,
-                      //   backgroundColor: AppStyles.buttonColor,
-                      //   child: const Icon(Icons.monetization_on, size: 50),
-                      // ),
                     ],),
                     const SizedBox(width: 10),
                     Column(
@@ -615,7 +524,7 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Widget _buildStatsSection2() {
+  Widget _buildStatsSection() {
     return Container(
        padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
        child: Column(
@@ -683,73 +592,6 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Widget _buildTextDisplay() {
-    return Column(
-            children: [
-
-            Text('displayLarge', style: AppStyles.vifitTheme.textTheme.displayLarge?.copyWith(color: Colors.black)),
-            Text('displayMedium', style: AppStyles.vifitTheme.textTheme.displayMedium?.copyWith(color: Colors.black)),
-            Text('displaySmall', style: AppStyles.vifitTheme.textTheme.displaySmall?.copyWith(color: Colors.black)),
-            Text('headlineLarge', style: AppStyles.vifitTheme.textTheme.headlineLarge?.copyWith(color: Colors.black)),
-            Text('headlineMedium', style: AppStyles.vifitTheme.textTheme.headlineMedium?.copyWith(color: Colors.black)),
-            Text('headlineSmall', style: AppStyles.vifitTheme.textTheme.headlineSmall?.copyWith(color: Colors.black)),
-            Text('titleLarge', style: AppStyles.vifitTheme.textTheme.titleLarge?.copyWith(color: Colors.black)),
-            Text('titleMedium', style: AppStyles.vifitTheme.textTheme.titleMedium?.copyWith(color: Colors.black)),
-            Text('titleSmall', style: AppStyles.vifitTheme.textTheme.titleSmall?.copyWith(color: Colors.black)),
-            Text('bodyLarge', style: AppStyles.vifitTheme.textTheme.bodyLarge?.copyWith(color: Colors.black)),
-            Text('bodyMedium', style: AppStyles.vifitTheme.textTheme.bodyMedium?.copyWith(color: Colors.black)),
-            Text('bodySmall', style: AppStyles.vifitTheme.textTheme.bodySmall?.copyWith(color: Colors.black)),
-            Text('labelLarge', style: AppStyles.vifitTheme.textTheme.labelLarge?.copyWith(color: Colors.black)),
-            Text('labelMedium', style: AppStyles.vifitTheme.textTheme.labelMedium?.copyWith(color: Colors.black)),
-            Text('labelSmall', style: AppStyles.vifitTheme.textTheme.labelSmall?.copyWith(color: Colors.black)),
-
-            const SizedBox(height: 10),
-    ],);
-  }
-Widget _buildStatsSection() {
-    return Card(
-      color: Colors.white,
-      elevation: 2,
-      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Stats Overview',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-            ),
-            const SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                _buildStatCard(
-                  icon: Icons.location_on,
-                  value: totalDistance,
-                  label: 'Distance (km)',
-                  color: Colors.orange,
-                ),
-                _buildStatCard(
-                  icon: Icons.timer,
-                  value: pace,
-                  label: 'Pace (min/km)',
-                  color: Colors.orange,
-                ),
-                _buildStatCard(
-                  icon: Icons.directions_run,
-                  value: totalRuns,
-                  label: 'Runs',
-                  color: Colors.orange,
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   Widget _buildStatCard({
     required IconData icon,
     required String value,
@@ -798,7 +640,7 @@ Widget _buildStatsSection() {
     );
   }
 
-  Widget _buildBadgesSection2() {
+  Widget _buildBadgesSection() {
     return (
       Container(
         padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
@@ -874,28 +716,28 @@ Widget _buildStatsSection() {
                                     backgroundColor: Colors.grey,
                                     child: Column(
                                       children: [
-                                         ClipOval(
-                                      child: Image.network(
-                                        'http://97.74.90.63:8080/races/badges/${badges[index]['badgesPicturePath']}',
-                                        width: 80,
-                                        height: 80,
-                                        fit: BoxFit.cover,
-                                        errorBuilder:
-                                            (context, error, stackTrace) {
-                                          return Image.network(
-                                            'https://via.placeholder.com/100x100',
-                                            width: 100,
-                                            height: 100,
+                                        ClipOval(
+                                          child: Image.network(
+                                            'http://97.74.90.63:8080/races/badges/${badges[index]['badgesPicturePath']}',
+                                            width: 80,
+                                            height: 80,
                                             fit: BoxFit.cover,
-                                          );
-                                        },
+                                            errorBuilder:
+                                                (context, error, stackTrace) {
+                                                  return Image.network(
+                                                    'https://via.placeholder.com/100x100',
+                                                    width: 100,
+                                                    height: 100,
+                                                    fit: BoxFit.cover,
+                                                  );
+                                                },
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                    ),
-                                  ],
                                     ),
                                   ),
                                 ),
-                              ),
                               ],
                               );
                             },
@@ -910,100 +752,6 @@ Widget _buildStatsSection() {
           ],
         ),
       )
-    );
-  }
-
-  Widget _buildBadgesSection() {
-    return Card(
-      color: Colors.white,
-      elevation: 2,
-      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: SizedBox(
-          width: double.infinity,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'My Badges',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-              ),
-              const SizedBox(height: 10),
-              badges.isEmpty
-                  ? const SizedBox(
-                      height: 100,
-                      width: double.infinity,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.badge, size: 48, color: Colors.blue),
-                          SizedBox(height: 10),
-                          Text('No badges earned yet.'),
-                        ],
-                      ),
-                    )
-                  : Column(
-                      children: [
-                        GridView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3,
-                            mainAxisSpacing: 10,
-                            crossAxisSpacing: 10,
-                            childAspectRatio: 1,
-                          ),
-                          itemCount: min(badges.length, 6),
-                          itemBuilder: (context, index) {
-                            return Stack(
-                              children: [
-                                CircleAvatar(
-                                  radius: 50,
-                                  // backgroundColor: Colors.transparent,
-                                  child: ClipOval(
-                                    child: Image.network(
-                                      'http://97.74.90.63:8080/races/badges/${badges[index]['badgesPicturePath']}',
-                                      width: 100,
-                                      height: 100,
-                                      fit: BoxFit.cover,
-                                      errorBuilder:
-                                          (context, error, stackTrace) {
-                                        return Image.network(
-                                          'https://via.placeholder.com/100x100',
-                                          width: 100,
-                                          height: 100,
-                                          fit: BoxFit.cover,
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            );
-                          },
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ViewAllBadgesScreen(
-                                  badges: badges,
-                                ),
-                              ),
-                            );
-                          },
-                          child: const Text('View All',
-                              style: TextStyle(color: Colors.blue)),
-                        ),
-                      ],
-                    ),
-            ],
-          ),
-        ),
-      ),
     );
   }
 
@@ -1055,7 +803,7 @@ Widget _buildStatsSection() {
     );
   }
 
-  Widget _buildJoinedRacesSection2() {
+  Widget _buildJoinedRacesSection() {
     List<dynamic> incompleteRaces = joinedRaces
         .where((race) => race['registration']['completed'] == false)
         .toList();
@@ -1119,61 +867,7 @@ Widget _buildStatsSection() {
     );
   }
 
-  Widget _buildJoinedRacesSection() {
-    List<dynamic> incompleteRaces = joinedRaces
-        .where((race) => race['registration']['completed'] == false)
-        .toList();
-
-    return Card(
-      color: Colors.white,
-      elevation: 2,
-      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('Races Joined and Progress',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-            const SizedBox(height: 10),
-            if (incompleteRaces.isEmpty)
-              const SizedBox(
-                height: 100,
-                width: double.infinity,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.directions_run, size: 48, color: Colors.blue),
-                    SizedBox(height: 10),
-                    Text('No in-progress races yet. Start your journey now!'),
-                  ],
-                ),
-              )
-            else
-              Column(
-                children: incompleteRaces
-                    .take(3)
-                    .map((race) => _buildCircularProgressBar(race))
-                    .toList(),
-              ),
-            TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const AllRacesScreen(),
-                  ),
-                );
-              },
-              child: const Text('View All', style: TextStyle(color: Colors.blue)),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildPhotosSection2() {
+  Widget _buildPhotosSection() {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
       child: Column (
@@ -1254,73 +948,6 @@ Widget _buildStatsSection() {
           )
         ]
       )
-    );
-  }
-
-  Widget _buildPhotosSection() {
-    return Card(
-      color: Colors.white,
-      elevation: 2,
-      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: SizedBox(
-          width: double.infinity,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text('My Photos',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-              const SizedBox(height: 10),
-              photos.isEmpty
-                  ? const SizedBox(
-                height: 100,
-                width: double.infinity,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.photo, size: 48, color: Colors.blue),
-                    SizedBox(height: 10),
-                    Text('No photos uploaded yet.'),
-                  ],
-                ),
-              )
-                  : GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                  mainAxisSpacing: 10,
-                  crossAxisSpacing: 10,
-                  childAspectRatio: 1,
-                ),
-                itemCount: photos.length,
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () {
-                      _showImageDialog(
-                          'http://97.74.90.63:8080/feed/images/${photos[index]['imagePath']}');
-                    },
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(8.0),
-                      child: Image.network(
-                        'http://97.74.90.63:8080/feed/images/${photos[index]['imagePath']}',
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Image.network(
-                            'https://via.placeholder.com/100x100',
-                            fit: BoxFit.cover,
-                          );
-                        },
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ],
-          ),
-        ),
-      ),
     );
   }
 
