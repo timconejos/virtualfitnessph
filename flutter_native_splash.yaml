@@ -1,11 +1,12 @@
 flutter_native_splash:
   color: "#0302dc"
-  image: assets/vifit.png
+  image: assets/splash.jpg
   android: true
   ios: true
-  web: false
+  android_gravity: fill
   android_12:
-    image: assets/vifit.png
-    icon_background_color: "#0302dc"
-    image_dark: assets/vifit.png
-    icon_background_color_dark: "#121212"
+    background_image: assets/splash.jpg
+#    image: assets/splash.jpg
+#    icon_background_color: "#0302dc"
+#    image_dark: assets/splash.jpg
+#    icon_background_color_dark: "#121212"

@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:virtualfitnessph/screens/main_page_screen.dart';
-import 'package:virtualfitnessph/screens/login_screen.dart';
 import 'package:virtualfitnessph/screens/splash_screen.dart';
 import 'package:virtualfitnessph/services/permissions_service.dart';
-import 'package:virtualfitnessph/services/auth_service.dart';
 import 'package:virtualfitnessph/styles/app_styles.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await _requestPermissionsOnce();
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 Future<void> _requestPermissionsOnce() async {
@@ -25,9 +22,7 @@ Future<void> _requestPermissionsOnce() async {
 }
 
 class MyApp extends StatelessWidget {
-  final AuthService _authService = AuthService();
-
-  MyApp({super.key});
+  const MyApp({Key? key}) : super(key: key); // Cleaned constructor
 
   @override
   Widget build(BuildContext context) {
@@ -41,56 +36,11 @@ class MyApp extends StatelessWidget {
         appBarTheme: AppBarTheme(
           backgroundColor: AppStyles.primaryColor,
           foregroundColor: AppStyles.primaryForeground,
-          centerTitle: false, 
-          titleTextStyle: AppStyles.vifitTextTheme.headlineMedium
-        )
+          centerTitle: false,
+          titleTextStyle: AppStyles.vifitTextTheme.headlineMedium,
+        ),
       ),
-      // initialRoute: '/',
-      // routes: {
-      //   '/': (context) => SplashScreen(),
-      //   '/home': (context) => FutureBuilder(
-      //       future: _authService.isUserLoggedIn(),
-      //       builder: (context, snapshot) {
-      //         if (snapshot.connectionState == ConnectionState.waiting) {
-      //           return const Scaffold(
-      //             body: Center(
-      //               child: CircularProgressIndicator(),
-      //             ),
-      //           );
-      //         } else if (snapshot.hasError) {
-      //           return Scaffold(
-      //             body: Center(
-      //               child: Text('Error: ${snapshot.error}'),
-      //             ),
-      //           );
-      //         } else {
-      //           bool isLoggedIn = snapshot.data as bool;
-      //           return isLoggedIn ? const MainPageScreen() : const LoginScreen();
-      //         }
-      //       },
-      //     ),
-      // },
-      home: FutureBuilder(
-        future: _authService.isUserLoggedIn(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Scaffold(
-              body: Center(
-                child: CircularProgressIndicator(),
-              ),
-            );
-          } else if (snapshot.hasError) {
-            return Scaffold(
-              body: Center(
-                child: Text('Error: ${snapshot.error}'),
-              ),
-            );
-          } else {
-            bool isLoggedIn = snapshot.data as bool;
-            return isLoggedIn ? const MainPageScreen() : const LoginScreen();
-          }
-        },
-      ),
+      home: const SplashScreen(), // Set SplashScreen as the home widget
     );
   }
 }
