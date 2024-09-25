@@ -29,8 +29,12 @@ class AppStyles {
   static ButtonStyle primaryButtonStyle = ElevatedButton.styleFrom(
     backgroundColor: primaryColor,
     foregroundColor: Colors.white,
+    minimumSize: Size(double.infinity, 50),
     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-    textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+    textStyle: vifitTextTheme.titleMedium,
+     shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(8), // Set the border radius here
+    ),
   );
 
   static TextTheme vifitTextTheme = TextTheme(

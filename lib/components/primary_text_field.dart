@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:virtualfitnessph/styles/app_styles.dart';
 
 class PrimaryTextField extends StatelessWidget {
   final String labelText;
@@ -8,6 +9,7 @@ class PrimaryTextField extends StatelessWidget {
   final TextInputType keyboardType;
   final FormFieldValidator<String>? validator;
   final Widget? suffixIcon_;
+  final Function? onChanged;
 
   PrimaryTextField({
     required this.labelText,
@@ -16,7 +18,8 @@ class PrimaryTextField extends StatelessWidget {
     this.controller,
     this.keyboardType = TextInputType.text,
     this.validator,
-    this.suffixIcon_
+    this.suffixIcon_,
+    this.onChanged = null
   });
 
   @override
@@ -25,17 +28,21 @@ class PrimaryTextField extends StatelessWidget {
       controller: controller,
       obscureText: isPassword, // To toggle password visibility
       keyboardType: keyboardType,
+      onChanged: (_) => onChanged,
       decoration: InputDecoration(
         labelText: labelText,
         hintText: hintText,
         border: OutlineInputBorder(),
         suffixIcon: suffixIcon_,
         focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.green, width: 2.0),
+          borderSide: BorderSide(color: AppStyles.primaryColor, width: 2.0),
+          borderRadius: BorderRadius.circular(8.0)
         ),
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(color: Colors.grey, width: 1.0),
+          borderRadius: BorderRadius.circular(8.0)
         ),
+        focusColor: AppStyles.primaryColor,
         labelStyle: TextStyle(color: Colors.grey),
         hintStyle: TextStyle(color: Colors.grey),
       ),

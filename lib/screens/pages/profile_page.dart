@@ -1044,7 +1044,7 @@ class _ProfilePageState extends State<ProfilePage> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           CustomCircularProgressBar(
-            progress: progress, // Percentage value (0-100)
+            progress: progress * 100, // Percentage value (0-100)
             size: halfScreenWidth,    // Diameter of the progress bar
             strokeWidth: 12,  // Thickness of the progress bar
             color: AppStyles.primaryColor, // Color of the progress bar

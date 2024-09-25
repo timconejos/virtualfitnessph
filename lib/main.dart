@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Virtual Fitness PH',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primaryColor: AppStyles.primaryColor,
         scaffoldBackgroundColor: AppStyles.scaffoldBgColor,
         textTheme: AppStyles.vifitTextTheme,
         appBarTheme: AppBarTheme(

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:virtualfitnessph/models/user.dart';
 import 'package:virtualfitnessph/screens/verification_screen.dart';
 import 'package:virtualfitnessph/services/auth_service.dart';
+import 'package:virtualfitnessph/components/primary_text_field.dart';
+import 'package:virtualfitnessph/styles/app_styles.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:crypto/crypto.dart';
 import 'dart:convert';
@@ -120,60 +122,80 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: BackButton(onPressed: () => Navigator.pop(context)),
-        title: const Text('Register'),
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
+      // appBar: AppBar(
+      //   leading: BackButton(onPressed: () => Navigator.pop(context)),
+      //   title: const Text('Register'),
+      // ),
+      body: Padding(
+        padding: const EdgeInsets.fromLTRB(50.0, 10.0, 50.0, 0.0),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            TextField(
+            Text('Create an account', 
+            textAlign: TextAlign.start,
+            style: AppStyles.vifitTextTheme.headlineMedium?.copyWith(color: AppStyles.primaryColor)),
+            const SizedBox(height: 20),
+            PrimaryTextField(
+              labelText: 'Enter your email',
               controller: _emailController,
-              decoration: const InputDecoration(labelText: 'Enter your email', border: OutlineInputBorder()),
+              // decoration: const InputDecoration(labelText: 'Enter your email', border: OutlineInputBorder()),
             ),
             const SizedBox(height: 10),
-            TextField(
+            PrimaryTextField(
+              labelText: 'Enter a username',
               controller: _usernameController,
-              decoration: const InputDecoration(labelText: 'Enter a username', border: OutlineInputBorder()),
+              // decoration: const InputDecoration(labelText: 'Enter a username', border: OutlineInputBorder()),
             ),
             const SizedBox(height: 10),
-            TextField(
+            PrimaryTextField(
+              labelText: 'Enter a password',
               controller: _passwordController,
-              obscureText: true,
+              isPassword: true,
+              // obscureText: true,
               onChanged: (_) => _onPasswordChanged(),
-              decoration: const InputDecoration(
-                labelText: 'Enter a password',
-                border: OutlineInputBorder(),
-              ),
+              // decoration: const InputDecoration(
+              //   labelText: 'Enter a password',
+              //   border: OutlineInputBorder(),
             ),
             const SizedBox(height: 10),
-            TextField(
+            PrimaryTextField(
+              labelText: 'Confirm Password',
+              isPassword: true,
               controller: _confirmPasswordController,
-              obscureText: true,
-              decoration: const InputDecoration(
-                labelText: 'Confirm Password',
-                border: OutlineInputBorder(),
-              ),
+              // obscureText: true,
+              // decoration: const InputDecoration(
+              //   labelText: 'Confirm Password',
+              //   border: OutlineInputBorder(),
+              // ),
             ),
             const SizedBox(height: 10),
             _buildPasswordRequirements(),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: _isLoading ? null : _register,
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 16.0), backgroundColor: _isLoading ? Colors.grey : Colors.blue,
-                textStyle: const TextStyle(fontSize: 18),
-              ),
+              style: AppStyles.primaryButtonStyle,
               child: _isLoading ? const Row(
-                mainAxisSize: MainAxisSize.min,
+                // mainAxisSize: MainAxisSize.min,
                 children: [
                   CircularProgressIndicator(color: Colors.white),
-                  SizedBox(width: 20),
                   Text('Please wait...')
                 ],
-              ) : const Text('Register'),
+              ) : Text('Register', style: AppStyles.vifitTextTheme.titleMedium),
             ),
+            const SizedBox(height: 30),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                GestureDetector(
+                  onTap: () => Navigator.pop(context),
+                  child: Text(
+                    "Back to login",
+                    style: AppStyles.vifitTextTheme.titleMedium?.copyWith(color: AppStyles.primaryColor),
+                  ),
+                ),
+              ],
+            ), 
+
           ],
         ),
       ),

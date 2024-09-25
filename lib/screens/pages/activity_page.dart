@@ -81,19 +81,24 @@ class _ActivityPageState extends State<ActivityPage> {
             ],
           ),
         )
-            : ListView.builder(
-          itemCount: submissions.length,
-          itemBuilder: (context, index) {
-            var submission = submissions[index];
-            DateTime submissionDate = DateTime.parse(submission['submissionDate']);
-            return ListTile(
-              leading: CircleAvatar(
-                backgroundImage: NetworkImage('http://97.74.90.63:8080/profiles/${submission['userId']}.jpg'),
-              ),
-              title: Text('${submission['username']} submitted ${submission['distanceKm']} KM for ${submission['raceName']} in ${submission['location']}'),
-              trailing: Text(_timeAgo(submissionDate)),
-            );
-          },
+            : Column(
+              children: 
+                [ ListView.builder(
+                  itemCount: submissions.length,
+                  itemBuilder: (context, index) {
+                    var submission = submissions[index];
+                    DateTime submissionDate = DateTime.parse(submission['submissionDate']);
+                    return ListTile(
+                      leading: CircleAvatar(
+                        backgroundImage: NetworkImage('http://97.74.90.63:8080/profiles/${submission['userId']}.jpg'),
+                      ),
+                      title: Text('${submission['username']} submitted ${submission['distanceKm']} KM for ${submission['raceName']} in ${submission['location']}'),
+                      trailing: Text(_timeAgo(submissionDate)),
+                    );
+                  },
+                ),
+                const Divider()
+              ]
         ),
       ),
     );
