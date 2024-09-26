@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:virtualfitnessph/styles/app_styles.dart';
 import '../../services/auth_service.dart';
 import '../view_profile_screen.dart';
+
 
 class FeedPage extends StatefulWidget {
   const FeedPage({super.key});
@@ -79,15 +81,17 @@ class _FeedPageState extends State<FeedPage> {
   }
 
   void _showImageDialog(String imageUrl) {
-    showDialog(
+    showGeneralDialog(
       context: context,
-      builder: (context) {
-        return Dialog(
+      // barrierDismissible: true,
+      pageBuilder: (BuildContext ctx, Animation<double> animation,
+          Animation<double> secondaryAnimation) {
+        return Scaffold(
           backgroundColor: Colors.black.withOpacity(0.8),
-          child: Stack(
+          body: SafeArea (child: Stack(
             children: [
               InteractiveViewer(
-                boundaryMargin: EdgeInsets.all(20),
+                boundaryMargin: EdgeInsets.zero,
                 minScale: 0.5,
                 maxScale: 4.0,
                 child: Center(
@@ -103,12 +107,12 @@ class _FeedPageState extends State<FeedPage> {
                 child: IconButton(
                   icon: Icon(Icons.close, color: Colors.white, size: 30),
                   onPressed: () {
-                    Navigator.of(context).pop();
+                    Navigator.of(ctx).pop();
                   },
                 ),
               ),
             ],
-          ),
+          )),
         );
       },
     );
@@ -323,7 +327,7 @@ class _FeedPageState extends State<FeedPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsets.all(16.0),
+            padding: EdgeInsets.all(10.0),
             child: GestureDetector(
             onTap: isProfileClickable
                 ? () => Navigator.push(
@@ -387,9 +391,7 @@ class _FeedPageState extends State<FeedPage> {
             ),
             )
           ),
-          const SizedBox(height: 10),
-          Text(feedItem['caption']),
-          const SizedBox(height: 10),
+          Padding(padding: EdgeInsets.all(10), child: Text(feedItem['caption'])),
           SizedBox(
             width: double.infinity,
             child: GestureDetector(
@@ -407,10 +409,12 @@ class _FeedPageState extends State<FeedPage> {
           ),
           const SizedBox(height: 10),
           Padding(
-            padding: EdgeInsets.all(0.0),
+            padding: EdgeInsets.all(13.0),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(('Location: ' + feedItem['location']).toUpperCase(), style: const TextStyle(color: Colors.grey)),
+                Text((feedItem['location']).toUpperCase(), style: AppStyles.vifitTextTheme.labelSmall?.copyWith(color: Colors.grey)),
+                const SizedBox(height: 8),
                 Row(
                   children: [
                     IconButton(
