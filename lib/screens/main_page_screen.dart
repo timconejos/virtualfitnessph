@@ -262,6 +262,11 @@ class _MainPageScreenState extends State<MainPageScreen> {
         title: _appBarTitle,
         centerTitle: false,
          actions: [
+          TextButton(
+            style: TextButton.styleFrom(foregroundColor: Colors.white),
+            onPressed: () {},
+            child: Text("2451 pts"),
+          ),
           IconButton(
             icon: const Icon(Icons.notifications),
             onPressed: _showNotifications,
