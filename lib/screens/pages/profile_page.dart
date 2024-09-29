@@ -10,6 +10,7 @@ import 'package:virtualfitnessph/components/circular_progress_bar.dart';
 import '../all_races_screen.dart';
 import '../edit_profile_screen.dart';
 import '../login_screen.dart';
+import '../pass_points_screen.dart';
 import '../race_detail_screen.dart';
 import '../view_all_badges_screen.dart'; // Add this import
 import 'dart:math';
@@ -29,21 +30,6 @@ class _ProfilePageState extends State<ProfilePage> {
   late List<dynamic> badges = [];
   late List<dynamic> trophies = [];
   late List<dynamic> photos = [];
-  final List<String> mockedFollowers = [
-    'Follower 1',
-    'Follower 2',
-    'Follower 3',
-    'Follower 4',
-    'Follower 5',
-  ];
-
-  final List<String> mockedFollowing = [
-    'Following 1',
-    'Following 2',
-    'Following 3',
-    'Following 4',
-    'Following 5',
-  ];
 
   bool isLoading = false;
   final AuthService _authService = AuthService();
@@ -54,6 +40,7 @@ class _ProfilePageState extends State<ProfilePage> {
   String totalDistance = "00 KM";
   String pace = "0:00:00";
   String totalRuns = "0";
+  String _currentPoints = "0";
 
   @override
   void initState() {
@@ -89,6 +76,7 @@ class _ProfilePageState extends State<ProfilePage> {
     await _loadProfilePicture();
     await _loadBadges(); // Load badges
     await _loadPhotos();
+    _fetchCurrentPoints();
     setState(() => isLoading = false);
   }
 
@@ -280,6 +268,16 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
     );
   }
+
+  void _fetchCurrentPoints() async {
+    String? userId = await _authService.getUserId();
+    if (userId != null) {
+      String points = await _authService.getCurrentPoints(userId);
+      setState(() {
+        _currentPoints = points;
+      });
+    }
+  }
   
   Widget _buildProfileHeader() {
     return Container(
@@ -354,14 +352,14 @@ class _ProfilePageState extends State<ProfilePage> {
                       "Followers",
                       profileData['followersCount']?.toString() ?? '0',
                           () => _navigateToList(
-                          context, 'Followers', mockedFollowers),
+                          context, 'Followers'),
                     ),
                     SizedBox(width: 16),
                     _buildStatColumn(
                       "Following",
                       profileData['followingCount']?.toString() ?? '0',
                           () => _navigateToList(
-                          context, 'Following', mockedFollowing),
+                          context, 'Following'),
                     ),
                   ],
                 ),
@@ -415,7 +413,7 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  void _navigateToList(BuildContext context, String title, List<dynamic> users) async {
+  void _navigateToList(BuildContext context, String title) async {
     List<dynamic> userList = await _fetchUserList(title);
     Navigator.push(
       context,
@@ -501,16 +499,23 @@ class _ProfilePageState extends State<ProfilePage> {
                       children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                         const Text(
-                          'Vifit coins: 975',
+                        children: [Text(
+                          "Vifit coins: $_currentPoints",
                           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                         ),
                       ],),
                       Row(children: [
                         PrimaryButton(text: 'Redeem', color: AppStyles.buttonColor, textColor: AppStyles.buttonTextColor, onPressed: () => null),
                         const SizedBox(width: 7),
-                        PrimaryButton(text: 'Pass points',color: AppStyles.buttonColor, textColor: AppStyles.buttonTextColor, onPressed: () => null),
+                        PrimaryButton(text: 'Pass points',color: AppStyles.buttonColor, textColor: AppStyles.buttonTextColor,  onPressed: () async {
+                          List<dynamic> followers = await _fetchUserList('Followers');
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const PassPointsScreen(),
+                            ),
+                          ).then((_) => _fetchCurrentPoints());
+                        },),
                       ],)
                     ],)
                   ]
