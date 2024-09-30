@@ -402,5 +402,66 @@ class AuthService {
     }
   }
 
+  Future<String> getCurrentPoints(String userId) async {
+    final String url = '$baseUrl/api/user-points/total/$userId';
+    try {
+      final response = await http.get(
+        Uri.parse(url),
+        headers: {'Content-Type': 'application/json'},
+      );
+      if (response.statusCode == 200) {
+        return response.body;
+      } else {
+        print('Failed to fetch current points: ${response.body}');
+        return "0";
+      }
+    } catch (e) {
+      print('Error fetching current points: $e');
+      return "0";
+    }
+  }
+
+  Future<bool> sharePoints(String sourceUserId, String targetUserId, double amount) async {
+    final String url = '$baseUrl/api/user-points/share';
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'sourceUserId': sourceUserId,
+          'targetUserId': targetUserId,
+          'amount': amount,
+        }),
+      );
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        print('Failed to share points: ${response.body}');
+        return false;
+      }
+    } catch (e) {
+      print('Error sharing points: $e');
+      return false;
+    }
+  }
+
+  Future<List<dynamic>> fetchUserList(String listType, String userId) async {
+    final String url = listType == 'Followers'
+        ? '$baseUrl/followers/$userId'
+        : '$baseUrl/following/$userId';
+
+    try {
+      final response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else {
+        throw Exception('Failed to load $listType');
+      }
+    } catch (e) {
+      print('Error loading $listType: $e');
+      return [];
+    }
+  }
+
 
 }
