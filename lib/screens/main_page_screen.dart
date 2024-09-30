@@ -1,3 +1,5 @@
+// main_page_screen.dart
+
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:virtualfitnessph/screens/pages/activity_page.dart';
@@ -22,6 +24,7 @@ class _MainPageScreenState extends State<MainPageScreen> {
   int _selectedIndex = 4;
   String _appBarTitle = 'Virtual Fitness PH';
   final AuthService _authService = AuthService();
+  String _currentPoints = "0";
 
   static final List<Widget> _widgetOptions = <Widget>[
     const FeedPage(),
@@ -49,6 +52,8 @@ class _MainPageScreenState extends State<MainPageScreen> {
     bool isLoggedIn = await _authService.isUserLoggedIn();
     if (!isLoggedIn) {
       _redirectToLogin();
+    } else {
+      _fetchCurrentPoints();
     }
   }
 
@@ -59,6 +64,16 @@ class _MainPageScreenState extends State<MainPageScreen> {
             (Route<dynamic> route) => false,
       );
     });
+  }
+
+  void _fetchCurrentPoints() async {
+    String? userId = await _authService.getUserId();
+    if (userId != null) {
+      String points = await _authService.getCurrentPoints(userId);
+      setState(() {
+        _currentPoints = points;
+      });
+    }
   }
 
   void _showAddOptions(BuildContext context) {
@@ -94,7 +109,7 @@ class _MainPageScreenState extends State<MainPageScreen> {
   }
 
   void _showNotifications() {
-    List<String> notifications = []; // This would be fetched from your backend or service
+    List<String> notifications = []; // Fetch from backend
 
     showModalBottomSheet(
       context: context,
@@ -210,10 +225,9 @@ class _MainPageScreenState extends State<MainPageScreen> {
                       bool success = await _authService.deleteUser(userId);
 
                       if (success) {
-                        Navigator.of(context).pop(); // Close the current dialog
-                        _showSuccessDialog(); // Show success dialog
+                        Navigator.of(context).pop();
+                        _showSuccessDialog();
                       } else {
-                        // Handle failure if needed
                         Navigator.of(context).pop();
                       }
                     } else {
@@ -242,8 +256,8 @@ class _MainPageScreenState extends State<MainPageScreen> {
             TextButton(
               child: const Text('OK'),
               onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
-                _authService.logout(); // Log out the user
+                Navigator.of(context).pop();
+                _authService.logout();
                 Navigator.of(context).pushReplacement(
                   MaterialPageRoute(builder: (context) => const LoginScreen()),
                 );
@@ -258,104 +272,96 @@ class _MainPageScreenState extends State<MainPageScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PrimaryAppBar(
-        title: _appBarTitle,
-        centerTitle: false,
-         actions: [
-          TextButton(
-            style: TextButton.styleFrom(foregroundColor: Colors.white),
-            onPressed: () {},
-            child: Text("2451 pts"),
-          ),
-          IconButton(
-            icon: const Icon(Icons.notifications),
-            onPressed: _showNotifications,
-          ),
-          // Builder(
-          //   builder: (context) => IconButton(
-          //     icon: const Icon(Icons.menu),
-          //     onPressed: () {
-          //       Scaffold.of(context).openDrawer();
-          //     },
-          //   ),
-          // ),
-        ],
-        ),
-      drawer: Drawer(
-        backgroundColor: Colors.white,
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            const SizedBox(height: 100), // Large blank space at the top
-            ListTile(
-              leading: const Icon(Icons.logout),
-              title: const Text('Logout'),
-              onTap: _logout,
+        appBar: PrimaryAppBar(
+          title: _appBarTitle,
+          centerTitle: false,
+          actions: [
+            TextButton(
+              style: TextButton.styleFrom(foregroundColor: Colors.white),
+              onPressed: () {},
+              child: Text("$_currentPoints coins"),
             ),
-            ListTile(
-              leading: const Icon(Icons.web),
-              title: const Text('Visit Website'),
-              onTap: () => _launchURL('https://virtualfitnessph.com'),
-            ),
-            const Divider(), // Horizontal bar
-            ListTile(
-              leading: const Icon(Icons.delete, color: Colors.red),
-              title: const Text('Deactivate Account', style: TextStyle(color: Colors.red)),
-              onTap: _deactivateAccount,
+            IconButton(
+              icon: const Icon(Icons.notifications),
+              onPressed: _showNotifications,
             ),
           ],
         ),
-      ),
-      body: Center(
-        child: _widgetOptions.elementAt(_selectedIndex),
-      ),
-      floatingActionButton: Container(
-        height: 70,
-        width: 70,
-        child: FloatingActionButton(
-          onPressed: () => _showAddOptions(context),
-          tooltip: 'Add Options',
-          foregroundColor: AppStyles.primaryForeground,
-          backgroundColor: AppStyles.secondaryColor,
-          child: const Icon(Icons.add),
-          shape: CircleBorder(),
-          elevation: 6.0,
+        drawer: Drawer(
+          backgroundColor: Colors.white,
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              const SizedBox(height: 100),
+              ListTile(
+                leading: const Icon(Icons.logout),
+                title: const Text('Logout'),
+                onTap: _logout,
+              ),
+              ListTile(
+                leading: const Icon(Icons.web),
+                title: const Text('Visit Website'),
+                onTap: () => _launchURL('https://virtualfitnessph.com'),
+              ),
+              const Divider(),
+              ListTile(
+                leading: const Icon(Icons.delete, color: Colors.red),
+                title: const Text('Deactivate Account', style: TextStyle(color: Colors.red)),
+                onTap: _deactivateAccount,
+              ),
+            ],
+          ),
         ),
-      ),
-      bottomNavigationBar: Container(
-        height: 70,
-        child:  BottomNavigationBar(
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.calendar_today),
-              label: 'Races',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.military_tech),
-              label: 'Rewards',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.directions_run),
-              label: 'Activity',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              label: 'Profile',
-            ),
-          ],
-          currentIndex: _selectedIndex,
-          selectedItemColor: AppStyles.buttonColor,
-          unselectedItemColor: Colors.grey,
-          backgroundColor: AppStyles.primaryColor,
-          onTap: _onItemTapped,
-          iconSize: 35,
-          type: BottomNavigationBarType.fixed,
+        body: Center(
+          child: _widgetOptions.elementAt(_selectedIndex),
         ),
-      )
+        floatingActionButton: Container(
+          height: 70,
+          width: 70,
+          child: FloatingActionButton(
+            onPressed: () => _showAddOptions(context),
+            tooltip: 'Add Options',
+            foregroundColor: AppStyles.primaryForeground,
+            backgroundColor: AppStyles.secondaryColor,
+            child: const Icon(Icons.add),
+            shape: CircleBorder(),
+            elevation: 6.0,
+          ),
+        ),
+        bottomNavigationBar: Container(
+          height: 70,
+          child:  BottomNavigationBar(
+            items: const <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home),
+                label: 'Home',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.calendar_today),
+                label: 'Races',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.military_tech),
+                label: 'Rewards',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.directions_run),
+                label: 'Activity',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.person),
+                label: 'Profile',
+              ),
+            ],
+            currentIndex: _selectedIndex,
+            selectedItemColor: AppStyles.buttonColor,
+            unselectedItemColor: Colors.grey,
+            backgroundColor: AppStyles.primaryColor,
+            onTap: _onItemTapped,
+            iconSize: 35,
+            type: BottomNavigationBarType.fixed,
+          ),
+        )
     );
   }
 }
