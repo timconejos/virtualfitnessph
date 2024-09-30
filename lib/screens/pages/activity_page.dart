@@ -76,9 +76,7 @@ class _ActivityPageState extends State<ActivityPage> {
             ],
           ),
         )
-            : Column(
-              children: 
-                [ ListView.builder(
+            : ListView.builder(
                   itemCount: submissions.length,
                   itemBuilder: (context, index) {
                     var submission = submissions[index];
@@ -92,9 +90,6 @@ class _ActivityPageState extends State<ActivityPage> {
                     );
                   },
                 ),
-                const Divider()
-              ]
-        ),
       ),
     );
   }
