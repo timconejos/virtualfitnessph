@@ -13,6 +13,7 @@ import 'login_screen.dart';
 import 'package:virtualfitnessph/styles/app_styles.dart';
 import 'package:virtualfitnessph/components/primary_app_bar.dart';
 import 'package:virtualfitnessph/screens/search_user_screen.dart'; // Import SearchUserScreen
+import 'package:virtualfitnessph/screens/points_history_screen.dart'; // Import PointsHistoryScreen
 
 class MainPageScreen extends StatefulWidget {
   const MainPageScreen({super.key});
@@ -230,6 +231,9 @@ class _MainPageScreenState extends State<MainPageScreen> {
                         _showSuccessDialog();
                       } else {
                         Navigator.of(context).pop();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Failed to deactivate account. Please try again.')),
+                        );
                       }
                     } else {
                       setState(() {
@@ -277,6 +281,13 @@ class _MainPageScreenState extends State<MainPageScreen> {
     );
   }
 
+  void _navigateToPointsHistory() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const PointsHistoryScreen()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -286,7 +297,7 @@ class _MainPageScreenState extends State<MainPageScreen> {
           actions: [
             TextButton(
               style: TextButton.styleFrom(foregroundColor: Colors.white),
-              onPressed: () {},
+              onPressed: _navigateToPointsHistory, // Updated onPressed
               child: Text("$_currentPoints coins"),
             ),
             IconButton(

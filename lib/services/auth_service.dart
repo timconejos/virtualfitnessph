@@ -7,6 +7,8 @@ import 'package:virtualfitnessph/models/user.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:crypto/crypto.dart';
 
+import '../screens/points_history_screen.dart';
+
 class AuthService {
   static const String baseUrl = 'http://97.74.90.63:8080';
   //static const String baseUrl = 'http://10.0.2.2:8080';
@@ -478,6 +480,38 @@ class AuthService {
       }
     } catch (e) {
       print('Error searching users: $e');
+      return [];
+    }
+  }
+
+  Future<List<PointsTransaction>> getPointsHistory(String userId) async {
+    final String url = '${await getBaseUrl()}/api/user-points/history/$userId';
+    try {
+      final response = await http.get(
+        Uri.parse(url),
+        headers: {'Accept': 'application/json'},
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+        print('Points History Response: $data'); // Debugging line
+
+        // Check if 'content' exists and is a list
+        if (data.containsKey('content') && data['content'] is List) {
+          List<dynamic> transactionsJson = data['content'];
+          return transactionsJson
+              .map((json) => PointsTransaction.fromJson(json))
+              .toList();
+        } else {
+          print('Unexpected JSON structure: ${response.body}');
+          return [];
+        }
+      } else {
+        print('Failed to fetch points history: ${response.body}');
+        return [];
+      }
+    } catch (e) {
+      print('Error fetching points history: $e');
       return [];
     }
   }
