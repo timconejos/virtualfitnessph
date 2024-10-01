@@ -1,9 +1,11 @@
 // pass_points_screen.dart
 
+import 'dart:async'; // Import for Timer
 import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
 import '../styles/app_styles.dart';
 import '../components/primary_button.dart';
+import '../screens/view_profile_screen.dart';
 
 class PassPointsScreen extends StatefulWidget {
   const PassPointsScreen({Key? key}) : super(key: key);
@@ -15,17 +17,39 @@ class PassPointsScreen extends StatefulWidget {
 class _PassPointsScreenState extends State<PassPointsScreen> {
   final AuthService _authService = AuthService();
   List<dynamic> _followers = [];
-  List<dynamic> _filteredFollowers = [];
-  String? _selectedFollowerId;
-  String? _selectedFollowerName;
+  List<dynamic> _searchResults = [];
+  String? _selectedUserId;
+  String? _selectedUserName;
   final TextEditingController _amountController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
   bool _isLoading = false;
   bool _isFetchingFollowers = true;
+  bool _isSearching = false;
+  String _baseUrl = '';
+  Timer? _debounce; // Timer for debounce
 
   @override
   void initState() {
     super.initState();
-    _fetchFollowers();
+    _initializeScreen();
+  }
+
+  @override
+  void dispose() {
+    _debounce?.cancel(); // Cancel the timer when disposing
+    super.dispose();
+  }
+
+  Future<void> _initializeScreen() async {
+    await _fetchBaseUrl();
+    await _fetchFollowers();
+  }
+
+  Future<void> _fetchBaseUrl() async {
+    String url = await _authService.getBaseUrl();
+    setState(() {
+      _baseUrl = url;
+    });
   }
 
   Future<void> _fetchFollowers() async {
@@ -37,7 +61,6 @@ class _PassPointsScreenState extends State<PassPointsScreen> {
       List<dynamic> followers = await _authService.fetchUserList('Following', userId);
       setState(() {
         _followers = followers;
-        _filteredFollowers = followers; // Initially, all followers are shown
         _isFetchingFollowers = false;
       });
     } else {
@@ -50,21 +73,40 @@ class _PassPointsScreenState extends State<PassPointsScreen> {
     }
   }
 
-  void _filterFollowers(String query) {
-    List<dynamic> filtered = _followers.where((follower) {
-      String username = follower['username']?.toString().toLowerCase() ?? '';
-      return username.contains(query.toLowerCase());
-    }).toList();
+  Future<void> _searchUsers(String query) async {
+    if (query.length < 2) {
+      setState(() {
+        _isSearching = false;
+        _searchResults = [];
+      });
+      return;
+    }
 
     setState(() {
-      _filteredFollowers = filtered;
+      _isLoading = true;
+      _isSearching = true;
+      _searchResults = [];
+    });
+
+    List<dynamic> results = await _authService.searchUsers(query);
+
+    setState(() {
+      _searchResults = results;
+      _isLoading = false;
+    });
+  }
+
+  void _onSearchChanged(String query) {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      _searchUsers(query);
     });
   }
 
   void _sharePoints() async {
-    if (_selectedFollowerId == null || _amountController.text.isEmpty) {
+    if (_selectedUserId == null || _amountController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select a follower and enter an amount.')),
+        const SnackBar(content: Text('Please select a user and enter an amount.')),
       );
       return;
     }
@@ -82,7 +124,7 @@ class _PassPointsScreenState extends State<PassPointsScreen> {
     });
 
     String? sourceUserId = await _authService.getUserId();
-    String targetUserId = _selectedFollowerId!;
+    String targetUserId = _selectedUserId!;
 
     if (sourceUserId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -112,8 +154,23 @@ class _PassPointsScreenState extends State<PassPointsScreen> {
     }
   }
 
+  void _selectUser(dynamic user) {
+    setState(() {
+      if (_selectedUserId == user['id']) {
+        _selectedUserId = null;
+        _selectedUserName = null;
+      } else {
+        _selectedUserId = user['id'];
+        _selectedUserName = user['username'];
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    // Decide which list to display based on search state
+    List<dynamic> displayList = _isSearching ? _searchResults : _followers;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Pass Points'),
@@ -121,54 +178,69 @@ class _PassPointsScreenState extends State<PassPointsScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: _isFetchingFollowers
-            ? const Center(child: CircularProgressIndicator())
-            : Column(
-          children: [
+        child: Column(
+          children: <Widget>[
             // Search Bar
             TextField(
-              decoration: const InputDecoration(
-                labelText: 'Search Followers',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.search),
+              controller: _searchController,
+              decoration: InputDecoration(
+                labelText: 'Search Users',
+                border: const OutlineInputBorder(),
+                prefixIcon: const Icon(Icons.search),
+                suffixIcon: _isSearching && _searchController.text.length >= 2
+                    ? IconButton(
+                  icon: const Icon(Icons.clear),
+                  onPressed: () {
+                    _searchController.clear();
+                    _searchUsers('');
+                  },
+                )
+                    : null,
               ),
               onChanged: (value) {
-                _filterFollowers(value);
+                _onSearchChanged(value);
+              },
+              onSubmitted: (value) {
+                if (value.length >= 2) {
+                  _searchUsers(value);
+                }
               },
             ),
             const SizedBox(height: 20),
-            // Followers List
-            Expanded(
-              child: _filteredFollowers.isEmpty
-                  ? const Center(child: Text('No followers found.'))
+            // Users List
+            _isLoading
+                ? const CircularProgressIndicator()
+                : Expanded(
+              child: displayList.isEmpty
+                  ? const Center(child: Text('No users found.'))
                   : ListView.builder(
-                itemCount: _filteredFollowers.length,
+                itemCount: displayList.length,
                 itemBuilder: (context, index) {
-                  var follower = _filteredFollowers[index];
+                  var user = displayList[index];
                   return ListTile(
                     leading: CircleAvatar(
                       backgroundImage: NetworkImage(
-                        follower['profilePictureUrl'] != null
-                            ? 'http://97.74.90.63:8080/profiles/${follower['id']}.jpg'
+                        user['id'] != null
+                            ? '$_baseUrl/profiles/${user['id']}.jpg'
                             : 'https://via.placeholder.com/100x100',
                       ),
                       backgroundColor: Colors.grey.shade200,
                     ),
-                    title: Text(_authService.decryptData(follower['username'])),
-                    subtitle: Text(follower['fullName'] ?? 'No Name'),
-                    trailing: _selectedFollowerId == follower['id']
+                    title: Text(_authService.decryptData(user['username'])),
+                    trailing: _selectedUserId == user['id']
                         ? const Icon(Icons.check, color: Colors.green)
                         : null,
-                    onTap: () {
-                      setState(() {
-                        if (_selectedFollowerId == follower['id']) {
-                          _selectedFollowerId = null;
-                          _selectedFollowerName = null;
-                        } else {
-                          _selectedFollowerId = follower['id'];
-                          _selectedFollowerName = follower['username'];
-                        }
-                      });
+                    onTap: () => _selectUser(user),
+                    onLongPress: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ViewProfileScreen(
+                            userId: user['id'],
+                            userName: user['username'],
+                          ),
+                        ),
+                      );
                     },
                   );
                 },

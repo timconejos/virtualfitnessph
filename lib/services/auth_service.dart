@@ -463,5 +463,24 @@ class AuthService {
     }
   }
 
+  Future<List<dynamic>> searchUsers(String query) async {
+    final String url = '$baseUrl/search?q=$query';
+    try {
+      final response = await http.get(
+        Uri.parse(url),
+        headers: {'Accept': 'application/json'},
+      );
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else {
+        print('Failed to search users: ${response.body}');
+        return [];
+      }
+    } catch (e) {
+      print('Error searching users: $e');
+      return [];
+    }
+  }
+
 
 }

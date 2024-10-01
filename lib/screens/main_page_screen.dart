@@ -12,6 +12,7 @@ import '../services/auth_service.dart';
 import 'login_screen.dart';
 import 'package:virtualfitnessph/styles/app_styles.dart';
 import 'package:virtualfitnessph/components/primary_app_bar.dart';
+import 'package:virtualfitnessph/screens/search_user_screen.dart'; // Import SearchUserScreen
 
 class MainPageScreen extends StatefulWidget {
   const MainPageScreen({super.key});
@@ -269,6 +270,13 @@ class _MainPageScreenState extends State<MainPageScreen> {
     );
   }
 
+  void _navigateToSearchUser() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const SearchUserScreen()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -284,6 +292,10 @@ class _MainPageScreenState extends State<MainPageScreen> {
             IconButton(
               icon: const Icon(Icons.notifications),
               onPressed: _showNotifications,
+            ),
+            IconButton(
+              icon: const Icon(Icons.search),
+              onPressed: _navigateToSearchUser, // Add search button
             ),
           ],
         ),
