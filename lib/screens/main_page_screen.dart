@@ -23,7 +23,7 @@ class MainPageScreen extends StatefulWidget {
 }
 
 class _MainPageScreenState extends State<MainPageScreen> {
-  int _selectedIndex = 4;
+  int _selectedIndex = 0;
   String _appBarTitle = 'Virtual Fitness PH';
   final AuthService _authService = AuthService();
   String _currentPoints = "0";
@@ -31,16 +31,17 @@ class _MainPageScreenState extends State<MainPageScreen> {
   static final List<Widget> _widgetOptions = <Widget>[
     const FeedPage(),
     const RacePage(),
-    const RacePage(), // TODO: create rewards page
+    // const RacePage(), // TODO: create rewards page
     const ActivityPage(),
     const ProfilePage(),
   ];
 
   void _onItemTapped(int index) {
-    const tabs  = ['Home', 'Races', 'Rewards', 'Activity', 'Profile'];
+    // const tabs  = ['Home', 'Races', 'Rewards', 'Activity', 'Profile'];
+    const tabs  = ['Home', 'Races', 'Activity', 'Profile'];
     setState(() {
       _selectedIndex = index;
-      _appBarTitle = index > 0 ? tabs[index] : _appBarTitle;
+      _appBarTitle = index > 0 ? tabs[index] : 'Virtual Fitness PH';
     });
   }
 
@@ -304,10 +305,10 @@ class _MainPageScreenState extends State<MainPageScreen> {
               icon: const Icon(Icons.notifications),
               onPressed: _showNotifications,
             ),
-            IconButton(
-              icon: const Icon(Icons.search),
-              onPressed: _navigateToSearchUser, // Add search button
-            ),
+            // IconButton(
+            //   icon: const Icon(Icons.search),
+            //   onPressed: _navigateToSearchUser, // Add search button
+            // ),
           ],
         ),
         drawer: Drawer(
@@ -363,10 +364,10 @@ class _MainPageScreenState extends State<MainPageScreen> {
                 icon: Icon(Icons.calendar_today),
                 label: 'Races',
               ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.military_tech),
-                label: 'Rewards',
-              ),
+              // BottomNavigationBarItem(
+              //   icon: Icon(Icons.military_tech),
+              //   label: 'Rewards',
+              // ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.directions_run),
                 label: 'Activity',

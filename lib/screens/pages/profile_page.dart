@@ -485,15 +485,28 @@ class _ProfilePageState extends State<ProfilePage> {
                             ),
                           ],
                         ),
-                        child: CircleAvatar(
-                          radius: 50,
+                        child: 
+                        // Container(
+                        //   width: 50,
+                        //   height: 50, 
+                        //   decoration: BoxDecoration(
+                        //     shape: BoxShape.circle,
+                        //     image: DecorationImage(
+                        //     image: AssetImage('assets/vifit-coin1.png'),
+                        //     fit: BoxFit.fill, // Change to BoxFit.contain, BoxFit.fill, etc. based on your need
+                        //   ),
+                        // )
+                        // )
+                        CircleAvatar(
+                          radius: 40,
                           backgroundColor: AppStyles.buttonColor,
-                          child: const Icon(Icons.monetization_on, size: 50),
+                          backgroundImage: AssetImage('assets/vifit-coin1.png'),
+                          // child: const Icon(Icons.monetization_on, size: 50),
                           // backgroundImage: NetworkImage('https://example.com/image.jpg'), // Add your image URL
                         ),
                       ),
                     ],),
-                    const SizedBox(width: 10),
+                    const SizedBox(width: 15),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -858,6 +871,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                   ) : Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,  
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: incompleteRaces
                       .take(3)
                       .map((race) => _buildCircularProgressBar(race))
@@ -1024,7 +1038,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget _buildCircularProgressBar(Map<String, dynamic> race) {
     
     double screenWidth = MediaQuery.of(context).size.width;
-    double halfScreenWidth = screenWidth / 2.6;
+    double halfScreenWidth = screenWidth / 2.2;
 
     double progress = race['registration']['distanceProgress'] /
         race['registration']['raceDistance'];

@@ -6,6 +6,7 @@ class AppStyles {
   static const Color secondaryColor = Color(0xFFd90e0a);
   static const Color unselectedColor = Color(0x800302dc);
   static const Color darkerPrimary = Color(0xFF0000BC);
+  static const Color lighterPrimary = Color(0xFF9A9AFE);
   static const Color textColor = Color(0xFF1e1e1e);
   static const Color primaryForeground = Colors.white;
 
@@ -30,6 +31,18 @@ class AppStyles {
     backgroundColor: primaryColor,
     foregroundColor: Colors.white,
     minimumSize: Size(double.infinity, 50),
+    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+    textStyle: vifitTextTheme.titleMedium,
+     shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(8), // Set the border radius here
+    ),
+  );
+
+  //Define button styles
+  static ButtonStyle secondaryButtonStyle = ElevatedButton.styleFrom(
+    backgroundColor: secondaryColor,
+    foregroundColor: Colors.white,
+    minimumSize: Size(double.infinity, 30),
     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
     textStyle: vifitTextTheme.titleMedium,
      shape: RoundedRectangleBorder(

@@ -39,6 +39,36 @@ class MyApp extends StatelessWidget {
           centerTitle: false,
           titleTextStyle: AppStyles.vifitTextTheme.headlineMedium,
         ),
+        popupMenuTheme: const PopupMenuThemeData(
+          color: Colors.white
+        ),
+        progressIndicatorTheme: const ProgressIndicatorThemeData(
+          color: AppStyles.darkerPrimary,
+          circularTrackColor: AppStyles.lighterPrimary,
+        ),
+        buttonTheme: const ButtonThemeData(
+          buttonColor: AppStyles.buttonColor,
+
+        ),
+        dividerTheme: const DividerThemeData(
+          color: Color.fromARGB(255, 235, 235, 235),
+          thickness: 1,
+          indent: 3,
+          endIndent: 3
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+              elevation: 1.0,
+              backgroundColor: AppStyles.primaryColor,
+              foregroundColor: AppStyles.primaryForeground,
+              disabledBackgroundColor: AppStyles.primaryColor.withOpacity(0.4),
+              disabledForegroundColor: Colors.grey,
+              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
+              textStyle: AppStyles.vifitTextTheme.labelLarge,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+            ),
+        )
+
       ),
       home: const SplashScreen(), // Set SplashScreen as the home widget
     );

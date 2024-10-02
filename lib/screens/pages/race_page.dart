@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:virtualfitnessph/models/race.dart';
 import 'package:virtualfitnessph/screens/pages/race_detail_page.dart';
 import 'package:virtualfitnessph/services/auth_service.dart';
+import 'package:virtualfitnessph/styles/app_styles.dart';
 
 class RacePage extends StatefulWidget {
   const RacePage({super.key});
@@ -17,16 +18,12 @@ class _RacePageState extends State<RacePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: const Text('Available Races'),
-      ),
+      backgroundColor: AppStyles.scaffoldBgColor,
       body: FutureBuilder<List<Race>>(
         future: _authService.fetchRaces(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator(color: AppStyles.primaryColor));
           } else if (snapshot.hasError) {
             return const Center(
               child: Column(
@@ -51,9 +48,12 @@ class _RacePageState extends State<RacePage> {
             onRefresh: () async {
               setState(() {});
             },
-            child: ListView.builder(
-              itemCount: races.length,
-              itemBuilder: (context, index) {
+            child: GridView.count(
+              crossAxisCount: 2,
+              crossAxisSpacing: 5, // Space between columns
+              mainAxisSpacing: 5, // Space between rows
+              padding: EdgeInsets.all(5),
+              children: List.generate(races.length, (index) {
                 return FutureBuilder<String>(
                   future: _authService.fetchRaceImage(races[index].racePicturePath),
                   builder: (context, imageSnapshot) {
@@ -65,8 +65,27 @@ class _RacePageState extends State<RacePage> {
                     return raceCard(races[index], imageSnapshot.data!);
                   },
                 );
-              },
+              })
+            //   children: [ListView.builder(
+            //   itemCount: races.length,
+            //   itemBuilder: (context, index) {
+            //     return FutureBuilder<String>(
+            //       future: _authService.fetchRaceImage(races[index].racePicturePath),
+            //       builder: (context, imageSnapshot) {
+            //         if (imageSnapshot.connectionState == ConnectionState.waiting) {
+            //           return const Center(child: CircularProgressIndicator());
+            //         } else if (imageSnapshot.hasError) {
+            //           return raceCard(races[index], 'assets/login.jpg'); // Default image
+            //         }
+            //         return raceCard(races[index], imageSnapshot.data!);
+            //       },
+            //     );
+            //   },
+            // ),],
             ),
+            
+            
+            
           );
         },
       ),
@@ -86,10 +105,10 @@ class _RacePageState extends State<RacePage> {
       },
       child: Card(
         color: Colors.white,
-        elevation: 2,
-        margin: const EdgeInsets.all(8.0),
+        elevation: 1,
+        margin: const EdgeInsets.all(4.0),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(4),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -98,35 +117,34 @@ class _RacePageState extends State<RacePage> {
               borderRadius: const BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
               child: Image.network(
                 imageUrl,
-                height: 200,
+                height: 150,
                 width: double.infinity,
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {
-                  return Image.asset('assets/login.jpg', height: 200, width: double.infinity, fit: BoxFit.cover);
+                  return Image.asset('assets/login.jpg', height: 150, width: double.infinity, fit: BoxFit.cover);
                 },
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
-              child: Text(
-                race.raceName,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.deepPurple,
-                ),
-              ),
+            Container(
+              padding: EdgeInsets.all(10.0),
+              child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              //  spacing: 10, // Horizontal space between items
+              //   runSpacing: 1,
+              children: [
+                Text(race.raceName, style: AppStyles.vifitTextTheme.titleMedium ),
+                Text( '$startDate - $endDate', style:  AppStyles.vifitTextTheme.labelMedium)
+              ],
             ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 4, 16, 16),
-              child: Text(
-                '$startDate - $endDate',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.grey[600],
-                ),
-              ),
             ),
+            // Padding(
+            //   padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
+            //   child: 
+            // ),
+            // Padding(
+            //   padding: const EdgeInsets.fromLTRB(16, 4, 16, 16),
+            //   ,
+            // ),
           ],
         ),
       ),

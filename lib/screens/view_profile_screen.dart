@@ -329,13 +329,13 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildProfileHeader2(),
+                      _buildProfileHeader(),
                       // const SizedBox(height: 10),
-                      _buildBadgesSection2(),
-                      _buildStatsSection2(),
+                      _buildBadgesSection(),
+                      _buildStatsSection(),
                       //_buildTrophiesSection(),
-                      _buildJoinedRacesSection2(),
-                      _buildPhotosSection2(),
+                      _buildJoinedRacesSection(),
+                      _buildPhotosSection(),
                     ],
                   ),
                 ),
@@ -345,7 +345,7 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
   }
 
 
-  Widget _buildProfileHeader2() {
+  Widget _buildProfileHeader() {
     return Container(
       height: 200,
       padding: EdgeInsets.only(left: 25, right: 25, top: 25, bottom: 5),
@@ -445,93 +445,6 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
   }
 
 
-
-  Widget _buildProfileHeader() {
-    return GestureDetector(
-      onTap: () {
-        if (_isCurrentUser) {
-          // Navigate to edit profile page
-        }
-      },
-      child: Card(
-        color: Colors.white,
-        elevation: 2,
-        margin: const EdgeInsets.all(8),
-        child: Container(
-          padding: const EdgeInsets.all(16),
-          height: 200,  // Increase the height of the profile header section
-          child: Stack(
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      _profilePicUrl == null
-                          ? CircleAvatar(
-                        radius: 60,
-                        backgroundColor: Colors.red.shade200,
-                        child: const Icon(Icons.person, size: 60),
-                      )
-                          : CircleAvatar(
-                        radius: 60,
-                        backgroundImage: NetworkImage(_profilePicUrl!),
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              _userName ?? 'Unknown User',
-                              style: const TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Row(
-                              children: [
-                                _buildStatColumn("Followers", _followers.length.toString()),
-                                const SizedBox(width: 16),
-                                _buildStatColumn("Following", _following.length.toString()),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              if (!_isCurrentUser)
-                Positioned(
-                  bottom: 0,  // Ensure the buttons are above the bottom edge of the section
-                  right: 0,
-                  child: Row(
-                    children: [
-                      IconButton(
-                        icon: Icon(
-                          _isFollowing ? Icons.person_remove : Icons.person_add,
-                          color: _isFollowing ? Colors.grey : Colors.blue,
-                        ),
-                        onPressed: _toggleFollow,
-                      ),
-                      const SizedBox(width: 8),
-                      IconButton(
-                        icon: Icon(Icons.block, color: Colors.red),
-                        onPressed: _blockUser,
-                      ),
-                    ],
-                  ),
-                ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget _buildStatColumn(String label, String count) {
     return GestureDetector(
       onTap: () {
@@ -554,7 +467,7 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
   }
 
 
-  Widget _buildStatsSection2() {
+  Widget _buildStatsSection() {
     return Container(
        padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
        child: Column(
@@ -623,50 +536,6 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
   }
 
 
-  Widget _buildStatsSection() {
-    return Card(
-      color: Colors.white,
-      elevation: 2,
-      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Stats Overview',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-            ),
-            const SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                _buildStatCard(
-                  icon: Icons.location_on,
-                  value: totalDistance,
-                  label: 'Distance (km)',
-                  color: Colors.orange,
-                ),
-                _buildStatCard(
-                  icon: Icons.timer,
-                  value: pace,
-                  label: 'Pace (min/km)',
-                  color: Colors.orange,
-                ),
-                _buildStatCard(
-                  icon: Icons.directions_run,
-                  value: totalRuns,
-                  label: 'Runs',
-                  color: Colors.orange,
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   Widget _buildStatCard({
     required IconData icon,
     required String value,
@@ -676,34 +545,38 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
     return Container(
       width: 100,
       padding: const EdgeInsets.symmetric(vertical: 16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
-            spreadRadius: 2,
-            blurRadius: 5,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      ),
+      // decoration: BoxDecoration(
+      //   color: Colors.white,
+      //   borderRadius: BorderRadius.circular(8),
+      //   boxShadow: [
+      //     BoxShadow(
+      //       color: Colors.grey.withOpacity(0.2),
+      //       spreadRadius: 2,
+      //       blurRadius: 5,
+      //       offset: const Offset(0, 3),
+      //     ),
+      //   ],
+      // ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, size: 32, color: color),
+          Icon(icon, size: 50, 
+            color: AppStyles.primaryColor, 
+            // shadows: [Shadow(
+            //   color: Colors.black.withOpacity(0.3),  
+            //   blurRadius: 10,                       
+            //   offset: Offset(5, 5),                  
+            // ),],
+          ),
           const SizedBox(height: 8),
           Text(
             value,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
+            style: AppStyles.vifitTextTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: 1),
           Text(
             label,
-            style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
+            style: AppStyles.vifitTextTheme.labelSmall,
             textAlign: TextAlign.center,
           ),
         ],
@@ -711,7 +584,7 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
     );
   }
 
-  Widget _buildBadgesSection2() {
+  Widget _buildBadgesSection() {
     return (
       Container(
         padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
@@ -719,7 +592,7 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   'My Badges',
@@ -768,8 +641,8 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                             gridDelegate:
                               const SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 3,
-                              mainAxisSpacing: 10,
-                              crossAxisSpacing: 10,
+                              mainAxisSpacing: 0,
+                              crossAxisSpacing: 0,
                                childAspectRatio: 1,
                             ),
                             itemCount: min(_badges.length, 6),
@@ -779,7 +652,7 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                                   Card(
                                     color: Colors.white,
                                     // elevation: 2,
-                                    margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                                    margin: const EdgeInsets.symmetric(vertical: 3, horizontal: 3),
                                     child: Padding(padding: EdgeInsets.all(8),
                                     child: CircleAvatar(
                                     radius: 40,
@@ -827,147 +700,65 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
   }
 
 
-  Widget _buildBadgesSection() {
-    return Card(
-      color: Colors.white,
-      elevation: 2,
-      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: SizedBox(
+
+  Widget _buildJoinedRacesSection() {
+  List<dynamic> incompleteRaces = _joinedRaces
+      .where((race) => race['registration']['completed'] == false)
+      .toList();
+
+  return Container(
+    padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Races joined',
+              style: AppStyles.vifitTextTheme.headlineSmall,
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ViewAllRacesScreen(
+                          joinedRaces: _joinedRaces,
+                        )
+                  ),
+                );
+              },
+              child: const Text('View All',
+                  style: TextStyle(color: Colors.blue)),
+            ),
+          ]
+        ),
+        SizedBox(
           width: double.infinity,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'My Badges',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-              ),
-              const SizedBox(height: 10),
-              _badges.isEmpty
-                  ? const SizedBox(
-                      height: 100,
-                      width: double.infinity,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.badge, size: 48, color: Colors.blue),
-                          SizedBox(height: 10),
-                          Text('No badges earned yet.'),
-                        ],
-                      ),
-                    )
-                  : Column(
-                      children: [
-                        GridView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3,
-                            mainAxisSpacing: 10,
-                            crossAxisSpacing: 10,
-                            childAspectRatio: 1,
-                          ),
-                          itemCount: min(_badges.length, 6),
-                          itemBuilder: (context, index) {
-                            return CircleAvatar(
-                              radius: 50,
-                              backgroundImage: NetworkImage(
-                                '${baseUrl}/races/badges/${_badges[index]['badgesPicturePath']}',
-                              ),
-                              backgroundColor: Colors.transparent,
-                              onBackgroundImageError: (exception, stackTrace) {
-                                // Handle image error
-                              },
-                            );
-                          },
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ViewAllBadgesScreen(
-                                  badges: _badges,
-                                ),
-                              ),
-                            );
-                          },
-                          child: const Text('View All',
-                              style: TextStyle(color: Colors.blue)),
-                        ),
-                      ],
-                    ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-    Widget _buildJoinedRacesSection2() {
-    List<dynamic> incompleteRaces = _joinedRaces
-        .where((race) => race['registration']['completed'] == false)
-        .toList();
-        //  ...inProgressRaces.take(3).map((race) => _buildProgressCard(
-        //                 race['race']['raceName'],
-        //                 race['registration']['distanceProgress'] /
-        //                     race['registration']['raceDistance'],
-        //                 race['registration']['id'],
-        //               ))
-
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Races joined',
-                style: AppStyles.vifitTextTheme.headlineSmall,
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ViewAllRacesScreen(
-                            joinedRaces: _joinedRaces,
-                          )
-                    ),
-                  );
-                },
-                child: const Text('View All',
-                    style: TextStyle(color: Colors.blue)),
-              ),
-            ]
-          ),
-          SizedBox(
-            width: double.infinity,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                incompleteRaces.isEmpty?
-                  const SizedBox(
-                    height: 100,
-                    width: double.infinity,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.directions_run, size: 48, color: Colors.grey),
-                        SizedBox(height: 10),
-                        Text('No in-progress races yet. Start your journey now!'),
-                      ],
-                    ),
-                  ) : Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,  
-                    children: incompleteRaces
-                      .take(2)
-                      .map((race) => _buildCircularProgressBar(race))
-                      .toList(),
-                  )
+              incompleteRaces.isEmpty?
+                const SizedBox(
+                  height: 100,
+                  width: double.infinity,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.directions_run, size: 48, color: Colors.grey),
+                      SizedBox(height: 10),
+                      Text('No in-progress races yet. Start your journey now!'),
+                    ],
+                  ),
+                ) : Row(
+                  mainAxisAlignment: MainAxisAlignment.start,  
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: incompleteRaces
+                    .take(2)
+                    .map((race) => _buildCircularProgressBar(race))
+                    .toList(),
+                )
 
               ]
             )
@@ -981,7 +772,7 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
   Widget _buildCircularProgressBar(Map<String, dynamic> race) {
     
     double screenWidth = MediaQuery.of(context).size.width;
-    double halfScreenWidth = screenWidth / 2.6;
+    double halfScreenWidth = screenWidth / 2.2;
 
     double progress = race['registration']['distanceProgress'] /
         race['registration']['raceDistance'];
@@ -1018,63 +809,7 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
   }
 
 
-  Widget _buildJoinedRacesSection() {
-    return Card(
-      color: Colors.white,
-      elevation: 2,
-      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('Races Joined and Progress',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-            const SizedBox(height: 10),
-            if (inProgressRaces.isEmpty)
-              const SizedBox(
-                height: 100,
-                width: double.infinity,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.directions_run, size: 48, color: Colors.blue),
-                    SizedBox(height: 10),
-                    Text('No in-progress races yet.'),
-                  ],
-                ),
-              )
-            else
-              Column(
-                children: [
-                  ...inProgressRaces.take(3).map((race) => _buildProgressCard(
-                        race['race']['raceName'],
-                        race['registration']['distanceProgress'] /
-                            race['registration']['raceDistance'],
-                        race['registration']['id'],
-                      )),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ViewAllRacesScreen(
-                            joinedRaces: _joinedRaces,
-                          ),
-                        ),
-                      );
-                    },
-                    child: const Text('View All'),
-                  ),
-                ],
-              ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildPhotosSection2() {
+  Widget _buildPhotosSection() {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
       child: Column (
@@ -1158,69 +893,6 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
     );
   }
 
-
-  Widget _buildPhotosSection() {
-    return Card(
-      color: Colors.white,
-      elevation: 2,
-      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: SizedBox(
-          width: double.infinity,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text('My Photos',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-              const SizedBox(height: 10),
-              _photos.isEmpty
-                  ? const SizedBox(
-                      height: 100,
-                      width: double.infinity,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.photo, size: 48, color: Colors.blue),
-                          SizedBox(height: 10),
-                          Text('No photos uploaded yet.'),
-                        ],
-                      ),
-                    )
-                  : GridView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
-                        mainAxisSpacing: 10,
-                        crossAxisSpacing: 10,
-                        childAspectRatio: 1,
-                      ),
-                      itemCount: _photos.length,
-                      itemBuilder: (context, index) {
-                        return GestureDetector(
-                          onTap: () => _showImageDialog(
-                              '${baseUrl}/feed/images/${_photos[index]['imagePath']}'),
-                          child: Image.network(
-                            '${baseUrl}/feed/images/${_photos[index]['imagePath']}',
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) {
-                              return Image.network(
-                                'https://via.placeholder.com/100x100',
-                                fit: BoxFit.cover,
-                              );
-                            },
-                          ),
-                        );
-                      },
-                    ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 
   void _showImageDialog(String imageUrl) {
     showDialog(
