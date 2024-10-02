@@ -2,6 +2,7 @@
 
 import 'dart:async'; // Import for Timer
 import 'package:flutter/material.dart';
+import '../components/confirm_pass_points_dialog.dart'; // Import the confirmation dialog
 import '../services/auth_service.dart';
 import '../styles/app_styles.dart';
 import '../components/primary_button.dart';
@@ -37,6 +38,8 @@ class _PassPointsScreenState extends State<PassPointsScreen> {
   @override
   void dispose() {
     _debounce?.cancel(); // Cancel the timer when disposing
+    _amountController.dispose();
+    _searchController.dispose();
     super.dispose();
   }
 
@@ -103,7 +106,7 @@ class _PassPointsScreenState extends State<PassPointsScreen> {
     });
   }
 
-  void _sharePoints() async {
+  Future<void> _sharePoints() async {
     if (_selectedUserId == null || _amountController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please select a user and enter an amount.')),
@@ -119,10 +122,6 @@ class _PassPointsScreenState extends State<PassPointsScreen> {
       return;
     }
 
-    setState(() {
-      _isLoading = true;
-    });
-
     String? sourceUserId = await _authService.getUserId();
     String targetUserId = _selectedUserId!;
 
@@ -130,27 +129,80 @@ class _PassPointsScreenState extends State<PassPointsScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('User not logged in.')),
       );
-      setState(() {
-        _isLoading = false;
-      });
       return;
     }
 
-    bool success = await _authService.sharePoints(sourceUserId, targetUserId, amount);
+    // Fetch selected user's details from both followers and search results
+    var selectedUser = _findUserById(targetUserId);
 
-    setState(() {
-      _isLoading = false;
-    });
+    if (selectedUser == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Selected user not found.')),
+      );
+      return;
+    }
 
-    if (success) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Points shared successfully!')),
-      );
-      Navigator.pop(context, true); // Return true to indicate success
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Failed to share points. Please try again.')),
-      );
+    String userName = _authService.decryptData(selectedUser['username']);
+    String profileImageUrl = selectedUser['id'] != null
+        ? '$_baseUrl/profiles/${selectedUser['id']}.jpg'
+        : 'https://via.placeholder.com/100x100';
+
+    // Show the confirmation dialog
+    bool? confirm = await showDialog<bool>(
+      context: context,
+      builder: (context) => ConfirmPassPointsDialog(
+        profileImageUrl: profileImageUrl,
+        userName: userName,
+        amount: amount,
+      ),
+    );
+
+    // If user confirmed, proceed to share points
+    if (confirm == true) {
+      setState(() {
+        _isLoading = true;
+      });
+
+      bool success = await _authService.sharePoints(sourceUserId, targetUserId, amount);
+
+      setState(() {
+        _isLoading = false;
+      });
+
+      if (success) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Points shared successfully!')),
+        );
+
+        // Reset the selection and input fields
+        setState(() {
+          _selectedUserId = null;
+          _selectedUserName = null;
+          _amountController.clear();
+          _searchController.clear();
+          _searchResults = [];
+        });
+
+        Navigator.pop(context, true); // Return true to indicate success
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to share points. Please try again.')),
+        );
+      }
+    }
+  }
+
+  // Helper function to find user by ID in both lists
+  dynamic _findUserById(String userId) {
+    try {
+      return _followers.firstWhere((user) => user['id'] == userId);
+    } catch (e) {
+      // If not found in followers, search in searchResults
+      try {
+        return _searchResults.firstWhere((user) => user['id'] == userId);
+      } catch (e) {
+        return null;
+      }
     }
   }
 
@@ -208,7 +260,7 @@ class _PassPointsScreenState extends State<PassPointsScreen> {
             ),
             const SizedBox(height: 20),
             // Users List
-            _isLoading
+            _isLoading && _isSearching
                 ? const CircularProgressIndicator()
                 : Expanded(
               child: displayList.isEmpty
@@ -259,13 +311,13 @@ class _PassPointsScreenState extends State<PassPointsScreen> {
             ),
             const SizedBox(height: 20),
             // Share Points Button
-            _isLoading
+            _isLoading && !_isSearching
                 ? const CircularProgressIndicator()
                 : PrimaryButton(
               text: 'Share Points',
               color: AppStyles.buttonColor,
               textColor: AppStyles.buttonTextColor,
-              onPressed: _sharePoints,
+              onPressed: _sharePoints
             ),
           ],
         ),
