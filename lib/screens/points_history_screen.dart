@@ -17,6 +17,7 @@ class _PointsHistoryScreenState extends State<PointsHistoryScreen> {
   List<PointsTransaction> _transactions = [];
   bool _isLoading = true;
   String _baseUrl = '';
+  String _currentPoints = "0";
 
   @override
   void initState() {
@@ -27,6 +28,7 @@ class _PointsHistoryScreenState extends State<PointsHistoryScreen> {
   Future<void> _initializeScreen() async {
     await _fetchBaseUrl();
     await _fetchPointsHistory();
+    await _fetchCurrentPoints();
   }
 
   Future<void> _fetchBaseUrl() async {
@@ -51,6 +53,16 @@ class _PointsHistoryScreenState extends State<PointsHistoryScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('User not logged in.')),
       );
+    }
+  }
+
+  Future<void> _fetchCurrentPoints() async {
+    String? userId = await _authService.getUserId();
+    if (userId != null) {
+      String points = await _authService.getCurrentPoints(userId);
+      setState(() {
+        _currentPoints = points;
+      });
     }
   }
 
@@ -103,13 +115,13 @@ class _PointsHistoryScreenState extends State<PointsHistoryScreen> {
 
     return ListTile(
       leading: Icon(icon, color: iconColor),
-      title: Text(description),
-      subtitle: Text(displayDescription),
+      title: Text(description, style: AppStyles.vifitTextTheme.labelLarge),
+      subtitle: Text(displayDescription, style: AppStyles.vifitTextTheme.labelSmall),
       trailing: Text(
         '${transaction.amount} coins',
-        style: TextStyle(
+        style: AppStyles.vifitTextTheme.labelMedium?.copyWith(
           color: transaction.amount >= 0 ? Colors.green : Colors.red,
-          fontWeight: FontWeight.bold,
+          fontWeight: FontWeight.w900,
         ),
       ),
       // Optionally, display both description and date:
@@ -140,56 +152,151 @@ class _PointsHistoryScreenState extends State<PointsHistoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppStyles.scaffoldBgColor,
       appBar: AppBar(
         title: const Text('Points History'),
         backgroundColor: AppStyles.primaryColor,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
+      body: Expanded(
+        // padding: const EdgeInsets.all(0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            // Buttons Row
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ElevatedButton.icon(
-                  onPressed: _navigateToPassPoints,
-                  icon: const Icon(Icons.share),
-                  label: const Text('Pass Points'),
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: AppStyles.buttonTextColor, backgroundColor: AppStyles.buttonColor,
-                  ),
-                ),
-                ElevatedButton.icon(
-                  onPressed: _redeemPoints,
-                  icon: const Icon(Icons.currency_exchange),
-                  label: const Text('Redeem'),
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: AppStyles.buttonTextColor, backgroundColor: AppStyles.secondaryColor,
-                  ),
-                ),
-              ],
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  _buildCoinsSection(),
+                  const SizedBox(height: 20),
+                  Text('Points history', style: AppStyles.vifitTextTheme.labelMedium?.copyWith(color: Colors.grey[700])),
+
+                ] 
+              ),
             ),
-            const SizedBox(height: 20),
             // Points History List
             Expanded(
-              child: _isLoading
-                  ? const Center(child: CircularProgressIndicator())
-                  : _transactions.isEmpty
-                  ? const Center(child: Text('No points history available.'))
-                  : ListView.builder(
-                itemCount: _transactions.length,
-                itemBuilder: (context, index) {
-                  return _buildTransactionItem(_transactions[index]);
-                },
-              ),
+              child: Container(
+                decoration: const BoxDecoration(
+                  color: Colors.white
+                ),
+                child: _isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : _transactions.isEmpty
+                    ? const Center(child: Text('No points history available.'))
+                    : ListView.separated(
+                      itemCount: _transactions.length,
+                      itemBuilder: (context, index) {
+                        return _buildTransactionItem(_transactions[index]);
+                      },
+                      separatorBuilder: (context, index) {
+                        return Divider();
+                      },
+                    ),
+                )
             ),
           ],
         ),
       ),
     );
   }
+
+  Widget _buildCoinsSection() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Expanded(
+          child:Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(13),
+              color: AppStyles.darkerPrimary,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.2),
+                  spreadRadius: 2,
+                  blurRadius: 2,
+                  offset: const Offset(0, 2),
+                ),
+              ]
+            ),
+            child: Expanded(
+              child: Column(
+                children: [
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 25, vertical: 25),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.vertical(top: Radius.circular(13.0), bottom: Radius.circular(0)),
+                      color: AppStyles.primaryColor,
+                        gradient: const LinearGradient(
+                        colors: [Color(0xFFFFFDB03), Color.fromARGB(255, 255, 241, 159)],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        stops: [0.2, 0.8]
+                      )
+                    ),
+                    child: Row(
+                      children: [
+                        const CircleAvatar(
+                          radius: 25,
+                          backgroundColor: AppStyles.buttonColor,
+                          backgroundImage: AssetImage('assets/vifit-coin1.png'),
+                        ),
+                        const SizedBox(width: 15),  
+                        Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Coins earned', style: AppStyles.vifitTextTheme.labelSmall?.copyWith(color: AppStyles.textColor)),
+                          Text(_currentPoints, style: AppStyles.vifitTextTheme.titleLarge?.copyWith(color: AppStyles.textColor))
+                        ]
+                      ),
+                    ]
+                  ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 5, horizontal: 1),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            TextButton.icon(
+                              onPressed: _navigateToPassPoints, 
+                              label: const Text('Pass points'),
+                              icon: const Icon(Icons.send),
+                              style: TextButton.styleFrom(
+                                foregroundColor: AppStyles.primaryForeground, // text and icon color
+                              )
+                            )
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            TextButton.icon(
+                              onPressed: _redeemPoints, 
+                              label: const Text('Redeem'),
+                              icon: const Icon(Icons.redeem),
+                              style: TextButton.styleFrom(
+                                foregroundColor: AppStyles.primaryForeground, // text and icon color
+                              )
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              )
+              
+          ))
+        ),
+      ]
+    );
+  }
 }
+
 
 // points_transaction.dart (Model)
 

@@ -67,6 +67,11 @@ class MyApp extends StatelessWidget {
               textStyle: AppStyles.vifitTextTheme.labelLarge,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
             ),
+        ),
+        textButtonTheme: TextButtonThemeData(
+          style: TextButton.styleFrom(
+            foregroundColor: AppStyles.darkerPrimary, // Text color
+          ),
         )
 
       ),

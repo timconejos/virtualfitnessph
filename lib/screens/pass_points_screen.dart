@@ -2,6 +2,7 @@
 
 import 'dart:async'; // Import for Timer
 import 'package:flutter/material.dart';
+import 'package:virtualfitnessph/components/primary_text_field.dart';
 import '../components/confirm_pass_points_dialog.dart'; // Import the confirmation dialog
 import '../services/auth_service.dart';
 import '../styles/app_styles.dart';
@@ -211,10 +212,13 @@ class _PassPointsScreenState extends State<PassPointsScreen> {
       if (_selectedUserId == user['id']) {
         _selectedUserId = null;
         _selectedUserName = null;
+        _searchController.text = '';
       } else {
         _selectedUserId = user['id'];
         _selectedUserName = user['username'];
+        _searchController.text = _authService.decryptData(user['username']) ?? '';
       }
+      
     });
   }
 
@@ -228,37 +232,18 @@ class _PassPointsScreenState extends State<PassPointsScreen> {
         title: const Text('Pass Points'),
         backgroundColor: AppStyles.primaryColor,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
+      body: Stack(children: [
+        Expanded(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
+            _buildSearchInput(),
             // Search Bar
-            TextField(
-              controller: _searchController,
-              decoration: InputDecoration(
-                labelText: 'Search Users',
-                border: const OutlineInputBorder(),
-                prefixIcon: const Icon(Icons.search),
-                suffixIcon: _isSearching && _searchController.text.length >= 2
-                    ? IconButton(
-                  icon: const Icon(Icons.clear),
-                  onPressed: () {
-                    _searchController.clear();
-                    _searchUsers('');
-                  },
-                )
-                    : null,
-              ),
-              onChanged: (value) {
-                _onSearchChanged(value);
-              },
-              onSubmitted: (value) {
-                if (value.length >= 2) {
-                  _searchUsers(value);
-                }
-              },
+            // const SizedBox(height: 20),
+            Padding(
+              padding: EdgeInsets.all(16),
+              child: Text('Following', style: AppStyles.vifitTextTheme.labelMedium?.copyWith(color: Colors.grey[700])),
             ),
-            const SizedBox(height: 20),
             // Users List
             _isLoading && _isSearching
                 ? const CircularProgressIndicator()
@@ -298,30 +283,80 @@ class _PassPointsScreenState extends State<PassPointsScreen> {
                 },
               ),
             ),
-            const SizedBox(height: 20),
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: Container(
+                padding: EdgeInsets.all(30),
+                decoration: BoxDecoration(
+                  color: Colors.white
+                ),
+                child: Column(
+                  children: [
+                    PrimaryTextField(
+                    controller: _amountController,  
+                    labelText: 'Amount',
+                    prefixIcon_: Icon(Icons.attach_money),
+                    keyboardType: TextInputType.numberWithOptions(decimal: true),
+                  ),
+                  const SizedBox(height: 20),
+                  // Share Points Button
+                  _isLoading && !_isSearching
+                      ? const CircularProgressIndicator()
+                      : PrimaryButton(
+                    text: 'Share Points',
+                    color: AppStyles.buttonColor,
+                    textColor: AppStyles.buttonTextColor,
+                    onPressed: _sharePoints
+                  ),
+                  ],
+              ))
+            ),
             // Amount Input
-            TextField(
-              controller: _amountController,
-              decoration: const InputDecoration(
-                labelText: 'Amount',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.attach_money),
-              ),
-              keyboardType: TextInputType.numberWithOptions(decimal: true),
-            ),
-            const SizedBox(height: 20),
-            // Share Points Button
-            _isLoading && !_isSearching
-                ? const CircularProgressIndicator()
-                : PrimaryButton(
-              text: 'Share Points',
-              color: AppStyles.buttonColor,
-              textColor: AppStyles.buttonTextColor,
-              onPressed: _sharePoints
-            ),
+           
           ],
         ),
-      ),
+      )]),
+    );
+  }
+
+  Widget _buildSearchInput(){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: Container (
+            padding: EdgeInsets.all(30),
+            decoration: BoxDecoration(
+              color: Colors.white,
+            ),
+            child: PrimaryTextField(
+              labelText: 'Pass points to',
+              hintText: 'Search user',
+              controller: _searchController,
+              prefixIcon_: const Icon(Icons.search),
+              suffixIcon_: _isSearching && _searchController.text.length >= 2
+                  ? IconButton(
+                icon: const Icon(Icons.clear),
+                onPressed: () {
+                  _searchController.clear();
+                  _searchUsers('');
+                },
+              ): null,
+              onChanged: (value) {
+                _onSearchChanged(value);
+              },
+              onSubmitted: (value) {
+                if (value.length >= 2) {
+                  _searchUsers(value);
+                }
+              },
+            ),
+          ),
+        ),
+      ]
     );
   }
 }

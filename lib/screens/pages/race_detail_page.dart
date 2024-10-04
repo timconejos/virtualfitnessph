@@ -80,11 +80,11 @@ class _RaceDetailPageState extends State<RaceDetailPage> {
               const SizedBox(height: 20),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Text(
+                child: Center(child: Text(
                   widget.race.raceName,
                   style: AppStyles.vifitTextTheme.headlineLarge,
                   textAlign: TextAlign.center,
-                ),
+                ),)
               ),
 
               const SizedBox(height: 20),
@@ -181,7 +181,7 @@ class _RaceDetailPageState extends State<RaceDetailPage> {
                           children: [
                             Text("Price starts at", style: AppStyles.vifitTextTheme.labelMedium?.copyWith(fontWeight: FontWeight.bold)),
                             Text( 'P ${widget.race.racetypes.last.price.toString()}',
-                            style: AppStyles.vifitTextTheme.bodyLarge?.copyWith(color: AppStyles.secondaryColor),
+                            style: AppStyles.vifitTextTheme.titleLarge?.copyWith(color: AppStyles.secondaryColor),
                             ),
                           ],
                         )
@@ -213,7 +213,7 @@ class _RaceDetailPageState extends State<RaceDetailPage> {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 40),
                 decoration: BoxDecoration(
-                  color: Colors.grey[100]
+                  color: AppStyles.primaryColor.withOpacity(0.05),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start, 
@@ -229,7 +229,7 @@ class _RaceDetailPageState extends State<RaceDetailPage> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[

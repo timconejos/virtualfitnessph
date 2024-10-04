@@ -9,7 +9,9 @@ class PrimaryTextField extends StatelessWidget {
   final TextInputType keyboardType;
   final FormFieldValidator<String>? validator;
   final Widget? suffixIcon_;
+  final Widget? prefixIcon_;
   final Function? onChanged;
+  final Function(String)? onSubmitted;
 
   PrimaryTextField({
     required this.labelText,
@@ -19,7 +21,9 @@ class PrimaryTextField extends StatelessWidget {
     this.keyboardType = TextInputType.text,
     this.validator,
     this.suffixIcon_,
-    this.onChanged = null
+    this.prefixIcon_ = null,
+    this.onChanged = null,
+    this.onSubmitted = null
   });
 
   @override
@@ -29,11 +33,13 @@ class PrimaryTextField extends StatelessWidget {
       obscureText: isPassword, // To toggle password visibility
       keyboardType: keyboardType,
       onChanged: (_) => onChanged,
+      onFieldSubmitted: onSubmitted,
       decoration: InputDecoration(
         labelText: labelText,
         hintText: hintText,
         border: OutlineInputBorder(),
         suffixIcon: suffixIcon_,
+        prefixIcon: prefixIcon_,
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(color: AppStyles.primaryColor, width: 2.0),
           borderRadius: BorderRadius.circular(8.0)
