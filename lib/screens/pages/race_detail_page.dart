@@ -127,14 +127,14 @@ class _RaceDetailPageState extends State<RaceDetailPage> {
                         const Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Icon(Icons.calendar_today, size: 32),
+                            Icon(Icons.calendar_today, size: 30),
                           ],
                         ),
-                        const SizedBox(width: 15),
+                        const SizedBox(width: 17),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text("Registration", style: AppStyles.vifitTextTheme.labelMedium?.copyWith(fontWeight: FontWeight.bold)),
+                            Text("Registration", style: AppStyles.vifitTextTheme.labelSmall?.copyWith(fontWeight: FontWeight.bold, color: AppStyles.greyColor)),
                             Text( '${DateFormat('MMM dd, yyyy').format(DateTime.parse(widget.race.startDate))} - ${DateFormat('MMM dd, yyyy').format(DateTime.parse(widget.race.endDate))}',
                             style: AppStyles.vifitTextTheme.bodyLarge,
                             ),
@@ -149,14 +149,14 @@ class _RaceDetailPageState extends State<RaceDetailPage> {
                         const Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Icon(Icons.category, size: 32),
+                            Icon(Icons.directions_run, size: 30),
                           ],
                         ),
-                        const SizedBox(width: 15),
+                        const SizedBox(width: 17),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text("Categories", style: AppStyles.vifitTextTheme.labelMedium?.copyWith(fontWeight: FontWeight.bold)),
+                            Text("Categories", style: AppStyles.vifitTextTheme.labelSmall?.copyWith(fontWeight: FontWeight.bold, color: AppStyles.greyColor)),
                             Text( widget.race.distance.map((d) => '$d KM').join(', '),
                             style: AppStyles.vifitTextTheme.bodyLarge,
                             ),
@@ -172,14 +172,14 @@ class _RaceDetailPageState extends State<RaceDetailPage> {
                         const Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Icon(Icons.sell, size: 32),
+                            Icon(Icons.sell, size: 30),
                           ],
                         ),
-                        const SizedBox(width: 15),
+                        const SizedBox(width: 17),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text("Price starts at", style: AppStyles.vifitTextTheme.labelMedium?.copyWith(fontWeight: FontWeight.bold)),
+                            Text("Price starts at", style: AppStyles.vifitTextTheme.labelSmall?.copyWith(fontWeight: FontWeight.bold, color: AppStyles.greyColor)),
                             Text( 'P ${widget.race.racetypes.last.price.toString()}',
                             style: AppStyles.vifitTextTheme.titleLarge?.copyWith(color: AppStyles.secondaryColor),
                             ),
@@ -220,7 +220,7 @@ class _RaceDetailPageState extends State<RaceDetailPage> {
                   children: [
                     Text(
                       widget.race.raceName,
-                      style: AppStyles.vifitTextTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                      style: AppStyles.vifitTextTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold, color: AppStyles.secondaryColor),
                     ),
                     const SizedBox(height: 10),
                     Text(widget.race.description)

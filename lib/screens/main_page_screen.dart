@@ -339,19 +339,19 @@ class _MainPageScreenState extends State<MainPageScreen> {
         body: Center(
           child: _widgetOptions.elementAt(_selectedIndex),
         ),
-        floatingActionButton: Container(
+        floatingActionButton: _selectedIndex != 1 ? Container(
           height: 70,
           width: 70,
           child: FloatingActionButton(
             onPressed: () => _showAddOptions(context),
             tooltip: 'Add Options',
             foregroundColor: AppStyles.primaryForeground,
-            backgroundColor: AppStyles.secondaryColor,
+            backgroundColor: AppStyles.primaryColor,
             child: const Icon(Icons.add),
             shape: CircleBorder(),
             elevation: 6.0,
           ),
-        ),
+        ) : null,
         bottomNavigationBar: Container(
           height: 70,
           child:  BottomNavigationBar(
@@ -379,7 +379,7 @@ class _MainPageScreenState extends State<MainPageScreen> {
             ],
             currentIndex: _selectedIndex,
             selectedItemColor: AppStyles.buttonColor,
-            unselectedItemColor: Colors.grey,
+            unselectedItemColor: Colors.grey[400],
             backgroundColor: AppStyles.primaryColor,
             onTap: _onItemTapped,
             iconSize: 35,

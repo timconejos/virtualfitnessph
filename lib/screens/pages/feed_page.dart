@@ -372,12 +372,18 @@ class _FeedPageState extends State<FeedPage> {
                     return [
                       PopupMenuItem<String>(
                           value: 'report',
-                          child: Text('Report'),
+                          child: const ListTile(
+                            trailing: Icon(Icons.report), // Icon
+                            title: Text('Report'),
+                          ),
                           onTap: () => _reportFeed(feedItem['feedId']),
                         ),
                         PopupMenuItem<String>(
                           value: 'block',
-                          child: Text('Block user'),
+                          child: const ListTile(
+                            trailing: Icon(Icons.block), // Icon
+                            title: Text('Block user'),
+                          ),
                           onTap: () => _blockUser(feedItem['userId']),
                         ),
                     ];

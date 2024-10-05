@@ -23,7 +23,10 @@ class _RacePageState extends State<RacePage> {
         future: _authService.fetchRaces(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator(color: AppStyles.primaryColor));
+            return const SizedBox(
+              height: 200,
+              child: Center(child: CircularProgressIndicator()),
+            );
           } else if (snapshot.hasError) {
             return const Center(
               child: Column(
@@ -48,12 +51,9 @@ class _RacePageState extends State<RacePage> {
             onRefresh: () async {
               setState(() {});
             },
-            child: GridView.count(
-              crossAxisCount: 2,
-              crossAxisSpacing: 5, // Space between columns
-              mainAxisSpacing: 5, // Space between rows
-              padding: EdgeInsets.all(5),
-              children: List.generate(races.length, (index) {
+              child: ListView.builder(
+              itemCount: races.length,
+              itemBuilder: (context, index) {
                 return FutureBuilder<String>(
                   future: _authService.fetchRaceImage(races[index].racePicturePath),
                   builder: (context, imageSnapshot) {
@@ -65,27 +65,8 @@ class _RacePageState extends State<RacePage> {
                     return raceCard(races[index], imageSnapshot.data!);
                   },
                 );
-              })
-            //   children: [ListView.builder(
-            //   itemCount: races.length,
-            //   itemBuilder: (context, index) {
-            //     return FutureBuilder<String>(
-            //       future: _authService.fetchRaceImage(races[index].racePicturePath),
-            //       builder: (context, imageSnapshot) {
-            //         if (imageSnapshot.connectionState == ConnectionState.waiting) {
-            //           return const Center(child: CircularProgressIndicator());
-            //         } else if (imageSnapshot.hasError) {
-            //           return raceCard(races[index], 'assets/login.jpg'); // Default image
-            //         }
-            //         return raceCard(races[index], imageSnapshot.data!);
-            //       },
-            //     );
-            //   },
-            // ),],
+              },
             ),
-            
-            
-            
           );
         },
       ),
@@ -93,7 +74,7 @@ class _RacePageState extends State<RacePage> {
   }
 
   Widget raceCard(Race race, String imageUrl) {
-    var startDate = DateFormat('MMM dd, yyyy').format(DateTime.parse(race.startDate));
+     var startDate = DateFormat('MMM dd, yyyy').format(DateTime.parse(race.startDate));
     var endDate = DateFormat('MMM dd, yyyy').format(DateTime.parse(race.endDate));
     return GestureDetector(
       onTap: () {
@@ -103,51 +84,93 @@ class _RacePageState extends State<RacePage> {
           ),
         );
       },
-      child: Card(
-        color: Colors.white,
-        elevation: 1,
-        margin: const EdgeInsets.all(4.0),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(4),
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 10.0),
+        padding: const EdgeInsets.only(bottom: 10.0),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.6),
+              spreadRadius: 1,
+              blurRadius: 1,
+              offset: const Offset(0, 1),
+            ),
+          ]
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ClipRRect(
-              borderRadius: const BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
-              child: Image.network(
-                imageUrl,
-                height: 150,
-                width: double.infinity,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return Image.asset('assets/login.jpg', height: 150, width: double.infinity, fit: BoxFit.cover);
-                },
+            SizedBox(
+              height: 180,
+              width: double.infinity,
+              child: Stack(
+                alignment: Alignment.topCenter,
+                children: [
+                  ClipRRect(
+                    child: Image.network(
+                      imageUrl,
+                      height: 180,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                      alignment: Alignment.topCenter,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Image.asset('assets/login.jpg', height: 180, width: double.infinity, fit: BoxFit.cover);
+                      },
+                    ),
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [AppStyles.primaryColor.withOpacity(0.2), Colors.transparent],
+                        begin: Alignment.bottomCenter,
+                        end: Alignment.topCenter,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
             Container(
-              padding: EdgeInsets.all(10.0),
+              padding: const EdgeInsets.all(15.0),
               child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              //  spacing: 10, // Horizontal space between items
-              //   runSpacing: 1,
               children: [
-                Text(race.raceName, style: AppStyles.vifitTextTheme.titleMedium ),
-                Text( '$startDate - $endDate', style:  AppStyles.vifitTextTheme.labelMedium)
+                const SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Flexible(child:
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(race.raceName, style: AppStyles.vifitTextTheme.titleLarge?.copyWith(color: AppStyles.textColor), maxLines: 2, overflow: TextOverflow.visible,),
+                        Text('$startDate - $endDate', style:  AppStyles.vifitTextTheme.labelMedium?.copyWith(color: AppStyles.greyColor)),
+                      ],
+                    )),
+                    const SizedBox(width: 5),
+                    OutlinedButton.icon(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => RaceDetailPage(race: race),
+                        ),
+                      );
+                    },
+                    icon: const Icon(Icons.directions_run, size: 20),
+                    // style: AppStyles.secondaryButtonStyleSmall,
+                    style: OutlinedButton.styleFrom(foregroundColor: AppStyles.secondaryColor, side: BorderSide(color: AppStyles.secondaryColor, width: 1)),
+                    label: Text('Join', style: AppStyles.vifitTextTheme.titleMedium),
+                  )]),
+                
+
               ],
             ),
             ),
-            // Padding(
-            //   padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
-            //   child: 
-            // ),
-            // Padding(
-            //   padding: const EdgeInsets.fromLTRB(16, 4, 16, 16),
-            //   ,
-            // ),
+             
           ],
-        ),
-      ),
+          )
+      )
     );
   }
 }

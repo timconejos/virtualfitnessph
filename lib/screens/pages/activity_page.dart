@@ -59,6 +59,7 @@ class _ActivityPageState extends State<ActivityPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: isLoading
           ? const Center(child: CircularProgressIndicator(color: AppStyles.primaryColor))
           : RefreshIndicator(
@@ -78,43 +79,43 @@ class _ActivityPageState extends State<ActivityPage> {
           ),
         )
             : ListView.separated(
-                  itemCount: submissions.length,
-                  itemBuilder: (context, index) {
-                    var submission = submissions[index];
-                    DateTime submissionDate = DateTime.parse(submission['submissionDate']);
-                    return ListTile(
-                      leading: CircleAvatar(
-                        radius: 30,
-                        backgroundImage: NetworkImage('http://97.74.90.63:8080/profiles/${submission['userId']}.jpg'),
-                        backgroundColor: const Color.fromARGB(255, 224, 224, 224),
-                         onBackgroundImageError: (exception, stackTrace) {
-                          // Handle the image load error
-                          print('Error loading image: $exception');
-                        },
-                        // child:  const Icon(Icons.person, size: 30),
+                itemCount: submissions.length,
+                itemBuilder: (context, index) {
+                  var submission = submissions[index];
+                  DateTime submissionDate = DateTime.parse(submission['submissionDate']);
+                  return ListTile(
+                    leading: CircleAvatar(
+                      radius: 30,
+                      backgroundImage: NetworkImage('http://97.74.90.63:8080/profiles/${submission['userId']}.jpg'),
+                      backgroundColor: const Color.fromARGB(255, 224, 224, 224),
+                        onBackgroundImageError: (exception, stackTrace) {
+                        // Handle the image load error
+                        print('Error loading image: $exception');
+                      },
+                      // child:  const Icon(Icons.person, size: 30),
+                    ),
+                    title: RichText(text: 
+                      TextSpan(
+                        style: TextStyle(
+                        // fontSize: 20.0,
+                        color: AppStyles.textColor, // Default text color
                       ),
-                      title: RichText(text: 
-                        TextSpan(
-                          style: TextStyle(
-                          // fontSize: 20.0,
-                          color: AppStyles.textColor, // Default text color
-                        ),
-                          children: [
-                          TextSpan(text: '${submission['username']}', style: TextStyle(fontWeight: FontWeight.bold)),
-                          TextSpan(text: ' submitted ${submission['distanceKm']} KM for '),
-                          TextSpan(text: '${submission['raceName']} in ${submission['location']}'),
+                        children: [
+                        TextSpan(text: '${submission['username']}', style: TextStyle(fontWeight: FontWeight.bold)),
+                        TextSpan(text: ' submitted ${submission['distanceKm']} KM for '),
+                        TextSpan(text: '${submission['raceName']} in ${submission['location']}'),
 
 
-                        ]
-                      )),
-                      // title: Text('${submission['username']} submitted ${submission['distanceKm']} KM for ${submission['raceName']} in ${submission['location']}'),
-                      trailing: Text(_timeAgo(submissionDate)),
-                    );
-                  },
-                  separatorBuilder: (context, index) {
-                    return Divider();
-                  },
-                ),
+                      ]
+                    )),
+                    // title: Text('${submission['username']} submitted ${submission['distanceKm']} KM for ${submission['raceName']} in ${submission['location']}'),
+                    trailing: Text(_timeAgo(submissionDate)),
+                  );
+                },
+                separatorBuilder: (context, index) {
+                  return Divider();
+                },
+              ),
       ),
     );
   }

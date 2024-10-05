@@ -239,6 +239,26 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
+  void _redeemPoints() {
+      // Currently not implemented. Show a placeholder dialog.
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Redeem Points'),
+            content: const Text('Redeem functionality is coming soon!'),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
 
 
   @override
@@ -518,7 +538,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                       ],),
                       Row(children: [
-                        PrimaryButton(text: 'Redeem', color: AppStyles.buttonColor, textColor: AppStyles.buttonTextColor, onPressed: () => null),
+                        PrimaryButton(text: 'Redeem', color: AppStyles.buttonColor, textColor: AppStyles.buttonTextColor, onPressed: _redeemPoints),
                         const SizedBox(width: 7),
                         PrimaryButton(text: 'Pass points',color: AppStyles.buttonColor, textColor: AppStyles.buttonTextColor,  onPressed: () async {
                           List<dynamic> followers = await _fetchUserList('Followers');
@@ -584,19 +604,16 @@ class _ProfilePageState extends State<ProfilePage> {
                             icon: Icons.location_on,
                             value: totalDistance,
                             label: 'Distance (km)',
-                            color: Colors.orange,
                           ),
                           _buildStatCard(
                             icon: Icons.timer,
                             value: pace,
                             label: 'Pace (min/km)',
-                            color: Colors.orange,
                           ),
                           _buildStatCard(
                             icon: Icons.directions_run,
                             value: totalRuns,
                             label: 'Runs',
-                            color: Colors.orange,
                           ),
                         ],
                       ),
@@ -614,7 +631,6 @@ class _ProfilePageState extends State<ProfilePage> {
     required IconData icon,
     required String value,
     required String label,
-    required Color color,
   }) {
     return Container(
       width: 100,
@@ -636,11 +652,11 @@ class _ProfilePageState extends State<ProfilePage> {
         children: [
           Icon(icon, size: 50, 
             color: AppStyles.primaryColor, 
-            // shadows: [Shadow(
-            //   color: Colors.black.withOpacity(0.3),  
-            //   blurRadius: 10,                       
-            //   offset: Offset(5, 5),                  
-            // ),],
+            shadows: [Shadow(
+              color: Colors.black.withOpacity(0.3),  
+              blurRadius: 10,                       
+              offset: Offset(5, 5),                  
+            ),],
           ),
           const SizedBox(height: 8),
           Text(
@@ -971,70 +987,43 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   void _showImageDialog(String imageUrl) {
-    showDialog(
-      context: context,
-      builder: (context) => GestureDetector(
-        onTap: () => Navigator.of(context).pop(),
-        child: Dialog(
-          backgroundColor: Colors.transparent,
-          child: Stack(
-            children: [
-              GestureDetector(
-                onTap: () {},
-                child: Container(
-                  width: double.infinity,
-                  height: double.infinity,
-                  color: Colors.transparent,
-                  child: InteractiveViewer(
-                    clipBehavior: Clip.none,
-                    minScale: 0.1,
-                    maxScale: 4.0,
+      showGeneralDialog(
+        context: context,
+        // barrierDismissible: true,
+        pageBuilder: (BuildContext ctx, Animation<double> animation,
+            Animation<double> secondaryAnimation) {
+          return Scaffold(
+            backgroundColor: Colors.black.withOpacity(0.8),
+            body: SafeArea (child: Stack(
+              children: [
+                InteractiveViewer(
+                  boundaryMargin: EdgeInsets.zero,
+                  minScale: 0.5,
+                  maxScale: 4.0,
+                  child: Center(
                     child: Image.network(
                       imageUrl,
-                      fit: BoxFit.contain,
-                      loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-                        if (loadingProgress == null) return child;
-                        return Center(
-                          child: CircularProgressIndicator(
-                            value: loadingProgress.expectedTotalBytes != null
-                                ? loadingProgress.cumulativeBytesLoaded / (loadingProgress.expectedTotalBytes ?? 1)
-                                : null,
-                          ),
-                        );
-                      },
-                      errorBuilder: (context, error, stackTrace) {
-                        return const Center(
-                          child: Text(
-                            'Failed to load image',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        );
-                      },
+                      fit: BoxFit.cover,
                     ),
                   ),
                 ),
-              ),
-              Positioned(
-                top: 20,
-                right: 20,
-                child: GestureDetector(
-                  onTap: () => Navigator.of(context).pop(),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.7),
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(Icons.close, color: Colors.white),
+                Positioned(
+                  top: 10,
+                  right: 10,
+                  child: IconButton(
+                    icon: Icon(Icons.close, color: Colors.white, size: 30),
+                    onPressed: () {
+                      Navigator.of(ctx).pop();
+                    },
                   ),
                 ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
+              ],
+            )),
+          );
+        },
+      );
+    }
+ 
   Widget _buildCircularProgressBar(Map<String, dynamic> race) {
     
     double screenWidth = MediaQuery.of(context).size.width;

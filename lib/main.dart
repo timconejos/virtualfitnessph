@@ -3,11 +3,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:virtualfitnessph/screens/splash_screen.dart';
 import 'package:virtualfitnessph/services/permissions_service.dart';
 import 'package:virtualfitnessph/styles/app_styles.dart';
+import 'package:virtualfitnessph/services/auth_service.dart';
+import 'package:virtualfitnessph/screens/main_page_screen.dart';
+import 'package:virtualfitnessph/screens/login_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await _requestPermissionsOnce();
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 Future<void> _requestPermissionsOnce() async {
@@ -22,7 +25,8 @@ Future<void> _requestPermissionsOnce() async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key); // Cleaned constructor
+  final AuthService _authService = AuthService();
+  MyApp({Key? key}) : super(key: key); // Cleaned constructor
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +34,15 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Virtual Fitness PH',
       theme: ThemeData(
+        colorScheme: const ColorScheme(brightness: Brightness.light, 
+          primary: AppStyles.primaryColor, 
+          onPrimary: AppStyles.primaryForeground, 
+          secondary: AppStyles.secondaryColor, 
+          onSecondary: AppStyles.primaryForeground, 
+          error: Colors.red, 
+          onError: Colors.white, 
+          surface: Colors.white, 
+          onSurface: AppStyles.textColor),
         primaryColor: AppStyles.primaryColor,
         scaffoldBackgroundColor: AppStyles.scaffoldBgColor,
         textTheme: AppStyles.vifitTextTheme,
@@ -48,7 +61,6 @@ class MyApp extends StatelessWidget {
         ),
         buttonTheme: const ButtonThemeData(
           buttonColor: AppStyles.buttonColor,
-
         ),
         dividerTheme: const DividerThemeData(
           color: Color.fromARGB(255, 235, 235, 235),
@@ -72,10 +84,37 @@ class MyApp extends StatelessWidget {
           style: TextButton.styleFrom(
             foregroundColor: AppStyles.darkerPrimary, // Text color
           ),
+        ),
+        inputDecorationTheme: InputDecorationTheme(
+          // focusedBorder: OutlineInputBorder(
+          //   borderSide: BorderSide(color: AppStyles.primaryColor), // Default border color
+          //   // borderRadius: BorderRadius.circular(8.0),
+          // ),
+          focusColor: AppStyles.primaryColor
         )
 
       ),
-      home: const SplashScreen(), // Set SplashScreen as the home widget
+      // home: const SplashScreen(), // Set SplashScreen as the home widget
+      home:  FutureBuilder(
+        future: _authService.isUserLoggedIn(), 
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Scaffold(
+              body: Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
+          } else if (snapshot.hasError) {
+            return Scaffold(
+              body: Center(
+                child: Text('Error: ${snapshot.error}'),
+              ),
+            );
+          } else {
+            bool isLoggedIn = snapshot.data as bool;
+            return isLoggedIn ? const MainPageScreen() : const LoginScreen();
+          }
+        },)
     );
   }
 }

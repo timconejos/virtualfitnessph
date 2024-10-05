@@ -212,7 +212,7 @@ class _PassPointsScreenState extends State<PassPointsScreen> {
       if (_selectedUserId == user['id']) {
         _selectedUserId = null;
         _selectedUserName = null;
-        _searchController.text = '';
+        _searchController.clear();
       } else {
         _selectedUserId = user['id'];
         _selectedUserName = user['username'];
@@ -242,7 +242,7 @@ class _PassPointsScreenState extends State<PassPointsScreen> {
             // const SizedBox(height: 20),
             Padding(
               padding: EdgeInsets.all(16),
-              child: Text('Following', style: AppStyles.vifitTextTheme.labelMedium?.copyWith(color: Colors.grey[700])),
+              child: Text('Following', style: AppStyles.vifitTextTheme.labelMedium?.copyWith(color: AppStyles.greyColor)),
             ),
             // Users List
             _isLoading && _isSearching
@@ -268,6 +268,7 @@ class _PassPointsScreenState extends State<PassPointsScreen> {
                         ? const Icon(Icons.check, color: Colors.green)
                         : null,
                     onTap: () => _selectUser(user),
+                    focusColor: Colors.grey,
                     onLongPress: () {
                       Navigator.push(
                         context,
@@ -288,9 +289,17 @@ class _PassPointsScreenState extends State<PassPointsScreen> {
               left: 0,
               right: 0,
               child: Container(
-                padding: EdgeInsets.all(30),
+                padding: EdgeInsets.symmetric(vertical: 20, horizontal: 30),
                 decoration: BoxDecoration(
-                  color: Colors.white
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.6),
+                      spreadRadius: 1,
+                      blurRadius: 1,
+                      offset: const Offset(0, 1),
+                    ),
+                  ]
                 ),
                 child: Column(
                   children: [
@@ -304,12 +313,11 @@ class _PassPointsScreenState extends State<PassPointsScreen> {
                   // Share Points Button
                   _isLoading && !_isSearching
                       ? const CircularProgressIndicator()
-                      : PrimaryButton(
-                    text: 'Share Points',
-                    color: AppStyles.buttonColor,
-                    textColor: AppStyles.buttonTextColor,
-                    onPressed: _sharePoints
-                  ),
+                      : ElevatedButton(
+                        onPressed: _sharePoints,
+                        style: AppStyles.primaryButtonStyle,
+                        child: Text('Share Points', style: AppStyles.vifitTextTheme.titleMedium),
+                      ),
                   ],
               ))
             ),
@@ -331,6 +339,14 @@ class _PassPointsScreenState extends State<PassPointsScreen> {
             padding: EdgeInsets.all(30),
             decoration: BoxDecoration(
               color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.6),
+                  spreadRadius: 1,
+                  blurRadius: 1,
+                  offset: const Offset(0, 1),
+                ),
+              ]
             ),
             child: PrimaryTextField(
               labelText: 'Pass points to',

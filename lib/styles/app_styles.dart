@@ -8,6 +8,7 @@ class AppStyles {
   static const Color darkerPrimary = Color(0xFF0000BC);
   static const Color lighterPrimary = Color(0xFF9A9AFE);
   static const Color textColor = Color(0xFF1e1e1e);
+  static const Color greyColor = Color(0xFF616161);
   static const Color primaryForeground = Colors.white;
 
   // Button colors
@@ -38,6 +39,17 @@ class AppStyles {
     ),
   );
 
+    static ButtonStyle primaryButtonStyleInvertSmall = ElevatedButton.styleFrom(
+    backgroundColor: Colors.white,
+    foregroundColor: AppStyles.primaryColor,
+    // minimumSize: Size(double.infinity, 50),
+    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+    textStyle: vifitTextTheme.bodyLarge,
+     shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(8), // Set the border radius here
+    ),
+  );
+
   //Define button styles
   static ButtonStyle secondaryButtonStyle = ElevatedButton.styleFrom(
     backgroundColor: secondaryColor,
@@ -45,6 +57,18 @@ class AppStyles {
     minimumSize: Size(double.infinity, 30),
     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
     textStyle: vifitTextTheme.titleMedium,
+     shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(8), // Set the border radius here
+    ),
+  );
+
+  static ButtonStyle secondaryButtonStyleSmall = ElevatedButton.styleFrom(
+    backgroundColor: secondaryColor,
+    foregroundColor: Colors.white,
+    minimumSize: Size(double.infinity, 30),
+    elevation: 0,
+    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
+    textStyle: vifitTextTheme.titleSmall,
      shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(8), // Set the border radius here
     ),
