@@ -55,7 +55,7 @@ dependencies:
   crypto: any
 dev_dependencies:
   flutter_launcher_icons: ^0.13.1
-  #flutter_native_splash: ^2.0.4
+  flutter_native_splash: ^2.0.4
   flutter_test:
     sdk: flutter
 
@@ -120,5 +120,5 @@ flutter:
 flutter_icons:
   android: true
   ios: true
-  image_path: "assets/icon.jpg"
+  image_path: "assets/vifit.png"
 
