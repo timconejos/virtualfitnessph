@@ -94,27 +94,27 @@ class MyApp extends StatelessWidget {
         )
 
       ),
-      // home: const SplashScreen(), // Set SplashScreen as the home widget
-      home:  FutureBuilder(
-        future: _authService.isUserLoggedIn(), 
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Scaffold(
-              body: Center(
-                child: CircularProgressIndicator(),
-              ),
-            );
-          } else if (snapshot.hasError) {
-            return Scaffold(
-              body: Center(
-                child: Text('Error: ${snapshot.error}'),
-              ),
-            );
-          } else {
-            bool isLoggedIn = snapshot.data as bool;
-            return isLoggedIn ? const MainPageScreen() : const LoginScreen();
-          }
-        },)
+      home: const SplashScreen(), // Set SplashScreen as the home widget
+      // home:  FutureBuilder(
+      //   future: _authService.isUserLoggedIn(), 
+      //   builder: (context, snapshot) {
+      //     if (snapshot.connectionState == ConnectionState.waiting) {
+      //       return const Scaffold(
+      //         body: Center(
+      //           child: CircularProgressIndicator(),
+      //         ),
+      //       );
+      //     } else if (snapshot.hasError) {
+      //       return Scaffold(
+      //         body: Center(
+      //           child: Text('Error: ${snapshot.error}'),
+      //         ),
+      //       );
+      //     } else {
+      //       bool isLoggedIn = snapshot.data as bool;
+      //       return isLoggedIn ? const MainPageScreen() : const LoginScreen();
+      //     }
+      //   },)
     );
   }
 }

@@ -70,7 +70,7 @@ class _PointsHistoryScreenState extends State<PointsHistoryScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const PassPointsScreen()),
-    );
+    ).then((_) => _fetchCurrentPoints());
   }
 
   void _redeemPoints() {
@@ -223,8 +223,8 @@ class _PointsHistoryScreenState extends State<PointsHistoryScreen> {
               child: Column(
                 children: [
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 25, vertical: 25),
-                    decoration: BoxDecoration(
+                    padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 25),
+                    decoration: const BoxDecoration(
                       borderRadius: BorderRadius.vertical(top: Radius.circular(13.0), bottom: Radius.circular(0)),
                       color: AppStyles.primaryColor,
                         gradient: const LinearGradient(
@@ -254,7 +254,7 @@ class _PointsHistoryScreenState extends State<PointsHistoryScreen> {
                   ),
                   ),
                   Padding(
-                    padding: EdgeInsets.symmetric(vertical: 5, horizontal: 1),
+                    padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 1),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [

@@ -202,7 +202,7 @@ class _RaceDetailPageState extends State<RaceDetailPage> {
                         );
                       },
                       style: AppStyles.secondaryButtonStyle,
-                      child: Text('Regiser', style: AppStyles.vifitTextTheme.titleMedium),
+                      child: Text('Register', style: AppStyles.vifitTextTheme.titleMedium),
                     ),
                   ),
                   ],

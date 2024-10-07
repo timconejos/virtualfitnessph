@@ -49,7 +49,7 @@ class PrimaryTextField extends StatelessWidget {
           borderRadius: BorderRadius.circular(8.0)
         ),
         focusColor: AppStyles.primaryColor,
-        labelStyle: TextStyle(color: Colors.grey),
+        // labelStyle: TextStyle(color: Colors.grey),
         hintStyle: TextStyle(color: Colors.grey),
       ),
       validator: validator,

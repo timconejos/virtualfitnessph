@@ -41,7 +41,7 @@ class _SplashScreenState extends State<SplashScreen> {
       backgroundColor: const Color(0xFFECF1F4), // Set background color to white
       body: Center(
         child: Image.asset(
-          'assets/splash.jpg', // Use your asset name
+          'assets/splash2.jpg', // Use your asset name
           fit: BoxFit.fitWidth, // Fit the image to the width of the screen
           width: double.infinity,
           alignment: Alignment.topCenter, // Align image to the top center

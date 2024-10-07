@@ -157,7 +157,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Image.asset('assets/vifit2024.png', height: 170), // Add your image asset here
+                  Image.asset('assets/icon-transparentx410.png', height: 150), // Add your image asset here
                   SizedBox(height: 40),
                   PrimaryTextField(
                     labelText: 'Username', 

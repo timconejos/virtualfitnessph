@@ -43,6 +43,8 @@ class _MainPageScreenState extends State<MainPageScreen> {
       _selectedIndex = index;
       _appBarTitle = index > 0 ? tabs[index] : 'Virtual Fitness PH';
     });
+    _fetchCurrentPoints();
+    
   }
 
   @override
