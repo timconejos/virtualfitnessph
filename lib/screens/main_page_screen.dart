@@ -24,24 +24,25 @@ class MainPageScreen extends StatefulWidget {
 
 class _MainPageScreenState extends State<MainPageScreen> {
   int _selectedIndex = 0;
-  String _appBarTitle = 'Virtual Fitness PH';
+  String _appBarTitle = 'Virtual Fitness';
   final AuthService _authService = AuthService();
   String _currentPoints = "0";
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   static final List<Widget> _widgetOptions = <Widget>[
     const FeedPage(),
     const RacePage(),
-    // const RacePage(), // TODO: create rewards page
+    const RacePage(), // TODO: create rewards page
     const ActivityPage(),
     const ProfilePage(),
   ];
 
   void _onItemTapped(int index) {
-    // const tabs  = ['Home', 'Races', 'Rewards', 'Activity', 'Profile'];
-    const tabs  = ['Home', 'Races', 'Activity', 'Profile'];
+    const tabs  = ['Home', 'Races', 'Rewards', 'Activity', 'Profile'];
+    // const tabs  = ['Home', 'Races', 'Activity', 'Profile'];
     setState(() {
       _selectedIndex = index;
-      _appBarTitle = index > 0 ? tabs[index] : 'Virtual Fitness PH';
+      _appBarTitle = index > 0 ? tabs[index] : 'Virtual Fitness';
     });
     _fetchCurrentPoints();
     
@@ -294,49 +295,90 @@ class _MainPageScreenState extends State<MainPageScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: PrimaryAppBar(
-          title: _appBarTitle,
-          centerTitle: false,
+        key: _scaffoldKey,
+        appBar: AppBar(
+          title: Text(_appBarTitle, style: AppStyles.vifitTextTheme.titleMedium),
+          titleSpacing: 1,
+          centerTitle: true,
+          leading: Row(
+            // mainAxisAlignmRnt: MainAxisAlignment.spaceEvenly,
+            mainAxisSize: MainAxisSize.min,
+            children:[
+              IconButton(
+              icon: const Icon(Icons.menu),
+              onPressed: () {
+                _scaffoldKey.currentState?.openDrawer();
+              },
+            ),
+            
+            ]),
           actions: [
-            TextButton(
-              style: TextButton.styleFrom(foregroundColor: Colors.white),
-              onPressed: _navigateToPointsHistory, // Updated onPressed
-              child: Text("$_currentPoints coins"),
+            // TextButton(
+            //   style: TextButton.styleFrom(foregroundColor: AppStyles.buttonColor, textStyle: AppStyles.vifitTextTheme.titleMedium),
+            //   onPressed: _navigateToPointsHistory, // Updated onPressed
+            //   child: Text("$_currentPoints coins"),
+            // ),
+            IconButton(
+              icon: const Icon(Icons.search),
+              onPressed: _navigateToSearchUser, // Add search button
             ),
             IconButton(
               icon: const Icon(Icons.notifications),
               onPressed: _showNotifications,
             ),
-            // IconButton(
-            //   icon: const Icon(Icons.search),
-            //   onPressed: _navigateToSearchUser, // Add search button
-            // ),
           ],
         ),
         drawer: Drawer(
           backgroundColor: Colors.white,
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: [
-              const SizedBox(height: 100),
-              ListTile(
-                leading: const Icon(Icons.logout),
-                title: const Text('Logout'),
-                onTap: _logout,
+          child: Column(
+            children: [ 
+              DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue,
               ),
-              ListTile(
-                leading: const Icon(Icons.web),
-                title: const Text('Visit Website'),
-                onTap: () => _launchURL('https://virtualfitnessph.com'),
+              child: Text(
+                'Drawer Header',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                ),
               ),
-              const Divider(),
-              ListTile(
+            ),
+            Expanded(
+              child: ListView(
+                padding: EdgeInsets.zero,
+                children: [
+                  const SizedBox(height: 100),
+                  
+                  ListTile(
+                    leading: const Icon(Icons.web),
+                    title: const Text('Visit Website'),
+                    onTap: () => _launchURL('https://virtualfitnessph.com'),
+                  ),
+                  const Divider(),
+                  ListTile(
+                    leading: const Icon(Icons.logout),
+                    title: const Text('Logout'),
+                    onTap: _logout,
+                  ),
+                ],
+              ),
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Column(
+                children: [
+                  ListTile(
                 leading: const Icon(Icons.delete, color: Colors.red),
                 title: const Text('Deactivate Account', style: TextStyle(color: Colors.red)),
-                onTap: _deactivateAccount,
+                onTap: _deactivateAccount
               ),
-            ],
-          ),
+              const SizedBox(height: 100)
+                ]
+              ),
+            ),
+          ],
+          )
         ),
         body: Center(
           child: _widgetOptions.elementAt(_selectedIndex),
@@ -366,10 +408,10 @@ class _MainPageScreenState extends State<MainPageScreen> {
                 icon: Icon(Icons.calendar_today),
                 label: 'Races',
               ),
-              // BottomNavigationBarItem(
-              //   icon: Icon(Icons.military_tech),
-              //   label: 'Rewards',
-              // ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.military_tech),
+                label: 'Rewards',
+              ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.directions_run),
                 label: 'Activity',

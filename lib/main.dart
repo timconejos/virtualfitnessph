@@ -49,8 +49,8 @@ class MyApp extends StatelessWidget {
         appBarTheme: AppBarTheme(
           backgroundColor: AppStyles.primaryColor,
           foregroundColor: AppStyles.primaryForeground,
-          centerTitle: false,
-          titleTextStyle: AppStyles.vifitTextTheme.headlineMedium,
+          centerTitle: true,
+          titleTextStyle: AppStyles.vifitTextTheme.titleMedium,
         ),
         popupMenuTheme: const PopupMenuThemeData(
           color: Colors.white
