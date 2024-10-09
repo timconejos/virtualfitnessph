@@ -315,7 +315,7 @@ class AuthService {
 
   Future<bool> forgotPassword(String username, String email) async {
     final response = await http.post(
-      Uri.parse('$baseUrl/auth/forgot_password'),
+      Uri.parse('$baseUrl/forgot_password'),
       headers: {'Content-Type': 'application/json'},
       body: json.encode({'username': username, 'email': email}),
     );

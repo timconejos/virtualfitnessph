@@ -9,7 +9,7 @@ import 'package:virtualfitnessph/screens/login_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await _requestPermissionsOnce();
+  _requestPermissionsOnce();
   runApp(MyApp());
 }
 

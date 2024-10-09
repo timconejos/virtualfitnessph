@@ -102,35 +102,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     return null;
                   },
                 ),
-                // TextFormField(
-                //   controller: _usernameController,
-                //   decoration: const InputDecoration(
-                //     labelText: 'Username',
-                //     border: OutlineInputBorder(),
-                //   ),
-                //   validator: (value) {
-                //     if (value == null || value.isEmpty) {
-                //       return 'Please enter your username';
-                //     }
-                //     return null;
-                //   },
-                // ),
-                // TextFormField(
-                //   controller: _emailController,
-                //   decoration: const InputDecoration(
-                //     labelText: 'Email',
-                //     border: OutlineInputBorder(),
-                //   ),
-                //   validator: (value) {
-                //     if (value == null || value.isEmpty) {
-                //       return 'Please enter your email';
-                //     }
-                //     if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
-                //       return 'Please enter a valid email address';
-                //     }
-                //     return null;
-                //   },
-                // ),
                 const SizedBox(height: 16.0),
                 _isLoading
                     ? const CircularProgressIndicator()
