@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:virtualfitnessph/models/race.dart';
 import 'package:virtualfitnessph/services/auth_service.dart';
+import 'package:virtualfitnessph/styles/app_styles.dart';
 
 class RegisterRaceScreen extends StatefulWidget {
   final Race race;
@@ -125,9 +126,7 @@ class _RegisterRaceScreenState extends State<RegisterRaceScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Register for ${widget.race.raceName}'),
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
+        title: Text('Register for ${widget.race.raceName}')
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -170,7 +169,7 @@ class _RegisterRaceScreenState extends State<RegisterRaceScreen> {
               ),
               ElevatedButton(
                 onPressed: _agreedToTerms ? _register : null,
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white),
+                style: AppStyles.primaryButtonStyle,
                 child: const Text('REGISTER'),
               ),
             ],

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../../services/auth_service.dart';
+import 'package:virtualfitnessph/styles/app_styles.dart';
 
 class ActivityPage extends StatefulWidget {
   const ActivityPage({super.key});
@@ -58,13 +59,9 @@ class _ActivityPageState extends State<ActivityPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Activity'),
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
-      ),
+      backgroundColor: Colors.white,
       body: isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator(color: AppStyles.primaryColor))
           : RefreshIndicator(
         onRefresh: _fetchSubmissions,
         child: submissions.isEmpty
@@ -81,20 +78,44 @@ class _ActivityPageState extends State<ActivityPage> {
             ],
           ),
         )
-            : ListView.builder(
-          itemCount: submissions.length,
-          itemBuilder: (context, index) {
-            var submission = submissions[index];
-            DateTime submissionDate = DateTime.parse(submission['submissionDate']);
-            return ListTile(
-              leading: CircleAvatar(
-                backgroundImage: NetworkImage('http://97.74.90.63:8080/profiles/${submission['userId']}.jpg'),
+            : ListView.separated(
+                itemCount: submissions.length,
+                itemBuilder: (context, index) {
+                  var submission = submissions[index];
+                  DateTime submissionDate = DateTime.parse(submission['submissionDate']);
+                  return ListTile(
+                    leading: CircleAvatar(
+                      radius: 30,
+                      backgroundImage: NetworkImage('http://97.74.90.63:8080/profiles/${submission['userId']}.jpg'),
+                      backgroundColor: const Color.fromARGB(255, 224, 224, 224),
+                        onBackgroundImageError: (exception, stackTrace) {
+                        // Handle the image load error
+                        print('Error loading image: $exception');
+                      },
+                      // child:  const Icon(Icons.person, size: 30),
+                    ),
+                    title: RichText(text: 
+                      TextSpan(
+                        style: TextStyle(
+                        // fontSize: 20.0,
+                        color: AppStyles.textColor, // Default text color
+                      ),
+                        children: [
+                        TextSpan(text: '${submission['username']}', style: TextStyle(fontWeight: FontWeight.bold)),
+                        TextSpan(text: ' submitted ${submission['distanceKm']} KM for '),
+                        TextSpan(text: '${submission['raceName']} in ${submission['location']}'),
+
+
+                      ]
+                    )),
+                    // title: Text('${submission['username']} submitted ${submission['distanceKm']} KM for ${submission['raceName']} in ${submission['location']}'),
+                    trailing: Text(_timeAgo(submissionDate)),
+                  );
+                },
+                separatorBuilder: (context, index) {
+                  return Divider();
+                },
               ),
-              title: Text('${submission['username']} submitted ${submission['distanceKm']} KM for ${submission['raceName']} in ${submission['location']}'),
-              trailing: Text(_timeAgo(submissionDate)),
-            );
-          },
-        ),
       ),
     );
   }

@@ -1,8 +1,11 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:virtualfitnessph/components/circular_progress_bar.dart';
 import 'package:virtualfitnessph/screens/view_all_races_screen.dart';
 import 'package:virtualfitnessph/screens/view_all_badges_screen.dart';
+import 'package:virtualfitnessph/components/outline_button.dart';
+import 'package:virtualfitnessph/styles/app_styles.dart';
 import 'dart:convert';
 
 import '../services/auth_service.dart';
@@ -308,12 +311,12 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppStyles.scaffoldBgColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppStyles.primaryColor,
         title:
-            const Text('View Profile', style: TextStyle(color: Colors.black)),
-        iconTheme: const IconThemeData(color: Colors.black),
+            const Text('Profile', style: TextStyle(color: Colors.white)),
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -322,14 +325,14 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
               backgroundColor: Colors.white,
               child: SingleChildScrollView(
                 child: Padding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.all(0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       _buildProfileHeader(),
-                      const SizedBox(height: 10),
-                      _buildStatsSection(),
+                      // const SizedBox(height: 10),
                       _buildBadgesSection(),
+                      _buildStatsSection(),
                       //_buildTrophiesSection(),
                       _buildJoinedRacesSection(),
                       _buildPhotosSection(),
@@ -341,91 +344,106 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
     );
   }
 
+
   Widget _buildProfileHeader() {
-    return GestureDetector(
-      onTap: () {
-        if (_isCurrentUser) {
-          // Navigate to edit profile page
-        }
-      },
-      child: Card(
-        color: Colors.white,
-        elevation: 2,
-        margin: const EdgeInsets.all(8),
-        child: Container(
-          padding: const EdgeInsets.all(16),
-          height: 200,  // Increase the height of the profile header section
-          child: Stack(
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
+    return Container(
+      height: 200,
+      padding: EdgeInsets.only(left: 25, right: 25, top: 25, bottom: 5),
+      decoration: BoxDecoration(color: AppStyles.primaryColor,
+          gradient: LinearGradient(
+          colors: [AppStyles.primaryColor, AppStyles.unselectedColor],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        )
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(children: [
+            Column(
+              children: [
+                  Container(
+                    padding: EdgeInsets.all(4.0),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: AppStyles.darkerPrimary
+                    ),
+                    child: 
                       _profilePicUrl == null
                           ? CircleAvatar(
-                        radius: 60,
+                        radius: 45,
                         backgroundColor: Colors.red.shade200,
-                        child: const Icon(Icons.person, size: 60),
+                        child: const Icon(Icons.person, size: 45),
                       )
                           : CircleAvatar(
-                        radius: 60,
+                        radius: 45,
                         backgroundImage: NetworkImage(_profilePicUrl!),
                       ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              _userName ?? 'Unknown User',
-                              style: const TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Row(
-                              children: [
-                                _buildStatColumn("Followers", _followers.length.toString()),
-                                const SizedBox(width: 16),
-                                _buildStatColumn("Following", _following.length.toString()),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              if (!_isCurrentUser)
-                Positioned(
-                  bottom: 0,  // Ensure the buttons are above the bottom edge of the section
-                  right: 0,
-                  child: Row(
-                    children: [
-                      IconButton(
-                        icon: Icon(
-                          _isFollowing ? Icons.person_remove : Icons.person_add,
-                          color: _isFollowing ? Colors.grey : Colors.blue,
-                        ),
-                        onPressed: _toggleFollow,
-                      ),
-                      const SizedBox(width: 8),
-                      IconButton(
-                        icon: Icon(Icons.block, color: Colors.red),
-                        onPressed: _blockUser,
-                      ),
-                    ],
-                  ),
+                  )
+              ]
+            ),
+            Column(
+              children: [
+                Container(
+                  padding: EdgeInsets.all(20),
+                  child: Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                          Text(
+                            _userName ?? 'Unknown User',
+                            style: AppStyles.vifitTextTheme.titleLarge?.copyWith(color: AppStyles.primaryForeground),
+                          ),
+                          Text(
+                            _userName ?? 'Unknown User',
+                            style: AppStyles.vifitTextTheme.titleMedium?.copyWith(color: AppStyles.primaryForeground),
+                          )
+                      ]
+                      )
+                    ),
+                  )
+              ]
+            )
+          ],),
+          const SizedBox(height: 15),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    _buildStatColumn(
+                      "Followers",
+                      _followers.length.toString(),
+                    ),
+                    SizedBox(width: 16),
+                    _buildStatColumn(
+                      "Following",
+                      _following.length.toString(),
+                    ),
+                  ],
                 ),
-            ],
-          ),
-        ),
-      ),
+              ],
+            ),
+            Column(
+              children: [
+                OutlineButton(
+                  text: _isFollowing ? 'Unfolllow' : 'Follow',
+                  icon: _isFollowing ? Icons.person_remove : Icons.person_add,
+                  size: 'small',
+                  onPressed: _toggleFollow)
+              ],
+            )
+          ],)
+
+        ],
+      )
+       
     );
   }
+
 
   Widget _buildStatColumn(String label, String count) {
     return GestureDetector(
@@ -437,66 +455,86 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
         children: [
           Text(
             count,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
+            style: AppStyles.vifitTextTheme.labelLarge?.copyWith(color: AppStyles.primaryForeground),
           ),
           Text(
             label,
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.grey.shade600,
-            ),
+            style: AppStyles.vifitTextTheme.labelLarge?.copyWith(color: AppStyles.primaryForeground),
           ),
         ],
       ),
     );
   }
 
+
   Widget _buildStatsSection() {
-    return Card(
-      color: Colors.white,
-      elevation: 2,
-      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    return Container(
+       padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+       child: Column(
+         crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Stats Overview',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-            ),
-            const SizedBox(height: 10),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                _buildStatCard(
-                  icon: Icons.location_on,
-                  value: totalDistance,
-                  label: 'Distance (km)',
-                  color: Colors.orange,
-                ),
-                _buildStatCard(
-                  icon: Icons.timer,
-                  value: pace,
-                  label: 'Pace (min/km)',
-                  color: Colors.orange,
-                ),
-                _buildStatCard(
-                  icon: Icons.directions_run,
-                  value: totalRuns,
-                  label: 'Runs',
-                  color: Colors.orange,
+                Text(
+                  'Stats overview',
+                  style: AppStyles.vifitTextTheme.headlineSmall,
                 ),
               ],
             ),
-          ],
-        ),
-      ),
+            const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Expanded(child: Container(
+                  margin: EdgeInsets.all(1),
+                  padding: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(13),
+                    // color: Color(0xFFB4D7FF),
+                    color: AppStyles.primaryColor,
+                      gradient: LinearGradient(
+                      colors: [Color(0x80FFDB03), Color(0x30FFDB03)],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                    )
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [ 
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          _buildStatCard(
+                            icon: Icons.location_on,
+                            value: totalDistance,
+                            label: 'Distance (km)',
+                            color: Colors.orange,
+                          ),
+                          _buildStatCard(
+                            icon: Icons.timer,
+                            value: pace,
+                            label: 'Pace (min/km)',
+                            color: Colors.orange,
+                          ),
+                          _buildStatCard(
+                            icon: Icons.directions_run,
+                            value: totalRuns,
+                            label: 'Runs',
+                            color: Colors.orange,
+                          ),
+                        ],
+                      ),
+                  ],),
+                )
+              )
+            ],
+            )
+          ]
+       )
     );
   }
+
 
   Widget _buildStatCard({
     required IconData icon,
@@ -507,34 +545,38 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
     return Container(
       width: 100,
       padding: const EdgeInsets.symmetric(vertical: 16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
-            spreadRadius: 2,
-            blurRadius: 5,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      ),
+      // decoration: BoxDecoration(
+      //   color: Colors.white,
+      //   borderRadius: BorderRadius.circular(8),
+      //   boxShadow: [
+      //     BoxShadow(
+      //       color: Colors.grey.withOpacity(0.2),
+      //       spreadRadius: 2,
+      //       blurRadius: 5,
+      //       offset: const Offset(0, 3),
+      //     ),
+      //   ],
+      // ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, size: 32, color: color),
+          Icon(icon, size: 50, 
+            color: AppStyles.primaryColor, 
+            // shadows: [Shadow(
+            //   color: Colors.black.withOpacity(0.3),  
+            //   blurRadius: 10,                       
+            //   offset: Offset(5, 5),                  
+            // ),],
+          ),
           const SizedBox(height: 8),
           Text(
             value,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
+            style: AppStyles.vifitTextTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: 1),
           Text(
             label,
-            style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
+            style: AppStyles.vifitTextTheme.labelSmall,
             textAlign: TextAlign.center,
           ),
         ],
@@ -543,173 +585,276 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
   }
 
   Widget _buildBadgesSection() {
-    return Card(
-      color: Colors.white,
-      elevation: 2,
-      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: SizedBox(
-          width: double.infinity,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'My Badges',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-              ),
-              const SizedBox(height: 10),
-              _badges.isEmpty
-                  ? const SizedBox(
+    return (
+      Container(
+        padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'My Badges',
+                  style: AppStyles.vifitTextTheme.headlineSmall,
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ViewAllBadgesScreen(
+                          badges: _badges,
+                        ),
+                      ),
+                    );
+                  },
+                  child: const Text('View All',
+                      style: TextStyle(color: Colors.blue)),
+                ),
+              ],
+              
+            ),
+           SizedBox(
+              width: double.infinity,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _badges.isEmpty
+                    ? const SizedBox(
                       height: 100,
                       width: double.infinity,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.badge, size: 48, color: Colors.blue),
+                          Icon(Icons.badge, size: 48, color: Colors.grey),
                           SizedBox(height: 10),
                           Text('No badges earned yet.'),
                         ],
                       ),
                     )
-                  : Column(
-                      children: [
-                        GridView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          gridDelegate:
+                    : Column(
+                        children: [
+                          GridView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            gridDelegate:
                               const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3,
-                            mainAxisSpacing: 10,
-                            crossAxisSpacing: 10,
-                            childAspectRatio: 1,
-                          ),
-                          itemCount: min(_badges.length, 6),
-                          itemBuilder: (context, index) {
-                            return CircleAvatar(
-                              radius: 50,
-                              backgroundImage: NetworkImage(
-                                '${baseUrl}/races/badges/${_badges[index]['badgesPicturePath']}',
-                              ),
-                              backgroundColor: Colors.transparent,
-                              onBackgroundImageError: (exception, stackTrace) {
-                                // Handle image error
-                              },
-                            );
-                          },
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ViewAllBadgesScreen(
-                                  badges: _badges,
+                              crossAxisCount: 3,
+                              mainAxisSpacing: 0,
+                              crossAxisSpacing: 0,
+                               childAspectRatio: 1,
+                            ),
+                            itemCount: min(_badges.length, 6),
+                            itemBuilder: (context, index) {
+                              return Stack(
+                                children: [
+                                  Card(
+                                    color: Colors.white,
+                                    // elevation: 2,
+                                    margin: const EdgeInsets.symmetric(vertical: 3, horizontal: 3),
+                                    child: Padding(padding: EdgeInsets.all(8),
+                                    child: CircleAvatar(
+                                    radius: 40,
+                                    // backgroundColor: Colors.transparent,
+                                    backgroundColor: Colors.grey,
+                                    child: Column(
+                                      children: [
+                                        ClipOval(
+                                          child: Image.network(
+                                            '${baseUrl}/races/badges/${_badges[index]['badgesPicturePath']}',
+                                            width: 80,
+                                            height: 80,
+                                            fit: BoxFit.cover,
+                                            errorBuilder:
+                                                (context, error, stackTrace) {
+                                                  return Image.network(
+                                                    'https://via.placeholder.com/100x100',
+                                                    width: 100,
+                                                    height: 100,
+                                                    fit: BoxFit.cover,
+                                                  );
+                                                },
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
-                          child: const Text('View All',
-                              style: TextStyle(color: Colors.blue)),
-                        ),
-                      ],
-                    ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildJoinedRacesSection() {
-    return Card(
-      color: Colors.white,
-      elevation: 2,
-      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('Races Joined and Progress',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-            const SizedBox(height: 10),
-            if (inProgressRaces.isEmpty)
-              const SizedBox(
-                height: 100,
-                width: double.infinity,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.directions_run, size: 48, color: Colors.blue),
-                    SizedBox(height: 10),
-                    Text('No in-progress races yet.'),
-                  ],
-                ),
-              )
-            else
-              Column(
-                children: [
-                  ...inProgressRaces.take(3).map((race) => _buildProgressCard(
-                        race['race']['raceName'],
-                        race['registration']['distanceProgress'] /
-                            race['registration']['raceDistance'],
-                        race['registration']['id'],
-                      )),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ViewAllRacesScreen(
-                            joinedRaces: _joinedRaces,
+                              ],
+                              );
+                            },
                           ),
-                        ),
-                      );
-                    },
-                    child: const Text('View All'),
-                  ),
+                          
+                        ],
+                      ),
                 ],
               ),
+            ),
+      
           ],
         ),
-      ),
+      )
     );
   }
 
-  Widget _buildPhotosSection() {
-    return Card(
-      color: Colors.white,
-      elevation: 2,
-      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: SizedBox(
+
+
+  Widget _buildJoinedRacesSection() {
+  List<dynamic> incompleteRaces = _joinedRaces
+      .where((race) => race['registration']['completed'] == false)
+      .toList();
+
+  return Container(
+    padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Races joined',
+              style: AppStyles.vifitTextTheme.headlineSmall,
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ViewAllRacesScreen(
+                          joinedRaces: _joinedRaces,
+                        )
+                  ),
+                );
+              },
+              child: const Text('View All',
+                  style: TextStyle(color: Colors.blue)),
+            ),
+          ]
+        ),
+        SizedBox(
           width: double.infinity,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('My Photos',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-              const SizedBox(height: 10),
-              _photos.isEmpty
-                  ? const SizedBox(
+              incompleteRaces.isEmpty?
+                const SizedBox(
+                  height: 100,
+                  width: double.infinity,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.directions_run, size: 48, color: Colors.grey),
+                      SizedBox(height: 10),
+                      Text('No in-progress races yet. Start your journey now!'),
+                    ],
+                  ),
+                ) : Row(
+                  mainAxisAlignment: MainAxisAlignment.start,  
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: incompleteRaces
+                    .take(2)
+                    .map((race) => _buildCircularProgressBar(race))
+                    .toList(),
+                )
+
+              ]
+            )
+          )
+        ],
+      )
+    );
+  }
+
+
+  Widget _buildCircularProgressBar(Map<String, dynamic> race) {
+    
+    double screenWidth = MediaQuery.of(context).size.width;
+    double halfScreenWidth = screenWidth / 2.2;
+
+    double progress = race['registration']['distanceProgress'] /
+        race['registration']['raceDistance'];
+    progress = min(progress, 1.0); // Ensure progress does not overflow past 1.0
+
+
+    return InkWell(
+      onTap: () {
+      },
+      child: Container(
+      padding: const EdgeInsets.symmetric(vertical: 3.0, horizontal: 15),
+      constraints: BoxConstraints(
+        maxWidth: halfScreenWidth,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          CustomCircularProgressBar(
+            progress: progress * 100, // Percentage value (0-100)
+            size: halfScreenWidth,    // Diameter of the progress bar
+            strokeWidth: 12,  // Thickness of the progress bar
+            color: AppStyles.primaryColor, // Color of the progress bar
+          ),
+          const SizedBox(height: 5),
+          Text(
+            race['race']['raceName'],
+            textAlign: TextAlign.center,
+            style: AppStyles.vifitTextTheme.labelMedium,
+          ),
+        ]
+      )
+    )
+    );
+  }
+
+
+  Widget _buildPhotosSection() {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+      child: Column (
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text(
+                'My Photos',
+                style: AppStyles.vifitTextTheme.headlineSmall,
+              ),
+            ]
+          ),
+          const SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Expanded(child: Container(
+                margin: EdgeInsets.all(1),
+                padding: EdgeInsets.all(15),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(13),
+                  color: Color(0x80FFDB03),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _photos.isEmpty
+                        ? const SizedBox(
                       height: 100,
                       width: double.infinity,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.photo, size: 48, color: Colors.blue),
+                          Icon(Icons.photo, size: 48, color: Colors.grey),
                           SizedBox(height: 10),
                           Text('No photos uploaded yet.'),
                         ],
                       ),
                     )
-                  : GridView.builder(
+                        : GridView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 3,
                         mainAxisSpacing: 10,
                         crossAxisSpacing: 10,
@@ -718,27 +863,36 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                       itemCount: _photos.length,
                       itemBuilder: (context, index) {
                         return GestureDetector(
-                          onTap: () => _showImageDialog(
-                              '${baseUrl}/feed/images/${_photos[index]['imagePath']}'),
-                          child: Image.network(
-                            '${baseUrl}/feed/images/${_photos[index]['imagePath']}',
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) {
-                              return Image.network(
-                                'https://via.placeholder.com/100x100',
-                                fit: BoxFit.cover,
-                              );
-                            },
+                          onTap: () {
+                            _showImageDialog(
+                                '${baseUrl}/feed/images/${_photos[index]['imagePath']}');
+                          },
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8.0),
+                            child: Image.network(
+                              '${baseUrl}/feed/images/${_photos[index]['imagePath']}',
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Image.network(
+                                  'https://via.placeholder.com/100x100',
+                                  fit: BoxFit.cover,
+                                );
+                              },
+                            ),
                           ),
                         );
                       },
                     ),
-            ],
-          ),
-        ),
-      ),
+                  ]
+                )
+              ))
+            ]
+          )
+        ]
+      )
     );
   }
+
 
   void _showImageDialog(String imageUrl) {
     showDialog(
@@ -808,6 +962,8 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
       ),
     );
   }
+
+  
 
   Widget _buildProgressCard(String raceName, double progress, int raceId) {
     progress = progress > 1

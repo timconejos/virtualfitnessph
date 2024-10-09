@@ -7,6 +7,7 @@ import 'dart:convert';
 import 'package:image/image.dart' as img;
 import '../services/auth_service.dart';
 import 'change_password_screen.dart';
+import 'package:virtualfitnessph/styles/app_styles.dart';
 
 class EditProfileScreen extends StatefulWidget {
   final Map<String, dynamic> profileData;
@@ -264,12 +265,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               icon: const Icon(Icons.camera),
               label: const Text('Camera'),
               onPressed: () => _pickImage(ImageSource.camera),
+              style: AppStyles.primaryButtonStyleInvertSmall,
             ),
             const SizedBox(width: 10),
             ElevatedButton.icon(
               icon: const Icon(Icons.image),
               label: const Text('Gallery'),
               onPressed: () => _pickImage(ImageSource.gallery),
+              style: AppStyles.primaryButtonStyleInvertSmall,
             ),
           ],
         ),
@@ -286,6 +289,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         );
       },
       child: const Text('Change Password'),
+      style: AppStyles.primaryButtonStyleInvertSmall,
     );
   }
 

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:virtualfitnessph/models/user.dart';
 import 'package:virtualfitnessph/screens/verification_screen.dart';
 import 'package:virtualfitnessph/services/auth_service.dart';
+import 'package:virtualfitnessph/components/primary_text_field.dart';
+import 'package:virtualfitnessph/styles/app_styles.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:crypto/crypto.dart';
 import 'dart:convert';
@@ -152,14 +154,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
     bool obscureText = false,
     void Function(String)? onChanged,
   }) {
-    return TextField(
+    return PrimaryTextField(
       controller: controller,
-      obscureText: obscureText,
+      isPassword: obscureText,
       onChanged: onChanged,
-      decoration: InputDecoration(
-        labelText: labelText,
-        border: const OutlineInputBorder(),
-      ),
+      labelText: labelText,
     );
   }
 
@@ -205,14 +204,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: BackButton(onPressed: () => Navigator.pop(context)),
-        title: const Text('Register'),
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
+      // appBar: AppBar(
+      //   leading: BackButton(onPressed: () => Navigator.pop(context)),
+      //   title: const Text('Register'),
+      // ),
+      body: Padding(
+        padding: const EdgeInsets.fromLTRB(50.0, 10.0, 50.0, 0.0),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Text('Create an account', 
+            textAlign: TextAlign.start,
+            style: AppStyles.vifitTextTheme.headlineMedium?.copyWith(color: AppStyles.primaryColor)),
+            const SizedBox(height: 20),
             _buildTextField(
               controller: _emailController,
               labelText: 'Enter your email',
@@ -240,11 +244,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: _isLoading ? null : _register,
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 16.0),
-                backgroundColor: _isLoading ? Colors.grey : null,
-                textStyle: const TextStyle(fontSize: 18),
-              ),
+              style: AppStyles.primaryButtonStyle,
               child: _isLoading
                   ? const Row(
                 mainAxisSize: MainAxisSize.min,
@@ -260,6 +260,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
               )
                   : const Text('Register'),
             ),
+            const SizedBox(height: 30),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                GestureDetector(
+                  onTap: () => Navigator.pop(context),
+                  child: Text(
+                    "Back to login",
+                    style: AppStyles.vifitTextTheme.titleMedium?.copyWith(color: AppStyles.primaryColor),
+                  ),
+                ),
+              ],
+            ), 
+
           ],
         ),
       ),
