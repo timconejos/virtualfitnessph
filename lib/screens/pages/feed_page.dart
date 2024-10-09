@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:virtualfitnessph/styles/app_styles.dart';
 import '../../services/auth_service.dart';
 import '../view_profile_screen.dart';
+
 
 class FeedPage extends StatefulWidget {
   const FeedPage({super.key});
@@ -79,18 +81,23 @@ class _FeedPageState extends State<FeedPage> {
   }
 
   void _showImageDialog(String imageUrl) {
-    showDialog(
+    showGeneralDialog(
       context: context,
-      builder: (context) {
-        return Dialog(
-          backgroundColor: Colors.transparent,
-          child: Stack(
+      // barrierDismissible: true,
+      pageBuilder: (BuildContext ctx, Animation<double> animation,
+          Animation<double> secondaryAnimation) {
+        return Scaffold(
+          backgroundColor: Colors.black.withOpacity(0.8),
+          body: SafeArea (child: Stack(
             children: [
               InteractiveViewer(
+                boundaryMargin: EdgeInsets.zero,
+                minScale: 0.5,
+                maxScale: 4.0,
                 child: Center(
                   child: Image.network(
                     imageUrl,
-                    fit: BoxFit.contain,
+                    fit: BoxFit.cover,
                   ),
                 ),
               ),
@@ -100,12 +107,12 @@ class _FeedPageState extends State<FeedPage> {
                 child: IconButton(
                   icon: Icon(Icons.close, color: Colors.white, size: 30),
                   onPressed: () {
-                    Navigator.of(context).pop();
+                    Navigator.of(ctx).pop();
                   },
                 ),
               ),
             ],
-          ),
+          )),
         );
       },
     );
@@ -256,16 +263,12 @@ class _FeedPageState extends State<FeedPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: const Text("Feed"),
-        backgroundColor: Colors.white,
-      ),
       body: RefreshIndicator(
         onRefresh: _refreshFeed,
         child: _feedItems.isEmpty
             ? _buildEmptyFeedMessage()
             : ListView.builder(
-          padding: const EdgeInsets.all(16.0),
+          // padding: const EdgeInsets.all(16.0),
           itemCount: _feedItems.length + 1,
           itemBuilder: (context, index) {
             if (index >= _feedItems.length) {
@@ -273,7 +276,7 @@ class _FeedPageState extends State<FeedPage> {
                   ? _buildLoadMoreButton()
                   : const SizedBox.shrink();
             }
-            return _buildFeedItem(context, index);
+            return _buildFeedItem2(context, index);
           },
         ),
       ),
@@ -303,6 +306,153 @@ class _FeedPageState extends State<FeedPage> {
         child: const Text('Load More'),
       ),
     );
+  }
+
+  Widget _buildFeedItem2(BuildContext context, int index) {
+    final feedItem = _feedItems[index]['feed'];
+    final isProfileClickable =
+        feedItem['userId'] != null && feedItem['username'] != null;
+    final profileImageUrl = feedItem['userId']?.isNotEmpty ?? false
+        ? 'http://97.74.90.63:8080/profiles/${feedItem['userId']}.jpg'
+        : '';
+    final name = feedItem['username']?.isNotEmpty ?? false
+        ? _authService.decryptData(feedItem['username'])
+        : 'Anonymous user';
+    final datePosted = DateTime.parse(feedItem['datePosted'])
+        .toUtc()
+        .add(const Duration(hours: 8));
+
+    return Expanded(
+      child:Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.all(10.0),
+            child: GestureDetector(
+            onTap: isProfileClickable
+                ? () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ViewProfileScreen(
+                  userId: feedItem['userId'],
+                  userName: feedItem['username'],
+                ),
+              ),
+            )
+                : null,
+            child: Row(
+              children: [
+                CircleAvatar(
+                  backgroundImage: profileImageUrl.isNotEmpty
+                      ? NetworkImage(profileImageUrl)
+                      : null,
+                  radius: 25,
+                  backgroundColor: Colors.grey.shade300,
+                  child:
+                  profileImageUrl.isEmpty ? const Icon(Icons.person) : null,
+                ),
+                const SizedBox(width: 10),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      name,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 16),
+                    ),
+                    Text(
+                      DateFormat('MMM dd, yyyy hh:mm a').format(datePosted),
+                      style: const TextStyle(color: Colors.grey),
+                    ),
+                  ],
+                ),
+                const Spacer(),
+                PopupMenuButton<String>(
+                  itemBuilder: (BuildContext context) {
+                    return [
+                      PopupMenuItem<String>(
+                          value: 'report',
+                          child: const ListTile(
+                            trailing: Icon(Icons.report), // Icon
+                            title: Text('Report'),
+                          ),
+                          onTap: () => _reportFeed(feedItem['feedId']),
+                        ),
+                        PopupMenuItem<String>(
+                          value: 'block',
+                          child: const ListTile(
+                            trailing: Icon(Icons.block), // Icon
+                            title: Text('Block user'),
+                          ),
+                          onTap: () => _blockUser(feedItem['userId']),
+                        ),
+                    ];
+                  },
+                ),
+                // IconButton(
+                //   icon: const Icon(Icons.flag, color: Colors.grey),
+                //   onPressed: () => _reportFeed(feedItem['feedId']),
+                // ),
+              ],
+            ),
+            )
+          ),
+          Padding(padding: EdgeInsets.all(10), child: Text(feedItem['caption'])),
+          SizedBox(
+            width: double.infinity,
+            child: GestureDetector(
+              onTap: () {
+                _showImageDialog(
+                    'http://97.74.90.63:8080/feed/images/${feedItem['imagePath']}');
+              },
+              child: ClipRRect(
+                child: Image.network(
+                  'http://97.74.90.63:8080/feed/images/${feedItem['imagePath']}',
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 10),
+          Padding(
+            padding: EdgeInsets.all(13.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text((feedItem['location']).toUpperCase(), style: AppStyles.vifitTextTheme.labelSmall?.copyWith(color: Colors.grey)),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    IconButton(
+                      icon: Icon(
+                        _feedItems[index]['likedByUser']
+                            ? Icons.favorite
+                            : Icons.favorite_border,
+                        color: _feedItems[index]['likedByUser']
+                            ? Colors.red
+                            : Colors.grey,
+                      ),
+                      onPressed: () {
+                        _toggleLike(
+                            feedItem['feedId'], _feedItems[index]['likedByUser']);
+                      },
+                    ),
+                    Text(
+                        '${feedItem['likes']} Like${feedItem['likes'] == 1 ? '' : 's'}'),
+                    // const Spacer(),
+                    // IconButton(
+                    //   icon: const Icon(Icons.block, color: Colors.grey),
+                    //   onPressed: () => _blockUser(feedItem['userId']),
+                    // ),
+                  ],
+                ),
+              ]
+            )
+          ),
+          const Divider(),
+        ]
+      )
+      );
   }
 
   Widget _buildFeedItem(BuildContext context, int index) {

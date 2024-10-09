@@ -7,6 +7,8 @@ import 'package:virtualfitnessph/models/user.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:crypto/crypto.dart';
 
+import '../screens/points_history_screen.dart';
+
 class AuthService {
   static const String baseUrl = 'http://97.74.90.63:8080';
   //static const String baseUrl = 'http://10.0.2.2:8080';
@@ -313,7 +315,7 @@ class AuthService {
 
   Future<bool> forgotPassword(String username, String email) async {
     final response = await http.post(
-      Uri.parse('$baseUrl/auth/forgot_password'),
+      Uri.parse('$baseUrl/forgot_password'),
       headers: {'Content-Type': 'application/json'},
       body: json.encode({'username': username, 'email': email}),
     );
@@ -399,6 +401,118 @@ class AuthService {
     } catch (e) {
       print('Error deleting user: $e');
       return false;
+    }
+  }
+
+  Future<String> getCurrentPoints(String userId) async {
+    final String url = '$baseUrl/api/user-points/total/$userId';
+    try {
+      final response = await http.get(
+        Uri.parse(url),
+        headers: {'Content-Type': 'application/json'},
+      );
+      if (response.statusCode == 200) {
+        return response.body;
+      } else {
+        print('Failed to fetch current points: ${response.body}');
+        return "0";
+      }
+    } catch (e) {
+      print('Error fetching current points: $e');
+      return "0";
+    }
+  }
+
+  Future<bool> sharePoints(String sourceUserId, String targetUserId, double amount) async {
+    final String url = '$baseUrl/api/user-points/share';
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'sourceUserId': sourceUserId,
+          'targetUserId': targetUserId,
+          'amount': amount,
+        }),
+      );
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        print('Failed to share points: ${response.body}');
+        return false;
+      }
+    } catch (e) {
+      print('Error sharing points: $e');
+      return false;
+    }
+  }
+
+  Future<List<dynamic>> fetchUserList(String listType, String userId) async {
+    final String url = listType == 'Followers'
+        ? '$baseUrl/followers/$userId'
+        : '$baseUrl/following/$userId';
+
+    try {
+      final response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else {
+        throw Exception('Failed to load $listType');
+      }
+    } catch (e) {
+      print('Error loading $listType: $e');
+      return [];
+    }
+  }
+
+  Future<List<dynamic>> searchUsers(String query) async {
+    final String url = '$baseUrl/search?q=$query';
+    try {
+      final response = await http.get(
+        Uri.parse(url),
+        headers: {'Accept': 'application/json'},
+      );
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else {
+        print('Failed to search users: ${response.body}');
+        return [];
+      }
+    } catch (e) {
+      print('Error searching users: $e');
+      return [];
+    }
+  }
+
+  Future<List<PointsTransaction>> getPointsHistory(String userId) async {
+    final String url = '${await getBaseUrl()}/api/user-points/history/$userId';
+    try {
+      final response = await http.get(
+        Uri.parse(url),
+        headers: {'Accept': 'application/json'},
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+        print('Points History Response: $data'); // Debugging line
+
+        // Check if 'content' exists and is a list
+        if (data.containsKey('content') && data['content'] is List) {
+          List<dynamic> transactionsJson = data['content'];
+          return transactionsJson
+              .map((json) => PointsTransaction.fromJson(json))
+              .toList();
+        } else {
+          print('Unexpected JSON structure: ${response.body}');
+          return [];
+        }
+      } else {
+        print('Failed to fetch points history: ${response.body}');
+        return [];
+      }
+    } catch (e) {
+      print('Error fetching points history: $e');
+      return [];
     }
   }
 

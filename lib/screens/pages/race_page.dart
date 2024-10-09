@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:virtualfitnessph/models/race.dart';
 import 'package:virtualfitnessph/screens/pages/race_detail_page.dart';
 import 'package:virtualfitnessph/services/auth_service.dart';
+import 'package:virtualfitnessph/styles/app_styles.dart';
 
 class RacePage extends StatefulWidget {
   const RacePage({super.key});
@@ -17,16 +18,15 @@ class _RacePageState extends State<RacePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: const Text('Available Races'),
-      ),
+      backgroundColor: AppStyles.scaffoldBgColor,
       body: FutureBuilder<List<Race>>(
         future: _authService.fetchRaces(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return const SizedBox(
+              height: 200,
+              child: Center(child: CircularProgressIndicator()),
+            );
           } else if (snapshot.hasError) {
             return const Center(
               child: Column(
@@ -51,7 +51,7 @@ class _RacePageState extends State<RacePage> {
             onRefresh: () async {
               setState(() {});
             },
-            child: ListView.builder(
+              child: ListView.builder(
               itemCount: races.length,
               itemBuilder: (context, index) {
                 return FutureBuilder<String>(
@@ -74,7 +74,7 @@ class _RacePageState extends State<RacePage> {
   }
 
   Widget raceCard(Race race, String imageUrl) {
-    var startDate = DateFormat('MMM dd, yyyy').format(DateTime.parse(race.startDate));
+     var startDate = DateFormat('MMM dd, yyyy').format(DateTime.parse(race.startDate));
     var endDate = DateFormat('MMM dd, yyyy').format(DateTime.parse(race.endDate));
     return GestureDetector(
       onTap: () {
@@ -84,52 +84,93 @@ class _RacePageState extends State<RacePage> {
           ),
         );
       },
-      child: Card(
-        color: Colors.white,
-        elevation: 2,
-        margin: const EdgeInsets.all(8.0),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 10.0),
+        padding: const EdgeInsets.only(bottom: 10.0),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.6),
+              spreadRadius: 1,
+              blurRadius: 1,
+              offset: const Offset(0, 1),
+            ),
+          ]
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ClipRRect(
-              borderRadius: const BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
-              child: Image.network(
-                imageUrl,
-                height: 200,
-                width: double.infinity,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return Image.asset('assets/login.jpg', height: 200, width: double.infinity, fit: BoxFit.cover);
-                },
+            SizedBox(
+              height: 180,
+              width: double.infinity,
+              child: Stack(
+                alignment: Alignment.topCenter,
+                children: [
+                  ClipRRect(
+                    child: Image.network(
+                      imageUrl,
+                      height: 180,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                      alignment: Alignment.topCenter,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Image.asset('assets/login.jpg', height: 180, width: double.infinity, fit: BoxFit.cover);
+                      },
+                    ),
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [AppStyles.primaryColor.withOpacity(0.2), Colors.transparent],
+                        begin: Alignment.bottomCenter,
+                        end: Alignment.topCenter,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
-              child: Text(
-                race.raceName,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.deepPurple,
-                ),
-              ),
+            Container(
+              padding: const EdgeInsets.all(15.0),
+              child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Flexible(child:
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(race.raceName, style: AppStyles.vifitTextTheme.titleLarge?.copyWith(color: AppStyles.textColor), maxLines: 2, overflow: TextOverflow.visible,),
+                        Text('$startDate - $endDate', style:  AppStyles.vifitTextTheme.labelMedium?.copyWith(color: AppStyles.greyColor)),
+                      ],
+                    )),
+                    const SizedBox(width: 5),
+                    OutlinedButton.icon(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => RaceDetailPage(race: race),
+                        ),
+                      );
+                    },
+                    icon: const Icon(Icons.directions_run, size: 20),
+                    // style: AppStyles.secondaryButtonStyleSmall,
+                    style: OutlinedButton.styleFrom(foregroundColor: AppStyles.secondaryColor, side: BorderSide(color: AppStyles.secondaryColor, width: 1)),
+                    label: Text('Join', style: AppStyles.vifitTextTheme.titleMedium),
+                  )]),
+                
+
+              ],
             ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 4, 16, 16),
-              child: Text(
-                '$startDate - $endDate',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.grey[600],
-                ),
-              ),
             ),
+             
           ],
-        ),
-      ),
+          )
+      )
     );
   }
 }

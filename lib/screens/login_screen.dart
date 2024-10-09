@@ -5,10 +5,13 @@ import 'package:virtualfitnessph/services/auth_service.dart';
 //import 'package:virtualfitnessph/services/notification_service.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:crypto/crypto.dart';
+import 'package:virtualfitnessph/styles/app_styles.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'register_screen.dart';
 import 'forgot_password_screen.dart';
+import 'package:virtualfitnessph/components/primary_text_field.dart';
+import 'package:virtualfitnessph/components/primary_button.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -137,124 +140,122 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Image.asset('assets/login.jpg', height: 200), // Add your image asset here
-
-              const SizedBox(height: 20),
-
-              TextField(
-                controller: _usernameController,
-                decoration: const InputDecoration(
-                  labelText: 'Username',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-
-              const SizedBox(height: 10),
-
-              TextField(
-                controller: _passwordController,
-                obscureText: !_showPassword,
-                decoration: InputDecoration(
-                  labelText: 'Password',
-                  border: const OutlineInputBorder(),
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      _showPassword ? Icons.visibility : Icons.visibility_off,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        _showPassword = !_showPassword;
-                      });
-                    },
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 20),
-
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _isLoading ? null : _login,
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16.0),
-                    textStyle: const TextStyle(fontSize: 18),
-                    foregroundColor: Colors.white,
-                    backgroundColor: Colors.blue.shade700,
-                  ),
-                  child: _isLoading
-                      ? const CircularProgressIndicator(
-                    color: Colors.white,
-                  )
-                      : const Text('Login'),
-                ),
-              ),
-
-              const SizedBox(height: 20),
-
-              Row(
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [ AppStyles.primaryColor.withOpacity(0.6), Colors.white, Colors.white, Colors.white, AppStyles.secondaryColor.withOpacity(0.6)],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter
+          )
+        ),
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(50.0, 10.0, 50.0, 30.0),
+            child: Stack(
+              // mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text("Don't have an account? "),
-                  GestureDetector(
-                    onTap: () {
-                      _register(context);
-                    },
-                    child: const Text(
-                      "Sign up",
-                      style: TextStyle(color: Colors.blue),
+                children: <Widget>[
+                  Image.asset('assets/icon-transparentx410.png', height: 150), // Add your image asset here
+                  SizedBox(height: 40),
+                  PrimaryTextField(
+                    labelText: 'Username', 
+                    controller: _usernameController),
+                  SizedBox(height: 20),
+                  PrimaryTextField(
+                    labelText: 'Password', 
+                    controller: _passwordController, 
+                    isPassword: !_showPassword,
+                    suffixIcon_: IconButton(
+                        icon: Icon(
+                          _showPassword ? Icons.visibility : Icons.visibility_off,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _showPassword = !_showPassword;
+                          });
+                        },
+                      )),
+                  SizedBox(height: 20),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: _isLoading ? null : _login,
+                      style: AppStyles.primaryButtonStyle,
+                      child: _isLoading
+                          ? const CircularProgressIndicator(
+                        color: Colors.white,
+                      )
+                          : Text('Login', style: AppStyles.vifitTextTheme.titleMedium),
                     ),
                   ),
+
+                  const SizedBox(height: 20),
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      // const Text("Forgot your password? "),
+                      GestureDetector(
+                        onTap: () {
+                          _forgotPassword(context);
+                        },
+                        child: Text(
+                          "Forgot Password",
+                          style: AppStyles.vifitTextTheme.titleMedium,
+                        ),
+                      ),
+                    ],
+                  ),
+
+
+
+                  // const SizedBox(height: 20),
+
+                  // ElevatedButton(
+                  //   style: ElevatedButton.styleFrom(
+                  //     backgroundColor: Colors.blue, // Facebook color
+                  //   ),
+                  //   onPressed: () => _showSnackBar("Facebook login coming soon!"),
+                  //   child: const Text('Login with Facebook'),
+                  // ),
+
+                  // const SizedBox(height: 10),
+
+                  // ElevatedButton(
+                  //   style: ElevatedButton.styleFrom(
+                  //     backgroundColor: Colors.red, // Google color
+                  //   ),
+                  //   onPressed: () => _showSnackBar("Google login coming soon!"),
+                  //   child: const Text('Login with Google'),
+                  // ),
                 ],
               ),
+              
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text("Don't have an account? ", style: AppStyles.vifitTextTheme.titleMedium),
+                      GestureDetector(
+                        onTap: () {
+                          _register(context);
+                        },
+                        child: Text(
+                          "Sign up",
+                          style: AppStyles.vifitTextTheme.titleMedium?.copyWith(color: AppStyles.primaryColor, fontWeight: FontWeight.w900),
+                        ),
+                      ),
+                    ],
+                  )),
 
-              const SizedBox(height: 20),
-
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text("Forgot your password? "),
-                  GestureDetector(
-                    onTap: () {
-                      _forgotPassword(context);
-                    },
-                    child: const Text(
-                      "Reset Password",
-                      style: TextStyle(color: Colors.blue),
-                    ),
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: 20),
-
-              // ElevatedButton(
-              //   style: ElevatedButton.styleFrom(
-              //     backgroundColor: Colors.blue, // Facebook color
-              //   ),
-              //   onPressed: () => _showSnackBar("Facebook login coming soon!"),
-              //   child: const Text('Login with Facebook'),
-              // ),
-
-              const SizedBox(height: 10),
-
-              // ElevatedButton(
-              //   style: ElevatedButton.styleFrom(
-              //     backgroundColor: Colors.red, // Google color
-              //   ),
-              //   onPressed: () => _showSnackBar("Google login coming soon!"),
-              //   child: const Text('Login with Google'),
-              // ),
-            ],
+              ]
+            )
           ),
         ),
-      ),
+      )
     );
   }
 }

@@ -3,9 +3,14 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:virtualfitnessph/screens/followers_following_screen.dart';
 import 'package:virtualfitnessph/services/auth_service.dart';
+import 'package:virtualfitnessph/styles/app_styles.dart';
+import 'package:virtualfitnessph/components/outline_button.dart';
+import 'package:virtualfitnessph/components/primary_button.dart';
+import 'package:virtualfitnessph/components/circular_progress_bar.dart';
 import '../all_races_screen.dart';
 import '../edit_profile_screen.dart';
 import '../login_screen.dart';
+import '../pass_points_screen.dart';
 import '../race_detail_screen.dart';
 import '../view_all_badges_screen.dart'; // Add this import
 import 'dart:math';
@@ -25,30 +30,17 @@ class _ProfilePageState extends State<ProfilePage> {
   late List<dynamic> badges = [];
   late List<dynamic> trophies = [];
   late List<dynamic> photos = [];
-  final List<String> mockedFollowers = [
-    'Follower 1',
-    'Follower 2',
-    'Follower 3',
-    'Follower 4',
-    'Follower 5',
-  ];
-
-  final List<String> mockedFollowing = [
-    'Following 1',
-    'Following 2',
-    'Following 3',
-    'Following 4',
-    'Following 5',
-  ];
 
   bool isLoading = false;
   final AuthService _authService = AuthService();
   String? userId;
   String? userName;
+  String? fullName;
   String? _profilePicUrl;
   String totalDistance = "00 KM";
   String pace = "0:00:00";
   String totalRuns = "0";
+  String _currentPoints = "0";
 
   @override
   void initState() {
@@ -84,6 +76,7 @@ class _ProfilePageState extends State<ProfilePage> {
     await _loadProfilePicture();
     await _loadBadges(); // Load badges
     await _loadPhotos();
+    _fetchCurrentPoints();
     setState(() => isLoading = false);
   }
 
@@ -98,6 +91,7 @@ class _ProfilePageState extends State<ProfilePage> {
       if (response.statusCode == 200) {
         setState(() {
           profileData = json.decode(response.body);
+          fullName = profileData['firstName'] + ' ' + profileData['lastName'];
         });
         await _loadStats(); // Load stats after profile data
       } else {
@@ -245,27 +239,46 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
+  void _redeemPoints() {
+      // Currently not implemented. Show a placeholder dialog.
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Redeem Points'),
+            content: const Text('Redeem functionality is coming soon!'),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
 
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppStyles.scaffoldBgColor,
       body: isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator(color: AppStyles.primaryColor))
           : RefreshIndicator(
               onRefresh: _loadAllData,
               child: SingleChildScrollView(
                 child: Padding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.all(0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       _buildProfileHeader(),
-                      const SizedBox(height: 10),
-                      _buildStatsSection(),
                       _buildBadgesSection(),
-                      //_buildTrophiesSection(),
+                      _buildStatsSection(),
+                      _buildRewardSection(),
                       _buildJoinedRacesSection(),
                       _buildPhotosSection(),
                     ],
@@ -276,68 +289,110 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
+  void _fetchCurrentPoints() async {
+    String? userId = await _authService.getUserId();
+    if (userId != null) {
+      String points = await _authService.getCurrentPoints(userId);
+      setState(() {
+        _currentPoints = points;
+      });
+    }
+  }
+  
   Widget _buildProfileHeader() {
-    return GestureDetector(
-      child: Card(
-        elevation: 2,
-        margin: const EdgeInsets.all(8),
-        color: Colors.white,
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  _profilePicUrl == null
-                      ? CircleAvatar(
-                    radius: 60,
-                    backgroundColor: Colors.red.shade200,
-                    child: const Icon(Icons.person, size: 60),
+    return Container(
+      height: 200,
+      padding: EdgeInsets.only(left: 25, right: 25, top: 25, bottom: 5),
+      decoration: BoxDecoration(color: AppStyles.primaryColor,
+          gradient: LinearGradient(
+          colors: [AppStyles.primaryColor, AppStyles.unselectedColor],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        )
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(children: [
+            Column(
+              children: [
+                  Container(
+                    padding: EdgeInsets.all(4.0),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: AppStyles.darkerPrimary
+                    ),
+                    child: 
+                      _profilePicUrl == null
+                          ? CircleAvatar(
+                        radius: 45,
+                        backgroundColor: Colors.red.shade200,
+                        child: const Icon(Icons.person, size: 45),
+                      )
+                          : CircleAvatar(
+                        radius: 45,
+                        backgroundImage: NetworkImage(_profilePicUrl!),
+                      ),
                   )
-                      : CircleAvatar(
-                    radius: 60,
-                    backgroundImage: NetworkImage(_profilePicUrl!),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
+              ]
+            ),
+            Column(
+              children: [
+                Container(
+                  padding: EdgeInsets.all(20),
+                  child: Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          userName ?? 'Unknown User',
-                          style: const TextStyle(
-                              fontSize: 24, fontWeight: FontWeight.bold),
-                        ),
-                        SizedBox(height: 8),
-                        Row(
-                          children: [
-                            _buildStatColumn(
-                              "Followers",
-                              profileData['followersCount']?.toString() ?? '0',
-                                  () => _navigateToList(
-                                  context, 'Followers', mockedFollowers),
-                            ),
-                            SizedBox(width: 16),
-                            _buildStatColumn(
-                              "Following",
-                              profileData['followingCount']?.toString() ?? '0',
-                                  () => _navigateToList(
-                                  context, 'Following', mockedFollowing),
-                            ),
-                          ],
-                        ),
-                      ],
+                          Text(
+                            fullName ?? 'Unknown User',
+                            style: AppStyles.vifitTextTheme.titleLarge?.copyWith(color: AppStyles.primaryForeground),
+                          ),
+                          Text(
+                            userName ?? 'Unknown User',
+                            style: AppStyles.vifitTextTheme.titleMedium?.copyWith(color: AppStyles.primaryForeground),
+                          )
+                      ]
+                      )
                     ),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.edit, color: Colors.blue),
-                    onPressed: () async {
+                  )
+              ]
+            )
+          ],),
+          const SizedBox(height: 15),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    _buildStatColumn(
+                      "Followers",
+                      profileData['followersCount']?.toString() ?? '0',
+                          () => _navigateToList(
+                          context, 'Followers'),
+                    ),
+                    SizedBox(width: 16),
+                    _buildStatColumn(
+                      "Following",
+                      profileData['followingCount']?.toString() ?? '0',
+                          () => _navigateToList(
+                          context, 'Following'),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            Column(
+              children: [
+                // const Text("Don't have an account? ")
+                OutlineButton(
+                  text: 'Edit profile',
+                  icon: Icons.edit,
+                  size: 'small',
+                  onPressed: () async {
                       final result = await Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -348,14 +403,14 @@ class _ProfilePageState extends State<ProfilePage> {
                       if (result == true) {
                         _loadAllData();
                       }
-                    },
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
+                    },)
+              ],
+            )
+          ],)
+
+        ],
+      )
+       
     );
   }
 
@@ -367,18 +422,18 @@ class _ProfilePageState extends State<ProfilePage> {
         children: [
           Text(
             count,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            style: AppStyles.vifitTextTheme.labelLarge?.copyWith(color: AppStyles.primaryForeground),
           ),
           Text(
             label,
-            style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
+            style: AppStyles.vifitTextTheme.labelSmall?.copyWith(color: AppStyles.primaryForeground),
           ),
         ],
       ),
     );
   }
 
-  void _navigateToList(BuildContext context, String title, List<dynamic> users) async {
+  void _navigateToList(BuildContext context, String title) async {
     List<dynamic> userList = await _fetchUserList(title);
     Navigator.push(
       context,
@@ -402,47 +457,173 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Widget _buildStatsSection() {
-    return Card(
-      color: Colors.white,
-      elevation: 2,
-      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Stats Overview',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-            ),
-            const SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                _buildStatCard(
-                  icon: Icons.location_on,
-                  value: totalDistance,
-                  label: 'Distance (km)',
-                  color: Colors.orange,
+  Widget _buildRewardSection() {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text(
+                'Get rewarded',
+                style: AppStyles.vifitTextTheme.headlineSmall,
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Expanded(child: Container(
+                margin: EdgeInsets.all(1),
+                padding: EdgeInsets.all(15),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(13),
+                  // color: Color(0xFFB4D7FF),
+                  color: AppStyles.primaryColor,
+                    gradient: LinearGradient(
+                    colors: [Color(0x80FFDB03), Color(0x30FFDB03)],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  )
                 ),
-                _buildStatCard(
-                  icon: Icons.timer,
-                  value: pace,
-                  label: 'Pace (min/km)',
-                  color: Colors.orange,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Column(children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,  // Make the container circular
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),  // Shadow color
+                              spreadRadius: 1,   // How far the shadow spreads
+                              blurRadius: 0,     // Softness of the shadow
+                              offset: Offset(1, 1),  // Position of the shadow (x, y)
+                            ),
+                          ],
+                        ),
+                        child: 
+                        // Container(
+                        //   width: 50,
+                        //   height: 50, 
+                        //   decoration: BoxDecoration(
+                        //     shape: BoxShape.circle,
+                        //     image: DecorationImage(
+                        //     image: AssetImage('assets/vifit-coin1.png'),
+                        //     fit: BoxFit.fill, // Change to BoxFit.contain, BoxFit.fill, etc. based on your need
+                        //   ),
+                        // )
+                        // )
+                        CircleAvatar(
+                          radius: 40,
+                          backgroundColor: AppStyles.buttonColor,
+                          backgroundImage: AssetImage('assets/vifit-coin1.png'),
+                          // child: const Icon(Icons.monetization_on, size: 50),
+                          // backgroundImage: NetworkImage('https://example.com/image.jpg'), // Add your image URL
+                        ),
+                      ),
+                    ],),
+                    const SizedBox(width: 15),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [Text(
+                          "Vifit coins: $_currentPoints",
+                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                        ),
+                      ],),
+                      Row(children: [
+                        PrimaryButton(text: 'Redeem', color: AppStyles.buttonColor, textColor: AppStyles.buttonTextColor, onPressed: _redeemPoints),
+                        const SizedBox(width: 7),
+                        PrimaryButton(text: 'Pass points',color: AppStyles.buttonColor, textColor: AppStyles.buttonTextColor,  onPressed: () async {
+                          List<dynamic> followers = await _fetchUserList('Followers');
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const PassPointsScreen(),
+                            ),
+                          ).then((_) => _fetchCurrentPoints());
+                        },),
+                      ],)
+                    ],)
+                  ]
                 ),
-                _buildStatCard(
-                  icon: Icons.directions_run,
-                  value: totalRuns,
-                  label: 'Runs',
-                  color: Colors.orange,
-                ),
-              ],
+              ),
             ),
           ],
         ),
-      ),
+      ]
+      )
+    );
+  }
+
+  Widget _buildStatsSection() {
+    return Container(
+       padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+       child: Column(
+         crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text(
+                  'Stats overview',
+                  style: AppStyles.vifitTextTheme.headlineSmall,
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Expanded(child: Container(
+                  margin: EdgeInsets.all(1),
+                  padding: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(13),
+                    // color: Color(0xFFB4D7FF),
+                    color: AppStyles.primaryColor,
+                      gradient: LinearGradient(
+                      colors: [Color(0x80FFDB03), Color(0x30FFDB03)],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                    )
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [ 
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          _buildStatCard(
+                            icon: Icons.location_on,
+                            value: totalDistance,
+                            label: 'Distance (km)',
+                          ),
+                          _buildStatCard(
+                            icon: Icons.timer,
+                            value: pace,
+                            label: 'Pace (min/km)',
+                          ),
+                          _buildStatCard(
+                            icon: Icons.directions_run,
+                            value: totalRuns,
+                            label: 'Runs',
+                          ),
+                        ],
+                      ),
+                  ],),
+                )
+              )
+            ],
+            )
+          ]
+       )
     );
   }
 
@@ -450,39 +631,42 @@ class _ProfilePageState extends State<ProfilePage> {
     required IconData icon,
     required String value,
     required String label,
-    required Color color,
   }) {
     return Container(
       width: 100,
       padding: const EdgeInsets.symmetric(vertical: 16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
-            spreadRadius: 2,
-            blurRadius: 5,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      ),
+      // decoration: BoxDecoration(
+      //   color: Colors.white,
+      //   borderRadius: BorderRadius.circular(8),
+      //   boxShadow: [
+      //     BoxShadow(
+      //       color: Colors.grey.withOpacity(0.2),
+      //       spreadRadius: 2,
+      //       blurRadius: 5,
+      //       offset: const Offset(0, 3),
+      //     ),
+      //   ],
+      // ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, size: 32, color: color),
+          Icon(icon, size: 50, 
+            color: AppStyles.primaryColor, 
+            shadows: [Shadow(
+              color: Colors.black.withOpacity(0.3),  
+              blurRadius: 10,                       
+              offset: Offset(5, 5),                  
+            ),],
+          ),
           const SizedBox(height: 8),
           Text(
             value,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
+            style: AppStyles.vifitTextTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: 1),
           Text(
             label,
-            style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
+            style: AppStyles.vifitTextTheme.labelSmall,
             textAlign: TextAlign.center,
           ),
         ],
@@ -491,96 +675,117 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget _buildBadgesSection() {
-    return Card(
-      color: Colors.white,
-      elevation: 2,
-      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: SizedBox(
-          width: double.infinity,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'My Badges',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-              ),
-              const SizedBox(height: 10),
-              badges.isEmpty
-                  ? const SizedBox(
+    return (
+      Container(
+        padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'My Badges',
+                  style: AppStyles.vifitTextTheme.headlineSmall,
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ViewAllBadgesScreen(
+                          badges: badges,
+                        ),
+                      ),
+                    );
+                  },
+                  child: const Text('View All',
+                      style: TextStyle(color: Colors.blue)),
+                ),
+              ],
+              
+            ),
+           SizedBox(
+              width: double.infinity,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  badges.isEmpty
+                    ? const SizedBox(
                       height: 100,
                       width: double.infinity,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.badge, size: 48, color: Colors.blue),
+                          Icon(Icons.badge, size: 48, color: Colors.grey),
                           SizedBox(height: 10),
                           Text('No badges earned yet.'),
                         ],
                       ),
                     )
-                  : Column(
-                      children: [
-                        GridView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          gridDelegate:
+                    : Column(
+                        children: [
+                          GridView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            gridDelegate:
                               const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3,
-                            mainAxisSpacing: 10,
-                            crossAxisSpacing: 10,
-                            childAspectRatio: 1,
-                          ),
-                          itemCount: min(badges.length, 6),
-                          itemBuilder: (context, index) {
-                            return Stack(
-                              children: [
-                                CircleAvatar(
-                                  radius: 50,
-                                  backgroundColor: Colors.transparent,
-                                  child: ClipOval(
-                                    child: Image.network(
-                                      'http://97.74.90.63:8080/races/badges/${badges[index]['badgesPicturePath']}',
-                                      width: 100,
-                                      height: 100,
-                                      fit: BoxFit.cover,
-                                      errorBuilder:
-                                          (context, error, stackTrace) {
-                                        return Image.network(
-                                          'https://via.placeholder.com/100x100',
-                                          width: 100,
-                                          height: 100,
-                                          fit: BoxFit.cover,
-                                        );
-                                      },
+                              crossAxisCount: 3,
+                              mainAxisSpacing: 10,
+                              crossAxisSpacing: 10,
+                               childAspectRatio: 1,
+                            ),
+                            itemCount: min(badges.length, 6),
+                            itemBuilder: (context, index) {
+                              return Stack(
+                                children: [
+                                  Card(
+                                    color: Colors.white,
+                                    // elevation: 2,
+                                    margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                                    child: Padding(padding: EdgeInsets.all(8),
+                                    child: CircleAvatar(
+                                    radius: 40,
+                                    // backgroundColor: Colors.transparent,
+                                    backgroundColor: Colors.grey,
+                                    child: Column(
+                                      children: [
+                                        ClipOval(
+                                          child: Image.network(
+                                            'http://97.74.90.63:8080/races/badges/${badges[index]['badgesPicturePath']}',
+                                            width: 80,
+                                            height: 80,
+                                            fit: BoxFit.cover,
+                                            errorBuilder:
+                                                (context, error, stackTrace) {
+                                                  return Image.network(
+                                                    'https://via.placeholder.com/100x100',
+                                                    width: 100,
+                                                    height: 100,
+                                                    fit: BoxFit.cover,
+                                                  );
+                                                },
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
                               ],
-                            );
-                          },
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ViewAllBadgesScreen(
-                                  badges: badges,
-                                ),
-                              ),
-                            );
-                          },
-                          child: const Text('View All',
-                              style: TextStyle(color: Colors.blue)),
-                        ),
-                      ],
-                    ),
-            ],
-          ),
+                              );
+                            },
+                          ),
+                          
+                        ],
+                      ),
+                ],
+              ),
+            ),
+      
+          ],
         ),
-      ),
+      )
     );
   }
 
@@ -637,184 +842,230 @@ class _ProfilePageState extends State<ProfilePage> {
         .where((race) => race['registration']['completed'] == false)
         .toList();
 
-    return Card(
-      color: Colors.white,
-      elevation: 2,
-      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('Races Joined and Progress',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-            const SizedBox(height: 10),
-            if (incompleteRaces.isEmpty)
-              const SizedBox(
-                height: 100,
-                width: double.infinity,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.directions_run, size: 48, color: Colors.blue),
-                    SizedBox(height: 10),
-                    Text('No in-progress races yet. Start your journey now!'),
-                  ],
-                ),
-              )
-            else
-              Column(
-                children: incompleteRaces
-                    .take(3)
-                    .map((race) => _buildProgressCard(race))
-                    .toList(),
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Races joined',
+                style: AppStyles.vifitTextTheme.headlineSmall,
               ),
-            TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const AllRacesScreen(),
-                  ),
-                );
-              },
-              child: const Text('View All', style: TextStyle(color: Colors.blue)),
-            ),
-          ],
-        ),
-      ),
+              TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const AllRacesScreen(),
+                    ),
+                  );
+                },
+                child: const Text('View All',
+                    style: TextStyle(color: Colors.blue)),
+              ),
+            ]
+          ),
+          SizedBox(
+            width: double.infinity,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                incompleteRaces.isEmpty?
+                  const SizedBox(
+                    height: 100,
+                    width: double.infinity,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.directions_run, size: 48, color: Colors.grey),
+                        SizedBox(height: 10),
+                        Text('No in-progress races yet. Start your journey now!'),
+                      ],
+                    ),
+                  ) : Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,  
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: incompleteRaces
+                      .take(3)
+                      .map((race) => _buildCircularProgressBar(race))
+                      .toList(),
+                  )
+
+              ]
+            )
+          )
+        ],
+      )
     );
   }
 
   Widget _buildPhotosSection() {
-    return Card(
-      color: Colors.white,
-      elevation: 2,
-      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: SizedBox(
-          width: double.infinity,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+      child: Column (
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              const Text('My Photos',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-              const SizedBox(height: 10),
-              photos.isEmpty
-                  ? const SizedBox(
-                height: 100,
-                width: double.infinity,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.photo, size: 48, color: Colors.blue),
-                    SizedBox(height: 10),
-                    Text('No photos uploaded yet.'),
-                  ],
-                ),
-              )
-                  : GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                  mainAxisSpacing: 10,
-                  crossAxisSpacing: 10,
-                  childAspectRatio: 1,
-                ),
-                itemCount: photos.length,
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () {
-                      _showImageDialog(
-                          'http://97.74.90.63:8080/feed/images/${photos[index]['imagePath']}');
-                    },
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(8.0),
-                      child: Image.network(
-                        'http://97.74.90.63:8080/feed/images/${photos[index]['imagePath']}',
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Image.network(
-                            'https://via.placeholder.com/100x100',
-                            fit: BoxFit.cover,
-                          );
-                        },
-                      ),
-                    ),
-                  );
-                },
+              Text(
+                'My Photos',
+                style: AppStyles.vifitTextTheme.headlineSmall,
               ),
-            ],
+            ]
           ),
-        ),
-      ),
+          const SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Expanded(child: Container(
+                margin: EdgeInsets.all(1),
+                padding: EdgeInsets.all(15),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(13),
+                  color: Color(0x80FFDB03),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    photos.isEmpty
+                        ? const SizedBox(
+                      height: 100,
+                      width: double.infinity,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.photo, size: 48, color: Colors.grey),
+                          SizedBox(height: 10),
+                          Text('No photos uploaded yet.'),
+                        ],
+                      ),
+                    )
+                        : GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                        mainAxisSpacing: 10,
+                        crossAxisSpacing: 10,
+                        childAspectRatio: 1,
+                      ),
+                      itemCount: photos.length,
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          onTap: () {
+                            _showImageDialog(
+                                'http://97.74.90.63:8080/feed/images/${photos[index]['imagePath']}');
+                          },
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8.0),
+                            child: Image.network(
+                              'http://97.74.90.63:8080/feed/images/${photos[index]['imagePath']}',
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Image.network(
+                                  'https://via.placeholder.com/100x100',
+                                  fit: BoxFit.cover,
+                                );
+                              },
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ]
+                )
+              ))
+            ]
+          )
+        ]
+      )
     );
   }
 
   void _showImageDialog(String imageUrl) {
-    showDialog(
-      context: context,
-      builder: (context) => GestureDetector(
-        onTap: () => Navigator.of(context).pop(),
-        child: Dialog(
-          backgroundColor: Colors.transparent,
-          child: Stack(
-            children: [
-              GestureDetector(
-                onTap: () {},
-                child: Container(
-                  width: double.infinity,
-                  height: double.infinity,
-                  color: Colors.transparent,
-                  child: InteractiveViewer(
-                    clipBehavior: Clip.none,
-                    minScale: 0.1,
-                    maxScale: 4.0,
+      showGeneralDialog(
+        context: context,
+        // barrierDismissible: true,
+        pageBuilder: (BuildContext ctx, Animation<double> animation,
+            Animation<double> secondaryAnimation) {
+          return Scaffold(
+            backgroundColor: Colors.black.withOpacity(0.8),
+            body: SafeArea (child: Stack(
+              children: [
+                InteractiveViewer(
+                  boundaryMargin: EdgeInsets.zero,
+                  minScale: 0.5,
+                  maxScale: 4.0,
+                  child: Center(
                     child: Image.network(
                       imageUrl,
-                      fit: BoxFit.contain,
-                      loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-                        if (loadingProgress == null) return child;
-                        return Center(
-                          child: CircularProgressIndicator(
-                            value: loadingProgress.expectedTotalBytes != null
-                                ? loadingProgress.cumulativeBytesLoaded / (loadingProgress.expectedTotalBytes ?? 1)
-                                : null,
-                          ),
-                        );
-                      },
-                      errorBuilder: (context, error, stackTrace) {
-                        return const Center(
-                          child: Text(
-                            'Failed to load image',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        );
-                      },
+                      fit: BoxFit.cover,
                     ),
                   ),
                 ),
-              ),
-              Positioned(
-                top: 20,
-                right: 20,
-                child: GestureDetector(
-                  onTap: () => Navigator.of(context).pop(),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.7),
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(Icons.close, color: Colors.white),
+                Positioned(
+                  top: 10,
+                  right: 10,
+                  child: IconButton(
+                    icon: Icon(Icons.close, color: Colors.white, size: 30),
+                    onPressed: () {
+                      Navigator.of(ctx).pop();
+                    },
                   ),
                 ),
-              ),
-            ],
+              ],
+            )),
+          );
+        },
+      );
+    }
+ 
+  Widget _buildCircularProgressBar(Map<String, dynamic> race) {
+    
+    double screenWidth = MediaQuery.of(context).size.width;
+    double halfScreenWidth = screenWidth / 2.2;
+
+    double progress = race['registration']['distanceProgress'] /
+        race['registration']['raceDistance'];
+    progress = min(progress, 1.0); // Ensure progress does not overflow past 1.0
+
+
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => RaceDetailScreen(race: race),
           ),
-        ),
+        );
+      },
+      child: Container(
+      padding: const EdgeInsets.symmetric(vertical: 3.0, horizontal: 15),
+      constraints: BoxConstraints(
+        maxWidth: halfScreenWidth,
       ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          CustomCircularProgressBar(
+            progress: progress * 100, // Percentage value (0-100)
+            size: halfScreenWidth,    // Diameter of the progress bar
+            strokeWidth: 12,  // Thickness of the progress bar
+            color: AppStyles.primaryColor, // Color of the progress bar
+          ),
+          const SizedBox(height: 5),
+          Text(
+            race['race']['raceName'],
+            textAlign: TextAlign.center,
+            style: AppStyles.vifitTextTheme.labelMedium,
+          ),
+        ]
+      )
+    )
     );
   }
 

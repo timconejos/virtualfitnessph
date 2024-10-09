@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:virtualfitnessph/services/auth_service.dart';
+import 'package:virtualfitnessph/styles/app_styles.dart';
 
 class AddRaceDataScreen extends StatefulWidget {
   final int? initialRaceId;
@@ -307,6 +308,7 @@ class _AddRaceDataScreenState extends State<AddRaceDataScreen> {
                             children: [
                               ElevatedButton.icon(
                                 onPressed: () => _pickImage(ImageSource.camera),
+                                style: AppStyles.primaryButtonStyleInvertSmall,
                                 icon: const Icon(Icons.camera_alt),
                                 label: const Text('Camera'),
                               ),
@@ -314,6 +316,7 @@ class _AddRaceDataScreenState extends State<AddRaceDataScreen> {
                                 onPressed: () =>
                                     _pickImage(ImageSource.gallery),
                                 icon: const Icon(Icons.image),
+                                style: AppStyles.primaryButtonStyleInvertSmall,
                                 label: const Text('Gallery'),
                               ),
                             ],

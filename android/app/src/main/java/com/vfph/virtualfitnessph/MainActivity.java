@@ -5,12 +5,20 @@ import android.app.NotificationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import androidx.core.splashscreen.SplashScreen;
 
 import io.flutter.embedding.android.FlutterActivity;
 
 public class MainActivity extends FlutterActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
+            // Remove the splash screen immediately
+            splashScreen.setKeepOnScreenCondition(() -> false);
+        }
         super.onCreate(savedInstanceState);
 
         // Create a notification channel

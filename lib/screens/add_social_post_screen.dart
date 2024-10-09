@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:virtualfitnessph/styles/app_styles.dart';
 
 import '../services/auth_service.dart';
 
@@ -98,8 +99,6 @@ class _AddSocialPostScreenState extends State<AddSocialPostScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Add Social Post"),
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
@@ -138,26 +137,20 @@ class _AddSocialPostScreenState extends State<AddSocialPostScreen> {
                   icon: const Icon(Icons.camera_alt),
                   label: const Text("Camera"),
                   onPressed: () => pickImage(ImageSource.camera),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white, // Light grey
-                  ),
+                  style: AppStyles.primaryButtonStyleInvertSmall,
                 ),
                 ElevatedButton.icon(
                   icon: const Icon(Icons.photo_library),
                   label: const Text("Gallery"),
                   onPressed: () => pickImage(ImageSource.gallery),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                  ),
+                  style: AppStyles.primaryButtonStyleInvertSmall,
                 ),
               ],
             ),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: uploadImage,
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white, backgroundColor: Colors.blue,
-              ),
+              style: AppStyles.primaryButtonStyle,
               child: const Text("Post"),
             ),
           ],
