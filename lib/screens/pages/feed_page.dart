@@ -322,13 +322,12 @@ class _FeedPageState extends State<FeedPage> {
         .toUtc()
         .add(const Duration(hours: 8));
 
-    return Expanded(
-      child:Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: EdgeInsets.all(10.0),
-            child: GestureDetector(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: GestureDetector(
             onTap: isProfileClickable
                 ? () => Navigator.push(
               context,
@@ -371,88 +370,87 @@ class _FeedPageState extends State<FeedPage> {
                   itemBuilder: (BuildContext context) {
                     return [
                       PopupMenuItem<String>(
-                          value: 'report',
-                          child: const ListTile(
-                            trailing: Icon(Icons.report), // Icon
-                            title: Text('Report'),
-                          ),
-                          onTap: () => _reportFeed(feedItem['feedId']),
+                        value: 'report',
+                        child: const ListTile(
+                          trailing: Icon(Icons.report), // Icon
+                          title: Text('Report'),
                         ),
-                        PopupMenuItem<String>(
-                          value: 'block',
-                          child: const ListTile(
-                            trailing: Icon(Icons.block), // Icon
-                            title: Text('Block user'),
-                          ),
-                          onTap: () => _blockUser(feedItem['userId']),
+                        onTap: () => _reportFeed(feedItem['feedId']),
+                      ),
+                      PopupMenuItem<String>(
+                        value: 'block',
+                        child: const ListTile(
+                          trailing: Icon(Icons.block), // Icon
+                          title: Text('Block user'),
                         ),
+                        onTap: () => _blockUser(feedItem['userId']),
+                      ),
                     ];
                   },
                 ),
-                // IconButton(
-                //   icon: const Icon(Icons.flag, color: Colors.grey),
-                //   onPressed: () => _reportFeed(feedItem['feedId']),
-                // ),
               ],
             ),
-            )
           ),
-          Padding(padding: EdgeInsets.all(10), child: Text(feedItem['caption'])),
-          SizedBox(
-            width: double.infinity,
-            child: GestureDetector(
-              onTap: () {
-                _showImageDialog(
-                    'http://97.74.90.63:8080/feed/images/${feedItem['imagePath']}');
+        ),
+        Padding(
+          padding: const EdgeInsets.all(10),
+          child: Text(feedItem['caption']),
+        ),
+        SizedBox(
+          width: double.infinity,
+          child: GestureDetector(
+            onTap: () {
+              _showImageDialog(
+                  'http://97.74.90.63:8080/feed/images/${feedItem['imagePath']}');
+            },
+            child: Image.network(
+              'http://97.74.90.63:8080/feed/images/${feedItem['imagePath']}',
+              fit: BoxFit.contain,  // Ensure the image maintains its aspect ratio
+              width: MediaQuery.of(context).size.width,  // Fit the screen width
+              errorBuilder: (context, error, stackTrace) {
+                return const Icon(Icons.broken_image, size: 100);  // Handle broken images
               },
-              child: ClipRRect(
-                child: Image.network(
-                  'http://97.74.90.63:8080/feed/images/${feedItem['imagePath']}',
-                  fit: BoxFit.cover,
-                ),
-              ),
             ),
           ),
-          const SizedBox(height: 10),
-          Padding(
-            padding: EdgeInsets.all(13.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text((feedItem['location']).toUpperCase(), style: AppStyles.vifitTextTheme.labelSmall?.copyWith(color: Colors.grey)),
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    IconButton(
-                      icon: Icon(
-                        _feedItems[index]['likedByUser']
-                            ? Icons.favorite
-                            : Icons.favorite_border,
-                        color: _feedItems[index]['likedByUser']
-                            ? Colors.red
-                            : Colors.grey,
-                      ),
-                      onPressed: () {
-                        _toggleLike(
-                            feedItem['feedId'], _feedItems[index]['likedByUser']);
-                      },
+        ),
+        const SizedBox(height: 10),
+        Padding(
+          padding: const EdgeInsets.all(13.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                (feedItem['location']).toUpperCase(),
+                style: AppStyles.vifitTextTheme.labelSmall
+                    ?.copyWith(color: Colors.grey),
+              ),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  IconButton(
+                    icon: Icon(
+                      _feedItems[index]['likedByUser']
+                          ? Icons.favorite
+                          : Icons.favorite_border,
+                      color: _feedItems[index]['likedByUser']
+                          ? Colors.red
+                          : Colors.grey,
                     ),
-                    Text(
-                        '${feedItem['likes']} Like${feedItem['likes'] == 1 ? '' : 's'}'),
-                    // const Spacer(),
-                    // IconButton(
-                    //   icon: const Icon(Icons.block, color: Colors.grey),
-                    //   onPressed: () => _blockUser(feedItem['userId']),
-                    // ),
-                  ],
-                ),
-              ]
-            )
+                    onPressed: () {
+                      _toggleLike(
+                          feedItem['feedId'], _feedItems[index]['likedByUser']);
+                    },
+                  ),
+                  Text(
+                      '${feedItem['likes']} Like${feedItem['likes'] == 1 ? '' : 's'}'),
+                ],
+              ),
+            ],
           ),
-          const Divider(),
-        ]
-      )
-      );
+        ),
+        const Divider(),
+      ],
+    );
   }
 
   Widget _buildFeedItem(BuildContext context, int index) {

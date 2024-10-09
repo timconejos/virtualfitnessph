@@ -232,100 +232,96 @@ class _PassPointsScreenState extends State<PassPointsScreen> {
         title: const Text('Pass Points'),
         backgroundColor: AppStyles.primaryColor,
       ),
-      body: Stack(children: [
-        Expanded(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            _buildSearchInput(),
-            // Search Bar
-            // const SizedBox(height: 20),
-            Padding(
-              padding: EdgeInsets.all(16),
-              child: Text('Following', style: AppStyles.vifitTextTheme.labelMedium?.copyWith(color: AppStyles.greyColor)),
-            ),
-            // Users List
-            _isLoading && _isSearching
-                ? const CircularProgressIndicator()
-                : Expanded(
-              child: displayList.isEmpty
-                  ? const Center(child: Text('No users found.'))
-                  : ListView.builder(
-                itemCount: displayList.length,
-                itemBuilder: (context, index) {
-                  var user = displayList[index];
-                  return ListTile(
-                    leading: CircleAvatar(
-                      backgroundImage: NetworkImage(
-                        user['id'] != null
-                            ? '$_baseUrl/profiles/${user['id']}.jpg'
-                            : 'https://via.placeholder.com/100x100',
-                      ),
-                      backgroundColor: Colors.grey.shade200,
-                    ),
-                    title: Text(_authService.decryptData(user['username'])),
-                    trailing: _selectedUserId == user['id']
-                        ? const Icon(Icons.check, color: Colors.green)
-                        : null,
-                    onTap: () => _selectUser(user),
-                    focusColor: Colors.grey,
-                    onLongPress: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ViewProfileScreen(
-                            userId: user['id'],
-                            userName: user['username'],
-                          ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildSearchInput(),
+          Expanded(
+            child: Stack(
+              children: [
+                // Users List or Loading Indicator
+                _isLoading && _isSearching
+                    ? const Center(child: CircularProgressIndicator())
+                    : displayList.isEmpty
+                    ? const Center(child: Text('No users found.'))
+                    : ListView.builder(
+                  itemCount: displayList.length,
+                  itemBuilder: (context, index) {
+                    var user = displayList[index];
+                    return ListTile(
+                      leading: CircleAvatar(
+                        backgroundImage: NetworkImage(
+                          user['id'] != null
+                              ? '$_baseUrl/profiles/${user['id']}.jpg'
+                              : 'https://via.placeholder.com/100x100',
                         ),
-                      );
-                    },
-                  );
-                },
-              ),
-            ),
-            Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: Container(
-                padding: EdgeInsets.symmetric(vertical: 20, horizontal: 30),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.6),
-                      spreadRadius: 1,
-                      blurRadius: 1,
-                      offset: const Offset(0, 1),
-                    ),
-                  ]
-                ),
-                child: Column(
-                  children: [
-                    PrimaryTextField(
-                    controller: _amountController,  
-                    labelText: 'Amount',
-                    prefixIcon_: Icon(Icons.attach_money),
-                    keyboardType: TextInputType.numberWithOptions(decimal: true),
-                  ),
-                  const SizedBox(height: 20),
-                  // Share Points Button
-                  _isLoading && !_isSearching
-                      ? const CircularProgressIndicator()
-                      : ElevatedButton(
-                        onPressed: _sharePoints,
-                        style: AppStyles.primaryButtonStyle,
-                        child: Text('Share Points', style: AppStyles.vifitTextTheme.titleMedium),
+                        backgroundColor: Colors.grey.shade200,
                       ),
-                  ],
-              ))
+                      title: Text(_authService.decryptData(user['username'])),
+                      trailing: _selectedUserId == user['id']
+                          ? const Icon(Icons.check, color: Colors.green)
+                          : null,
+                      onTap: () => _selectUser(user),
+                      focusColor: Colors.grey,
+                      onLongPress: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ViewProfileScreen(
+                              userId: user['id'],
+                              userName: user['username'],
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                ),
+                // Positioned Widget for Amount Input and Share Button
+                Positioned(
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.6),
+                          spreadRadius: 1,
+                          blurRadius: 1,
+                          offset: const Offset(0, 1),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min, // Add this line
+                      children: [
+                        PrimaryTextField(
+                          controller: _amountController,
+                          labelText: 'Amount',
+                          prefixIcon_: const Icon(Icons.attach_money),
+                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                        ),
+                        const SizedBox(height: 20),
+                        // Share Points Button
+                        _isLoading && !_isSearching
+                            ? const CircularProgressIndicator()
+                            : ElevatedButton(
+                          onPressed: _sharePoints,
+                          style: AppStyles.primaryButtonStyle,
+                          child: Text('Share Points', style: AppStyles.vifitTextTheme.titleMedium),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
-            // Amount Input
-           
-          ],
-        ),
-      )]),
+          ),
+        ],
+      ),
     );
   }
 

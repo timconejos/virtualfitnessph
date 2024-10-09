@@ -157,7 +157,7 @@ class _PointsHistoryScreenState extends State<PointsHistoryScreen> {
         title: const Text('Points History'),
         backgroundColor: AppStyles.primaryColor,
       ),
-      body: Expanded(
+      body: SingleChildScrollView(
         // padding: const EdgeInsets.all(0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -175,8 +175,8 @@ class _PointsHistoryScreenState extends State<PointsHistoryScreen> {
               ),
             ),
             // Points History List
-            Expanded(
-              child: Container(
+            Container(
+                height: MediaQuery.of(context).size.height * 0.6,
                 decoration: const BoxDecoration(
                   color: Colors.white
                 ),
@@ -194,7 +194,6 @@ class _PointsHistoryScreenState extends State<PointsHistoryScreen> {
                       },
                     ),
                 )
-            ),
           ],
         ),
       ),
@@ -206,7 +205,7 @@ class _PointsHistoryScreenState extends State<PointsHistoryScreen> {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Expanded(
-          child:Container(
+          child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(13),
               color: AppStyles.darkerPrimary,
@@ -217,82 +216,74 @@ class _PointsHistoryScreenState extends State<PointsHistoryScreen> {
                   blurRadius: 2,
                   offset: const Offset(0, 2),
                 ),
-              ]
+              ],
             ),
-            child: Expanded(
-              child: Column(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 25),
-                    decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.vertical(top: Radius.circular(13.0), bottom: Radius.circular(0)),
-                      color: AppStyles.primaryColor,
-                        gradient: const LinearGradient(
-                        colors: [Color(0xFFFFFDB03), Color.fromARGB(255, 255, 241, 159)],
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        stops: [0.2, 0.8]
-                      )
+            child: Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 25),
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.vertical(top: Radius.circular(13.0)),
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFFFFFDB03), Color.fromARGB(255, 255, 241, 159)],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      stops: [0.2, 0.8],
                     ),
-                    child: Row(
-                      children: [
-                        const CircleAvatar(
-                          radius: 25,
-                          backgroundColor: AppStyles.buttonColor,
-                          backgroundImage: AssetImage('assets/vifit-coin1.png'),
-                        ),
-                        const SizedBox(width: 15),  
-                        Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
+                  ),
+                  child: Row(
+                    children: [
+                      const CircleAvatar(
+                        radius: 25,
+                        backgroundColor: AppStyles.buttonColor,
+                        backgroundImage: AssetImage('assets/vifit-coin1.png'),
+                      ),
+                      const SizedBox(width: 15),
+                      Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Coins earned', style: AppStyles.vifitTextTheme.labelSmall?.copyWith(color: AppStyles.textColor)),
-                          Text(_currentPoints, style: AppStyles.vifitTextTheme.titleLarge?.copyWith(color: AppStyles.textColor))
-                        ]
+                          Text(
+                            'Coins earned',
+                            style: AppStyles.vifitTextTheme.labelSmall?.copyWith(color: AppStyles.textColor),
+                          ),
+                          Text(
+                            _currentPoints,
+                            style: AppStyles.vifitTextTheme.titleLarge?.copyWith(color: AppStyles.textColor),
+                          ),
+                        ],
                       ),
-                    ]
+                    ],
                   ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 1),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      TextButton.icon(
+                        onPressed: _navigateToPassPoints,
+                        label: const Text('Pass points'),
+                        icon: const Icon(Icons.send),
+                        style: TextButton.styleFrom(
+                          foregroundColor: AppStyles.primaryForeground,
+                        ),
+                      ),
+                      TextButton.icon(
+                        onPressed: _redeemPoints,
+                        label: const Text('Redeem'),
+                        icon: const Icon(Icons.redeem),
+                        style: TextButton.styleFrom(
+                          foregroundColor: AppStyles.primaryForeground,
+                        ),
+                      ),
+                    ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 1),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            TextButton.icon(
-                              onPressed: _navigateToPassPoints, 
-                              label: const Text('Pass points'),
-                              icon: const Icon(Icons.send),
-                              style: TextButton.styleFrom(
-                                foregroundColor: AppStyles.primaryForeground, // text and icon color
-                              )
-                            )
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            TextButton.icon(
-                              onPressed: _redeemPoints, 
-                              label: const Text('Redeem'),
-                              icon: const Icon(Icons.redeem),
-                              style: TextButton.styleFrom(
-                                foregroundColor: AppStyles.primaryForeground, // text and icon color
-                              )
-                            )
-                          ],
-                        ),
-                      ],
-                    ),
-                  )
-                ],
-              )
-              
-          ))
+                ),
+              ],
+            ),
+          ),
         ),
-      ]
+      ],
     );
   }
 }

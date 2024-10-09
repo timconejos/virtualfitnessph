@@ -340,22 +340,20 @@ class _ProfilePageState extends State<ProfilePage> {
               children: [
                 Container(
                   padding: EdgeInsets.all(20),
-                  child: Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                          Text(
-                            fullName ?? 'Unknown User',
-                            style: AppStyles.vifitTextTheme.titleLarge?.copyWith(color: AppStyles.primaryForeground),
-                          ),
-                          Text(
-                            userName ?? 'Unknown User',
-                            style: AppStyles.vifitTextTheme.titleMedium?.copyWith(color: AppStyles.primaryForeground),
-                          )
-                      ]
-                      )
-                    ),
-                  )
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        fullName ?? 'Unknown User',
+                        style: AppStyles.vifitTextTheme.titleLarge?.copyWith(color: AppStyles.primaryForeground),
+                      ),
+                      Text(
+                        userName ?? 'Unknown User',
+                        style: AppStyles.vifitTextTheme.titleMedium?.copyWith(color: AppStyles.primaryForeground),
+                      ),
+                    ],
+                  ),
+                ),
               ]
             )
           ],),
