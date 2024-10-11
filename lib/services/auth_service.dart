@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:virtualfitnessph/models/race.dart';
+import 'package:virtualfitnessph/models/rewards.dart';
 import 'package:virtualfitnessph/models/user.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:crypto/crypto.dart';
@@ -517,11 +518,11 @@ class AuthService {
   }
 
 
-  Future<List<dynamic>> fetchRewards() async {
+  Future<List<Map<String, dynamic>>> fetchRewards() async {
     return [
-      {'Rewards name', 33, 'description test test', 'assets/post1.jpg'},
-      {'Rewards name 1', 33, 'description test test', 'assets/post1.jpg'},
-      {'Rewards name 2', 33, 'description test test', 'assets/post1.jpg'},
+      // {rewardsId: 12, rewardsName: 'Rewards name', points: 33, rewardsPicture: 'assets/post1.jpg'},
+      {'rewardsName': 'Rewards name 1', 'price': '33', 'description': 'description test test', 'rewardsPicture': 'assets/post1.jpg'},
+      {'rewardsName': 'Rewards name 1', 'price': '33', 'description': 'description test test', 'rewardsPicture': 'assets/post1.jpg'},
     ];
   }
 

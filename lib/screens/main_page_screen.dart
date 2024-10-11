@@ -8,6 +8,7 @@ import 'package:virtualfitnessph/screens/pages/profile_page.dart';
 import 'package:virtualfitnessph/screens/add_race_data_screen.dart';
 import 'package:virtualfitnessph/screens/add_social_post_screen.dart';
 import 'package:virtualfitnessph/screens/pages/race_page.dart';
+import 'package:virtualfitnessph/screens/pages/rewards_page.dart';
 import '../services/auth_service.dart';
 import 'login_screen.dart';
 import 'package:virtualfitnessph/styles/app_styles.dart';
@@ -32,7 +33,7 @@ class _MainPageScreenState extends State<MainPageScreen> {
   static final List<Widget> _widgetOptions = <Widget>[
     const FeedPage(),
     const RacePage(),
-    const RacePage(), // TODO: create rewards page
+    const RewardsPage(), // TODO: create rewards page
     const ActivityPage(),
     const ProfilePage(),
   ];
