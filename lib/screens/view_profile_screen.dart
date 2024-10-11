@@ -348,99 +348,108 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
   Widget _buildProfileHeader() {
     return Container(
       height: 200,
-      padding: EdgeInsets.only(left: 25, right: 25, top: 25, bottom: 5),
-      decoration: BoxDecoration(color: AppStyles.primaryColor,
-          gradient: LinearGradient(
+      padding: const EdgeInsets.only(left: 25, right: 25, top: 25, bottom: 5),
+      decoration: BoxDecoration(
+        color: AppStyles.primaryColor,
+        gradient: LinearGradient(
           colors: [AppStyles.primaryColor, AppStyles.unselectedColor],
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-        )
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(children: [
-            Column(
-              children: [
+          Row(
+            children: [
+              // Profile Picture Column
+              Column(
+                children: [
                   Container(
-                    padding: EdgeInsets.all(4.0),
+                    padding: const EdgeInsets.all(4.0),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: AppStyles.darkerPrimary
+                      color: AppStyles.darkerPrimary,
                     ),
-                    child: 
-                      _profilePicUrl == null
-                          ? CircleAvatar(
-                        radius: 45,
-                        backgroundColor: Colors.red.shade200,
-                        child: const Icon(Icons.person, size: 45),
-                      )
-                          : CircleAvatar(
-                        radius: 45,
-                        backgroundImage: NetworkImage(_profilePicUrl!),
+                    child: _profilePicUrl == null
+                        ? CircleAvatar(
+                      radius: 45,
+                      backgroundColor: Colors.red.shade200,
+                      child: const Icon(Icons.person, size: 45),
+                    )
+                        : CircleAvatar(
+                      radius: 45,
+                      backgroundImage: NetworkImage(_profilePicUrl!),
+                    ),
+                  ),
+                ],
+              ),
+              // Add some spacing
+              const SizedBox(width: 10),
+              // Expanded Widget Moved Here
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        _userName ?? 'Unknown User',
+                        style: AppStyles.vifitTextTheme.titleLarge?.copyWith(
+                          color: AppStyles.primaryForeground,
+                        ),
                       ),
-                  )
-              ]
-            ),
-            Column(
-              children: [
-                Container(
-                  padding: EdgeInsets.all(20),
-                  child: Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                          Text(
-                            _userName ?? 'Unknown User',
-                            style: AppStyles.vifitTextTheme.titleLarge?.copyWith(color: AppStyles.primaryForeground),
-                          ),
-                          Text(
-                            _userName ?? 'Unknown User',
-                            style: AppStyles.vifitTextTheme.titleMedium?.copyWith(color: AppStyles.primaryForeground),
-                          )
-                      ]
-                      )
-                    ),
-                  )
-              ]
-            )
-          ],),
+                      Text(
+                        _userName ?? 'Unknown User',
+                        style: AppStyles.vifitTextTheme.titleMedium?.copyWith(
+                          color: AppStyles.primaryForeground,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
           const SizedBox(height: 15),
+          // Rest of your code...
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    _buildStatColumn(
-                      "Followers",
-                      _followers.length.toString(),
-                    ),
-                    SizedBox(width: 16),
-                    _buildStatColumn(
-                      "Following",
-                      _following.length.toString(),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            Column(
-              children: [
-                OutlineButton(
-                  text: _isFollowing ? 'Unfolllow' : 'Follow',
-                  icon: _isFollowing ? Icons.person_remove : Icons.person_add,
-                  size: 'small',
-                  onPressed: _toggleFollow)
-              ],
-            )
-          ],)
-
+              // Followers and Following
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      _buildStatColumn(
+                        "Followers",
+                        _followers.length.toString(),
+                      ),
+                      const SizedBox(width: 16),
+                      _buildStatColumn(
+                        "Following",
+                        _following.length.toString(),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              // Follow/Unfollow Button
+              Column(
+                children: [
+                  OutlineButton(
+                    text: _isFollowing ? 'Unfollow' : 'Follow',
+                    icon: _isFollowing ? Icons.person_remove : Icons.person_add,
+                    size: 'small',
+                    onPressed: _toggleFollow,
+                  ),
+                ],
+              ),
+            ],
+          ),
         ],
-      )
-       
+      ),
     );
   }
 
