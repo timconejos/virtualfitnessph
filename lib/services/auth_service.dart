@@ -517,4 +517,18 @@ class AuthService {
   }
 
 
+  Future<List<dynamic>> fetchRewards() async {
+    return [
+      {'Rewards name', 33, 'description test test', 'assets/post1.jpg'},
+      {'Rewards name 1', 33, 'description test test', 'assets/post1.jpg'},
+      {'Rewards name 2', 33, 'description test test', 'assets/post1.jpg'},
+    ];
+  }
+
+   Future<String> fetchRewardsImage(String filename) async {
+      return 'assets/post1.jpg'; // Default image
+  }
+
+
+
 }

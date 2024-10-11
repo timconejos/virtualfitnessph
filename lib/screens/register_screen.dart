@@ -131,11 +131,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return emailRegExp.hasMatch(email);
   }
 
-  void _onPasswordChanged(String value) {
-    setState(() {
-      _isPasswordValid = _validatePassword(value);
-    });
-  }
+  // ValueChanged _onPasswordChanged(String value) {
+  //   setState(() {
+  //     _isPasswordValid = _validatePassword(value);
+  //   });
+  // }
 
   bool _validatePassword(String password) {
     final passwordRegExp = RegExp(r'^(?=.*[a-z])(?=.*\d).{7,}$');
@@ -152,7 +152,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     required TextEditingController controller,
     required String labelText,
     bool obscureText = false,
-    void Function(String)? onChanged,
+    ValueChanged? onChanged,
   }) {
     return PrimaryTextField(
       controller: controller,
@@ -231,7 +231,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
               controller: _passwordController,
               labelText: 'Enter a password',
               obscureText: true,
-              onChanged: _onPasswordChanged,
+              onChanged: (value) {
+                 setState(() {
+                  _isPasswordValid = _validatePassword(value);
+                });
+              },
             ),
             const SizedBox(height: 10),
             _buildTextField(

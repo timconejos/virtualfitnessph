@@ -74,7 +74,7 @@ class _RacePageState extends State<RacePage> {
   }
 
   Widget raceCard(Race race, String imageUrl) {
-     var startDate = DateFormat('MMM dd, yyyy').format(DateTime.parse(race.startDate));
+    var startDate = DateFormat('MMM dd, yyyy').format(DateTime.parse(race.startDate));
     var endDate = DateFormat('MMM dd, yyyy').format(DateTime.parse(race.endDate));
     return GestureDetector(
       onTap: () {
