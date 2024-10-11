@@ -10,7 +10,7 @@ class PrimaryTextField extends StatelessWidget {
   final FormFieldValidator<String>? validator;
   final Widget? suffixIcon_;
   final Widget? prefixIcon_;
-  final Function? onChanged;
+  final ValueChanged? onChanged;
   final Function(String)? onSubmitted;
 
   PrimaryTextField({
@@ -22,7 +22,7 @@ class PrimaryTextField extends StatelessWidget {
     this.validator,
     this.suffixIcon_,
     this.prefixIcon_ = null,
-    this.onChanged = null,
+    this.onChanged,
     this.onSubmitted = null
   });
 
@@ -32,7 +32,7 @@ class PrimaryTextField extends StatelessWidget {
       controller: controller,
       obscureText: isPassword, // To toggle password visibility
       keyboardType: keyboardType,
-      onChanged: (_) => onChanged,
+      onChanged: onChanged,
       onFieldSubmitted: onSubmitted,
       decoration: InputDecoration(
         labelText: labelText,
