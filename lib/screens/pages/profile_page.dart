@@ -580,13 +580,13 @@ class _ProfilePageState extends State<ProfilePage> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Expanded(child: Container(
-                  margin: EdgeInsets.all(1),
-                  padding: EdgeInsets.all(10),
+                  margin: const EdgeInsets.all(1),
+                  padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(13),
                     // color: Color(0xFFB4D7FF),
                     color: AppStyles.primaryColor,
-                      gradient: LinearGradient(
+                      gradient: const LinearGradient(
                       colors: [Color(0x80FFDB03), Color(0x30FFDB03)],
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
@@ -653,7 +653,7 @@ class _ProfilePageState extends State<ProfilePage> {
             shadows: [Shadow(
               color: Colors.black.withOpacity(0.3),  
               blurRadius: 10,                       
-              offset: Offset(5, 5),                  
+              offset: const Offset(5, 5),                  
             ),],
           ),
           const SizedBox(height: 8),
@@ -675,7 +675,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget _buildBadgesSection() {
     return (
       Container(
-        padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+        padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -884,7 +884,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       ],
                     ),
                   ) : Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,  
+                    mainAxisAlignment: MainAxisAlignment.start,  
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: incompleteRaces
                       .take(3)

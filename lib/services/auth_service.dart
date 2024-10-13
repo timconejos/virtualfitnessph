@@ -523,6 +523,10 @@ class AuthService {
       // {rewardsId: 12, rewardsName: 'Rewards name', points: 33, rewardsPicture: 'assets/post1.jpg'},
       {'rewardsName': 'Rewards name 1', 'price': '33', 'description': 'description test test', 'rewardsPicture': 'assets/post1.jpg'},
       {'rewardsName': 'Rewards name 1', 'price': '33', 'description': 'description test test', 'rewardsPicture': 'assets/post1.jpg'},
+      {'rewardsName': 'Rewards name 1', 'price': '33', 'description': 'description test test', 'rewardsPicture': 'assets/post1.jpg'},
+      {'rewardsName': 'Rewards name 1', 'price': '33', 'description': 'description test test', 'rewardsPicture': 'assets/post1.jpg'},
+      {'rewardsName': 'Rewards name 1', 'price': '33', 'description': 'description test test', 'rewardsPicture': 'assets/post1.jpg'},
+      {'rewardsName': 'Rewards name 1', 'price': '33', 'description': 'description test test', 'rewardsPicture': 'assets/post1.jpg'},
     ];
   }
 

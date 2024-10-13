@@ -49,8 +49,8 @@ class _FeedPageState extends State<FeedPage> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('End User License Agreement (EULA)'),
-          content: SingleChildScrollView(
+          title: const Text('End User License Agreement (EULA)'),
+          content: const SingleChildScrollView(
             child: Column(
               children: [
                 Text(
@@ -66,11 +66,11 @@ class _FeedPageState extends State<FeedPage> {
           ),
           actions: [
             TextButton(
-              child: Text('Decline'),
+              child: const Text('Decline'),
               onPressed: () => Navigator.of(context).pop(false),
             ),
             TextButton(
-              child: Text('Accept'),
+              child: const Text('Accept'),
               onPressed: () => Navigator.of(context).pop(true),
             ),
           ],
@@ -207,20 +207,20 @@ class _FeedPageState extends State<FeedPage> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Report Feed'),
+          title: const Text('Report Feed'),
           content: TextField(
             controller: reasonController,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               hintText: 'Enter the reason for reporting',
             ),
           ),
           actions: [
             TextButton(
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
               onPressed: () => Navigator.of(context).pop(false),
             ),
             TextButton(
-              child: Text('Submit'),
+              child: const Text('Submit'),
               onPressed: () => Navigator.of(context).pop(true),
             ),
           ],
@@ -240,11 +240,11 @@ class _FeedPageState extends State<FeedPage> {
           content: Text(content),
           actions: [
             TextButton(
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
               onPressed: () => Navigator.of(context).pop(false),
             ),
             TextButton(
-              child: Text('Confirm'),
+              child: const Text('Confirm'),
               onPressed: () => Navigator.of(context).pop(true),
             ),
           ],

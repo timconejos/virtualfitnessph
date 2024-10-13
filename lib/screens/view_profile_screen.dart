@@ -348,8 +348,8 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
   Widget _buildProfileHeader() {
     return Container(
       height: 200,
-      padding: const EdgeInsets.only(left: 25, right: 25, top: 25, bottom: 5),
-      decoration: BoxDecoration(
+      padding: const EdgeInsets.only(left: 25, right: 5, top: 2, bottom: 5),
+      decoration: const BoxDecoration(
         color: AppStyles.primaryColor,
         gradient: LinearGradient(
           colors: [AppStyles.primaryColor, AppStyles.unselectedColor],
@@ -359,15 +359,19 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Profile Picture Column
               Column(
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(4.0),
-                    decoration: BoxDecoration(
+                    margin: const EdgeInsets.only(top: 23),
+                    padding: const EdgeInsets.fromLTRB(4, 4, 4, 4),
+                    decoration: const BoxDecoration(
                       shape: BoxShape.circle,
                       color: AppStyles.darkerPrimary,
                     ),
@@ -385,11 +389,11 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                 ],
               ),
               // Add some spacing
-              const SizedBox(width: 10),
+              // const SizedBox(width: 10),
               // Expanded Widget Moved Here
               Expanded(
                 child: Container(
-                  padding: const EdgeInsets.all(20),
+                  padding: const EdgeInsets.fromLTRB(20, 45, 20, 20),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -409,6 +413,28 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                   ),
                 ),
               ),
+              Row(
+              // mainAxisAlignment: MainAxisAlignment.start,
+              // crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                PopupMenuButton<String>(
+                  iconColor: AppStyles.primaryForeground,
+                  itemBuilder: (BuildContext context) {
+                    return [
+                      PopupMenuItem<String>(
+                        value: 'block',
+                        child: const ListTile(
+                          trailing: Icon(Icons.block), // Icon
+                          title: Text('Block user'),
+                        ),
+                        onTap: () => _blockUser(),
+                      ),
+                    ];
+                  },
+                ),
+              ]
+            ),
             ],
           ),
           const SizedBox(height: 15),
@@ -436,15 +462,14 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                 ],
               ),
               // Follow/Unfollow Button
-              Column(
-                children: [
-                  OutlineButton(
+              Padding(
+                padding: const EdgeInsets.only(right: 20),
+                child: OutlineButton(
                     text: _isFollowing ? 'Unfollow' : 'Follow',
                     icon: _isFollowing ? Icons.person_remove : Icons.person_add,
                     size: 'small',
                     onPressed: _toggleFollow,
                   ),
-                ],
               ),
             ],
           ),
@@ -468,7 +493,7 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
           ),
           Text(
             label,
-            style: AppStyles.vifitTextTheme.labelLarge?.copyWith(color: AppStyles.primaryForeground),
+            style: AppStyles.vifitTextTheme.labelSmall?.copyWith(color: AppStyles.primaryForeground),
           ),
         ],
       ),
@@ -478,7 +503,7 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
 
   Widget _buildStatsSection() {
     return Container(
-       padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+       padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
        child: Column(
          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -496,13 +521,13 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Expanded(child: Container(
-                  margin: EdgeInsets.all(1),
-                  padding: EdgeInsets.all(10),
+                  margin: const EdgeInsets.all(1),
+                  padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(13),
                     // color: Color(0xFFB4D7FF),
                     color: AppStyles.primaryColor,
-                      gradient: LinearGradient(
+                      gradient: const LinearGradient(
                       colors: [Color(0x80FFDB03), Color(0x30FFDB03)],
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
@@ -571,11 +596,11 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
         children: [
           Icon(icon, size: 50, 
             color: AppStyles.primaryColor, 
-            // shadows: [Shadow(
-            //   color: Colors.black.withOpacity(0.3),  
-            //   blurRadius: 10,                       
-            //   offset: Offset(5, 5),                  
-            // ),],
+            shadows: [Shadow(
+              color: Colors.black.withOpacity(0.3),  
+              blurRadius: 10,                       
+              offset: const Offset(5, 5),                  
+            ),],
           ),
           const SizedBox(height: 8),
           Text(
@@ -596,7 +621,7 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
   Widget _buildBadgesSection() {
     return (
       Container(
-        padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+        padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

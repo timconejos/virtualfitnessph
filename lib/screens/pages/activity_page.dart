@@ -96,7 +96,7 @@ class _ActivityPageState extends State<ActivityPage> {
                     ),
                     title: RichText(text: 
                       TextSpan(
-                        style: TextStyle(
+                        style: const TextStyle(
                         // fontSize: 20.0,
                         color: AppStyles.textColor, // Default text color
                       ),

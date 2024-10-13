@@ -181,6 +181,8 @@ class _SearchUserScreenState extends State<SearchUserScreen> {
             // ),
             const SizedBox(height: 20),
             // Users List
+          
+
             _isLoading
                 ? const CircularProgressIndicator()
                 : Expanded(

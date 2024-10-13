@@ -74,7 +74,7 @@ class AppStyles {
     ),
   );
 
-  static TextTheme vifitTextTheme = TextTheme(
+  static TextTheme vifitTextTheme = const TextTheme(
 
       displayLarge: TextStyle(fontFamily: 'NunitoSans', fontWeight: FontWeight.w300, fontSize: 57.0),
       displayMedium: TextStyle(fontFamily: 'NunitoSans', fontWeight: FontWeight.w300, fontSize: 45.0),

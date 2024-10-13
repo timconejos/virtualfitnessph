@@ -78,43 +78,48 @@ class _RewardsPageState extends State<RewardsPage> {
         );
       },
       child: Container(
-        margin: const EdgeInsets.only(bottom: 10.0),
-        padding: const EdgeInsets.only(bottom: 10.0),
+        margin: const EdgeInsets.only(bottom: 5.0),
         decoration: BoxDecoration(
           color: Colors.white,
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.6),
+              color: Colors.grey.withOpacity(0.3),
               spreadRadius: 1,
               blurRadius: 1,
               offset: const Offset(0, 1),
             ),
           ]
         ),
+
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
-              height: 100,
-              width: 100,
+
+              height: 150,
+              width: 130,
               child: ClipRRect(
                   child: Image.network(
                     imageUrl,
-                    height: 180,
+                    height: 150,
                     width: double.infinity,
                     fit: BoxFit.cover,
                     alignment: Alignment.topCenter,
                     errorBuilder: (context, error, stackTrace) {
-                      return Image.asset('assets/login.jpg', height: 180, width: double.infinity, fit: BoxFit.cover);
+                      return Image.asset('assets/post1.jpg', height: 100, width: double.infinity, fit: BoxFit.cover);
                     },
                   ),
                 ),
             ),
+            const SizedBox(width: 15),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Text(rewards['rewardsName']),
-                Text(rewards['price']),
+                const SizedBox(height: 15),
+                Text(rewards['rewardsName'], style: AppStyles.vifitTextTheme.titleMedium),
+                Text('P ${rewards['price']}', style: AppStyles.vifitTextTheme.titleLarge?.copyWith(color: AppStyles.secondaryColor)),
               ],
             )
           ]
