@@ -16,6 +16,7 @@ class SearchUserScreen extends StatefulWidget {
 class _SearchUserScreenState extends State<SearchUserScreen> {
   final AuthService _authService = AuthService();
   final TextEditingController _searchController = TextEditingController();
+  bool _isSearching = true;
   List<dynamic> _users = [];
   bool _isLoading = false;
   String _baseUrl = '';
@@ -67,6 +68,81 @@ class _SearchUserScreenState extends State<SearchUserScreen> {
     );
   }
 
+
+  AppBar _buildSearchAppBar() {
+    return AppBar(
+      // leading: IconButton(
+      //   icon: Icon(Icons.arrow_back),
+      //   onPressed: () {
+      //     setState(() {
+      //       _isSearching = false; // Exit search mode
+      //       _searchController.clear(); // Clear search input
+      //     });
+      //   },
+      // ),
+      title: TextField(
+        controller: _searchController,
+        autofocus: true,
+        style: const TextStyle(color: Colors.white),
+        onSubmitted: (value) => _searchUsers(),
+        decoration: InputDecoration(
+          isDense: true,
+          isCollapsed: false,
+          filled: true,
+          fillColor: AppStyles.darkerPrimary,
+          hintText: 'Search users...',
+          hintStyle: TextStyle(color: Colors.white.withOpacity(0.7)),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide.none,
+          ),
+          focusedBorder:  OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide.none,
+          ),
+          errorBorder:  OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide.none,
+          ),
+          enabledBorder:  OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide.none,
+          ),
+          focusedErrorBorder:  OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide.none,
+          ),
+          disabledBorder:  OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide.none,
+          ),
+          floatingLabelBehavior: FloatingLabelBehavior.never,
+          suffixIcon: IconButton(
+                icon: const Icon(Icons.search),
+                onPressed: _searchUsers,
+                color: Colors.white,
+              ),
+        ),
+        onChanged: (value) {
+          // Implement search logic here
+          print("Searching for: $value");
+        },
+        cursorColor: Colors.white
+      ),
+      // actions: [
+      //   IconButton(
+      //     icon: Icon(Icons.clear),
+      //     onPressed: () {
+      //       _searchController.clear(); // Clear the search text
+      //       setState(() {
+      //         _isSearching = false; // Exit search mode
+      //       });
+      //     },
+      //   ),
+      // ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     // If baseUrl is not yet initialized, show a loading indicator
@@ -81,27 +157,28 @@ class _SearchUserScreenState extends State<SearchUserScreen> {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Search Users'),
-        backgroundColor: AppStyles.primaryColor,
-      ),
+      appBar: _buildSearchAppBar(),
+      // AppBar(
+      //   title: const Text('Search Users'),
+      //   backgroundColor: AppStyles.primaryColor,
+      // ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: <Widget>[
-            // Search Bar
-            TextField(
-              controller: _searchController,
-              decoration: InputDecoration(
-                labelText: 'Search by username, name, or email',
-                border: const OutlineInputBorder(),
-                suffixIcon: IconButton(
-                  icon: const Icon(Icons.search),
-                  onPressed: _searchUsers,
-                ),
-              ),
-              onSubmitted: (value) => _searchUsers(),
-            ),
+            // // Search Bar
+            // TextField(
+            //   controller: _searchController,
+            //   decoration: InputDecoration(
+            //     labelText: 'Search by username, name, or email',
+            //     border: const OutlineInputBorder(),
+            //     suffixIcon: IconButton(
+            //       icon: const Icon(Icons.search),
+            //       onPressed: _searchUsers,
+            //     ),
+            //   ),
+            //   onSubmitted: (value) => _searchUsers(),
+            // ),
             const SizedBox(height: 20),
             // Users List
             _isLoading

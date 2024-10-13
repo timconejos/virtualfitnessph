@@ -280,6 +280,9 @@ class _MainPageScreenState extends State<MainPageScreen> {
   }
 
   void _navigateToSearchUser() {
+    // setState(() {
+    //   _isSearching = true;
+    // });
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const SearchUserScreen()),
@@ -293,64 +296,88 @@ class _MainPageScreenState extends State<MainPageScreen> {
     );
   }
 
+  AppBar _buildAppBar() {
+    return AppBar(
+      title: Text(_appBarTitle, style: AppStyles.vifitTextTheme.titleMedium),
+      titleSpacing: 1,
+      centerTitle: true,
+      leading: Row(
+        // mainAxisAlignmRnt: MainAxisAlignment.spaceEvenly,
+        mainAxisSize: MainAxisSize.min,
+        children:[
+          IconButton(
+          icon: const Icon(Icons.menu),
+          onPressed: () {
+            _scaffoldKey.currentState?.openDrawer();
+          },
+        ),
+        ]),
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.search),
+          onPressed: _navigateToSearchUser, // Add search button
+        ),
+        IconButton(
+          icon: const Icon(Icons.notifications),
+          onPressed: _showNotifications,
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         key: _scaffoldKey,
-        appBar: AppBar(
-          title: Text(_appBarTitle, style: AppStyles.vifitTextTheme.titleMedium),
-          titleSpacing: 1,
-          centerTitle: true,
-          leading: Row(
-            // mainAxisAlignmRnt: MainAxisAlignment.spaceEvenly,
-            mainAxisSize: MainAxisSize.min,
-            children:[
-              IconButton(
-              icon: const Icon(Icons.menu),
-              onPressed: () {
-                _scaffoldKey.currentState?.openDrawer();
-              },
-            ),
-            
-            ]),
-          actions: [
-            // TextButton(
-            //   style: TextButton.styleFrom(foregroundColor: AppStyles.buttonColor, textStyle: AppStyles.vifitTextTheme.titleMedium),
-            //   onPressed: _navigateToPointsHistory, // Updated onPressed
-            //   child: Text("$_currentPoints coins"),
-            // ),
-            IconButton(
-              icon: const Icon(Icons.search),
-              onPressed: _navigateToSearchUser, // Add search button
-            ),
-            IconButton(
-              icon: const Icon(Icons.notifications),
-              onPressed: _showNotifications,
-            ),
-          ],
-        ),
+        appBar: _buildAppBar(),
         drawer: Drawer(
           backgroundColor: Colors.white,
           child: Column(
             children: [ 
-              DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.blue,
-              ),
-              child: Text(
-                'Drawer Header',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                ),
-              ),
-            ),
             Expanded(
               child: ListView(
                 padding: EdgeInsets.zero,
                 children: [
-                  const SizedBox(height: 100),
-                  
+                    DrawerHeader(
+                    // padding: const EdgeInsets.symmetric(vertical: 60, horizontal: 10),
+                    padding: const EdgeInsets.fromLTRB(20, 16, 16, 16),
+                    decoration: const BoxDecoration(
+                    color: AppStyles.primaryColor,
+                    ),
+                    child:  GestureDetector(
+                          onTap: _navigateToPointsHistory, child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        const CircleAvatar(
+                          radius: 25,
+                          backgroundImage: AssetImage('assets/vifit-coin1.png'),
+                        ),
+                        const SizedBox(width: 15),
+                      Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                             Text(
+                              'Coin balance',
+                              style: AppStyles.vifitTextTheme.labelSmall?.copyWith(color: AppStyles.primaryForeground)
+                            ),
+                              Text(
+                              "$_currentPoints",
+                              style: AppStyles.vifitTextTheme.titleLarge?.copyWith(color: AppStyles.primaryForeground)
+                            ),
+                          ]
+                        ),
+
+                      ],
+                    )),
+                  ),
+                  // const SizedBox(height: 10),
+                  ListTile(
+                    leading: const Icon(Icons.history),
+                    title: const Text('View coin history'),
+                    onTap: _navigateToPointsHistory,
+                  ),
                   ListTile(
                     leading: const Icon(Icons.web),
                     title: const Text('Visit Website'),
@@ -374,7 +401,7 @@ class _MainPageScreenState extends State<MainPageScreen> {
                 title: const Text('Deactivate Account', style: TextStyle(color: Colors.red)),
                 onTap: _deactivateAccount
               ),
-              const SizedBox(height: 100)
+              const SizedBox(height: 30)
                 ]
               ),
             ),
@@ -393,43 +420,45 @@ class _MainPageScreenState extends State<MainPageScreen> {
             foregroundColor: AppStyles.primaryForeground,
             backgroundColor: AppStyles.primaryColor,
             child: const Icon(Icons.add),
-            shape: CircleBorder(),
+            shape: const CircleBorder(),
             elevation: 6.0,
           ),
         ) : null,
-        bottomNavigationBar: Container(
-          height: 70,
-          child:  BottomNavigationBar(
-            items: const <BottomNavigationBarItem>[
-              BottomNavigationBarItem(
-                icon: Icon(Icons.home),
-                label: 'Home',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.calendar_today),
-                label: 'Races',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.military_tech),
-                label: 'Rewards',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.directions_run),
-                label: 'Activity',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.person),
-                label: 'Profile',
-              ),
-            ],
-            currentIndex: _selectedIndex,
-            selectedItemColor: AppStyles.buttonColor,
-            unselectedItemColor: Colors.grey[400],
-            backgroundColor: AppStyles.primaryColor,
-            onTap: _onItemTapped,
-            iconSize: 35,
-            type: BottomNavigationBarType.fixed,
-          ),
+        bottomNavigationBar: SafeArea(
+            child: Container(
+            height: 70,
+            child:  BottomNavigationBar(
+              items: const <BottomNavigationBarItem>[
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.home),
+                  label: 'Home',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.calendar_today),
+                  label: 'Races',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.military_tech),
+                  label: 'Rewards',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.directions_run),
+                  label: 'Activity',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.person),
+                  label: 'Profile',
+                ),
+              ],
+              currentIndex: _selectedIndex,
+              selectedItemColor: AppStyles.buttonColor,
+              unselectedItemColor: Colors.grey[400],
+              backgroundColor: AppStyles.primaryColor,
+              onTap: _onItemTapped,
+              iconSize: 35,
+              type: BottomNavigationBarType.fixed,
+            ),
+          )
         )
     );
   }

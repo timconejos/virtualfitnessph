@@ -94,6 +94,37 @@ class _AddSocialPostScreenState extends State<AddSocialPostScreen> {
     }
   }
 
+
+void _showUploadOptions(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return SizedBox(
+          height: 130,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              const SizedBox(height: 10),
+              ListTile(
+                leading: const Icon(Icons.camera_alt),
+                title: const Text('Take photo'),
+                onTap: () => pickImage(ImageSource.camera),
+              ),
+              ListTile(
+                leading: const Icon(Icons.image),
+                title: const Text('Choose from library'),
+                onTap: () => pickImage(ImageSource.gallery),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -107,10 +138,12 @@ class _AddSocialPostScreenState extends State<AddSocialPostScreen> {
           children: <Widget>[
             if (_imageFile != null)
               Image.file(_imageFile!, height: 300, fit: BoxFit.cover),
-            const SizedBox(height: 20),
+            const SizedBox(height: 15),
             TextField(
+              minLines: 6,
               controller: _captionController,
               decoration: const InputDecoration(
+                alignLabelWithHint: true,
                 labelText: 'Caption',
                 border: OutlineInputBorder(),
                 filled: true,
@@ -119,7 +152,7 @@ class _AddSocialPostScreenState extends State<AddSocialPostScreen> {
               keyboardType: TextInputType.multiline,
               maxLines: null,  // Allows for any number of lines
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 15),
             TextField(
               controller: _locationController,
               decoration: const InputDecoration(
@@ -129,24 +162,59 @@ class _AddSocialPostScreenState extends State<AddSocialPostScreen> {
                 fillColor: Colors.white,
               ),
             ),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ElevatedButton.icon(
-                  icon: const Icon(Icons.camera_alt),
-                  label: const Text("Camera"),
-                  onPressed: () => pickImage(ImageSource.camera),
-                  style: AppStyles.primaryButtonStyleInvertSmall,
+
+            const SizedBox(height: 15),
+            GestureDetector(
+              onTap: () => _showUploadOptions(context),
+              child: Container(
+                width: double.infinity,
+                // height: 150,
+                padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(
+                    color: Colors.grey, // Border color
+                    width: 1.0, // Border width
+                  ),
+                  borderRadius: BorderRadius.circular(8.0), // Rounded border
                 ),
-                ElevatedButton.icon(
-                  icon: const Icon(Icons.photo_library),
-                  label: const Text("Gallery"),
-                  onPressed: () => pickImage(ImageSource.gallery),
-                  style: AppStyles.primaryButtonStyleInvertSmall,
+                alignment: Alignment.center,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.cloud_upload, size: 50, color: Colors.grey),
+                    TextButton(
+                      onPressed: () => _showUploadOptions(context), // Updated onPressed
+                      child: const Text("Upload photo", style: TextStyle(color: Colors.blue)),
+                    ),
+                    
+                    if (_imageFile != null)
+                      Image.file(_imageFile!, height: 300, fit: BoxFit.cover),
+                  ],
                 ),
-              ],
+              ),
             ),
+
+            
+            // const SizedBox(height: 20),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            //   children: [
+            //     ElevatedButton.icon(
+            //       icon: const Icon(Icons.camera_alt),
+            //       label: const Text("Camera"),
+            //       onPressed: () => pickImage(ImageSource.camera),
+            //       style: AppStyles.primaryButtonStyleInvertSmall,
+            //     ),
+            //     ElevatedButton.icon(
+            //       icon: const Icon(Icons.photo_library),
+            //       label: const Text("Gallery"),
+            //       onPressed: () => pickImage(ImageSource.gallery),
+            //       style: AppStyles.primaryButtonStyleInvertSmall,
+            //     ),
+            //   ],
+            // ),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: uploadImage,

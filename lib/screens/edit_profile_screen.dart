@@ -255,52 +255,77 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           backgroundColor: Colors.red.shade200,
           child: const Icon(Icons.person, size: 60),
         )
-            : CircleAvatar(
-            radius: 60,
-            backgroundImage: NetworkImage(_profilePicUrl!))),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton.icon(
-              icon: const Icon(Icons.camera),
-              label: const Text('Camera'),
-              onPressed: () => _pickImage(ImageSource.camera),
-              style: AppStyles.primaryButtonStyleInvertSmall,
-            ),
-            const SizedBox(width: 10),
-            ElevatedButton.icon(
-              icon: const Icon(Icons.image),
-              label: const Text('Gallery'),
-              onPressed: () => _pickImage(ImageSource.gallery),
-              style: AppStyles.primaryButtonStyleInvertSmall,
-            ),
-          ],
+            : GestureDetector(
+              onTap: () => _showUploadOptions(context),
+              child: CircleAvatar(
+                radius: 60,
+                backgroundImage: NetworkImage(_profilePicUrl!))
+              )),
+        const SizedBox(height: 10),
+        TextButton(
+          // style: TextButton.styleFrom(foregroundColor: AppStyles.buttonColor, textStyle: AppStyles.vifitTextTheme.titleMedium),
+          onPressed: () => _showUploadOptions(context), // Updated onPressed
+          child: const Text("Change profile picture", style: TextStyle(color: Colors.blue)),
         ),
+        const SizedBox(height: 20),
       ],
     );
   }
 
+void _showUploadOptions(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return SizedBox(
+          height: 180,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Container(
+                padding: EdgeInsets.only(left: 20),
+                child: Text('Change profile picture', style: TextStyle(color: AppStyles.greyColor))
+              ),
+              const SizedBox(height: 10),
+              ListTile(
+                leading: const Icon(Icons.camera_alt),
+                title: const Text('Take photo'),
+                onTap: () => _pickImage(ImageSource.camera),
+              ),
+              ListTile(
+                leading: const Icon(Icons.image),
+                title: const Text('Choose from library'),
+                onTap: () => _pickImage(ImageSource.gallery),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   Widget _buildChangePasswordButton() {
-    return ElevatedButton(
+    return TextButton(
       onPressed: () {
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => const ChangePasswordScreen()),
         );
       },
-      child: const Text('Change Password'),
-      style: AppStyles.primaryButtonStyleInvertSmall,
+      child: const Text('Change password', style: TextStyle(color: AppStyles.primaryColor)),
+      // style: AppStyles.primaryButtonStyleInvertSmall,
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Edit Profile'),
+        title: const Text('Edit profile'),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.fromLTRB(16, 16, 16, 30),
         child: Form(
           key: _formKey,
           child: Column(
@@ -312,22 +337,26 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 validator: (value) =>
                 value!.isEmpty ? 'First Name is required' : null,
               ),
+              const SizedBox(height: 20),
               TextFormField(
                 controller: _middleNameController,
                 decoration: const InputDecoration(labelText: 'Middle Name'),
               ),
+              const SizedBox(height: 20),
               TextFormField(
                 controller: _lastNameController,
                 decoration: const InputDecoration(labelText: 'Last Name'),
                 validator: (value) =>
                 value!.isEmpty ? 'Last Name is required' : null,
               ),
+              const SizedBox(height: 20),
               TextFormField(
                 controller: _addressController,
                 decoration: const InputDecoration(labelText: 'Address'),
                 validator: (value) =>
                 value!.isEmpty ? 'Address is required' : null,
               ),
+              const SizedBox(height: 20),
               TextFormField(
                 controller: _phoneNumberController,
                 decoration: const InputDecoration(labelText: 'Phone Number'),
@@ -336,6 +365,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 validator: (value) =>
                 value!.isEmpty ? 'Phone Number is required' : null,
               ),
+              const SizedBox(height: 20),
               TextFormField(
                 controller: _ageController,
                 decoration: const InputDecoration(labelText: 'Age'),
@@ -346,6 +376,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 ],
                 validator: (value) => value!.isEmpty ? 'Age is required' : null,
               ),
+              const SizedBox(height: 20),
               TextFormField(
                 controller: _weightController,
                 decoration: const InputDecoration(labelText: 'Weight (kg)'),
@@ -357,6 +388,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 validator: (value) =>
                 value!.isEmpty ? 'Weight is required' : null,
               ),
+              const SizedBox(height: 20),
               Row(
                 children: [
                   Expanded(
@@ -388,17 +420,22 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   ),
                 ],
               ),
+              const SizedBox(height: 20),
               TextFormField(
                 controller: _fitnessGoalsController,
                 decoration: const InputDecoration(labelText: 'Fitness Goals'),
               ),
               const SizedBox(height: 20),
-              ElevatedButton(
+             SizedBox(
+              width: double.infinity,
+              child:  ElevatedButton(
                 onPressed: _saveProfile,
-                child: const Text('Save Profile'),
+                child: const Text('Save profile'),
               ),
+             ),
               const SizedBox(height: 20),
               _buildChangePasswordButton(),
+              const SizedBox(height: 20),
             ],
           ),
         ),

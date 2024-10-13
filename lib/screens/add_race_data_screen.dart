@@ -67,6 +67,7 @@ class _AddRaceDataScreenState extends State<AddRaceDataScreen> {
     setState(() {
       _image = pickedFile;
     });
+    Navigator.pop(context);
   }
 
   Future<void> _submitData() async {
@@ -132,6 +133,36 @@ class _AddRaceDataScreenState extends State<AddRaceDataScreen> {
     }
   }
 
+
+void _showUploadOptions(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return SizedBox(
+          height: 130,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              const SizedBox(height: 10),
+              ListTile(
+                leading: const Icon(Icons.camera_alt),
+                title: const Text('Take photo'),
+                onTap: () => _pickImage(ImageSource.camera),
+              ),
+              ListTile(
+                leading: const Icon(Icons.image),
+                title: const Text('Choose from library'),
+                onTap: () => _pickImage(ImageSource.gallery),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -146,6 +177,7 @@ class _AddRaceDataScreenState extends State<AddRaceDataScreen> {
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -160,6 +192,7 @@ class _AddRaceDataScreenState extends State<AddRaceDataScreen> {
                             decoration: BoxDecoration(
                               border: Border.all(color: Colors.grey),
                               borderRadius: BorderRadius.circular(8),
+                              color: Colors.white,
                             ),
                             height: 300,
                             // Increased height for the scrollable section
@@ -230,6 +263,7 @@ class _AddRaceDataScreenState extends State<AddRaceDataScreen> {
                         validator: (value) =>
                             value!.isEmpty ? 'Please enter distance' : null,
                       ),
+                      const SizedBox(height: 15),
                       Row(
                         children: [
                           Expanded(
@@ -290,47 +324,84 @@ class _AddRaceDataScreenState extends State<AddRaceDataScreen> {
                           ),
                         ],
                       ),
+                      const SizedBox(height: 15),
                       TextFormField(
                         controller: _locationController,
                         decoration: const InputDecoration(labelText: 'Location'),
                         validator: (value) =>
                             value!.isEmpty ? 'Please enter location' : null,
                       ),
-                      const SizedBox(height: 20),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text('Upload Proof:',
-                              style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.bold)),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      const SizedBox(height: 15),
+                      const Text('Upload Proof: ', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold,), textAlign: TextAlign.start),
+                      const SizedBox(height: 5),
+                      GestureDetector(
+                        onTap: () => _showUploadOptions(context),
+                        child: Container(
+                          width: double.infinity,
+                          // height: 150,
+                          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            border: Border.all(
+                              color: Colors.grey, // Border color
+                              width: 1.0, // Border width
+                            ),
+                            borderRadius: BorderRadius.circular(8.0), // Rounded border
+                          ),
+                          alignment: Alignment.center,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              ElevatedButton.icon(
-                                onPressed: () => _pickImage(ImageSource.camera),
-                                style: AppStyles.primaryButtonStyleInvertSmall,
-                                icon: const Icon(Icons.camera_alt),
-                                label: const Text('Camera'),
+                              const Icon(Icons.cloud_upload, size: 50, color:  Colors.grey),
+                              TextButton(
+                                onPressed: () => _showUploadOptions(context), // Updated onPressed
+                                child: const Text("Upload photo", style: TextStyle(color: Colors.blue)),
                               ),
-                              ElevatedButton.icon(
-                                onPressed: () =>
-                                    _pickImage(ImageSource.gallery),
-                                icon: const Icon(Icons.image),
-                                style: AppStyles.primaryButtonStyleInvertSmall,
-                                label: const Text('Gallery'),
-                              ),
+                              
+                              if (_image != null) Image.file(File(_image!.path)),
                             ],
                           ),
-                        ],
+                        ),
                       ),
-                      if (_image != null) Image.file(File(_image!.path)),
-                      const SizedBox(height: 20),
+
+                      
+                      const SizedBox(height: 15),
+                      // Column(
+                      //   crossAxisAlignment: CrossAxisAlignment.start,
+                      //   children: [
+                      //     const Text('Upload Proof:',
+                      //         style: TextStyle(
+                      //             fontSize: 16, fontWeight: FontWeight.bold)),
+                      //     Row(
+                      //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //       children: [
+                      //         ElevatedButton.icon(
+                      //           onPressed: () => _pickImage(ImageSource.camera),
+                      //           style: AppStyles.primaryButtonStyleInvertSmall,
+                      //           icon: const Icon(Icons.camera_alt),
+                      //           label: const Text('Camera'),
+                      //         ),
+                      //         ElevatedButton.icon(
+                      //           onPressed: () =>
+                      //               _pickImage(ImageSource.gallery),
+                      //           icon: const Icon(Icons.image),
+                      //           style: AppStyles.primaryButtonStyleInvertSmall,
+                      //           label: const Text('Gallery'),
+                      //         ),
+                      //       ],
+                      //     ),
+                      //   ],
+                      // ),
+                      const SizedBox(height: 5),
                       isSubmitting
-                          ? const CircularProgressIndicator()
-                          : ElevatedButton(
+                          ? const Center(child: CircularProgressIndicator())
+                          : SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton(
                               onPressed: _submitData,
                               child: const Text('Submit'),
-                            ),
+                            )),
                     ],
                   ),
                 ),
