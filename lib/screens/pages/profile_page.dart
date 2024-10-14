@@ -339,7 +339,7 @@ class _ProfilePageState extends State<ProfilePage> {
             Column(
               children: [
                 Container(
-                  padding: EdgeInsets.all(20),
+                  padding: const EdgeInsets.all(20),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -348,7 +348,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         style: AppStyles.vifitTextTheme.titleLarge?.copyWith(color: AppStyles.primaryForeground),
                       ),
                       Text(
-                        userName ?? 'Unknown User',
+                        '@${userName}' ?? 'Unknown User',
                         style: AppStyles.vifitTextTheme.titleMedium?.copyWith(color: AppStyles.primaryForeground),
                       ),
                     ],

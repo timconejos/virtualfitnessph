@@ -21,14 +21,14 @@ class PrimaryButton extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         backgroundColor: color,
         foregroundColor: textColor,
-        minimumSize: Size(0,0),
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+        minimumSize: const Size(0,0),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
         ),
       ),
       onPressed: onPressed,
-      child: Text(text, style: AppStyles.vifitTextTheme.labelMedium),
+      child: Text(text, style: AppStyles.vifitTextTheme.labelMedium?.copyWith(fontWeight: FontWeight.w600)),
     );
   }
 }

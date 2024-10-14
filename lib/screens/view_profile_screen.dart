@@ -404,7 +404,7 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                         ),
                       ),
                       Text(
-                        _userName ?? 'Unknown User',
+                        '@${_userName}' ?? 'Unknown User',
                         style: AppStyles.vifitTextTheme.titleMedium?.copyWith(
                           color: AppStyles.primaryForeground,
                         ),
@@ -645,7 +645,7 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                   },
                   child: const Text('View All',
                       style: TextStyle(color: Colors.blue)),
-                ),
+                ),  
               ],
               
             ),

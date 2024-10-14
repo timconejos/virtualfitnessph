@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:virtualfitnessph/services/auth_service.dart';
+import 'package:virtualfitnessph/styles/app_styles.dart';
 
 import 'add_race_data_screen.dart';
 
@@ -79,16 +80,15 @@ class _RaceDetailScreenState extends State<RaceDetailScreen> {
   }
 
   Widget _buildStatsSection() {
-    return Card(
-      elevation: 2,
+    return Container(
+      // elevation: 2,
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
+        // padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Stats Overview',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+            Text('Stats Overview',
+                style: AppStyles.vifitTextTheme.labelMedium?.copyWith(color: AppStyles.greyColor)),
             const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -109,7 +109,6 @@ class _RaceDetailScreenState extends State<RaceDetailScreen> {
             ),
           ],
         ),
-      ),
     );
   }
 
@@ -126,18 +125,32 @@ class _RaceDetailScreenState extends State<RaceDetailScreen> {
     double pendingProgress = ((approvedDistance + pendingDistance) / raceDistance).clamp(0.0, 1.0) - approvedProgress;
     double totalProgress = approvedProgress + pendingProgress;
 
-    return Card(
-      elevation: 2,
-      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.only(bottom: 5.0),
+      padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 20.0),
+        decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+            BoxShadow(
+            color: Colors.grey.withOpacity(0.3),
+            spreadRadius: 1,
+            blurRadius: 1,
+            offset: const Offset(0, 1),
+          ),
+        ]
+      ),
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.symmetric(horizontal:0, vertical: 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Race Progress',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-            ),
+            // const Text(
+            //   'Race Progress',
+            //   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+            // ),
+            Text('Race Progress',
+                style: AppStyles.vifitTextTheme.labelMedium?.copyWith(color: AppStyles.greyColor)),
             const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -157,7 +170,7 @@ class _RaceDetailScreenState extends State<RaceDetailScreen> {
               children: [
                 // Background for the progress bar
                 Container(
-                  height: 20,
+                  height: 26,
                   decoration: BoxDecoration(
                     color: Colors.grey[300],
                     borderRadius: BorderRadius.circular(10),
@@ -167,9 +180,9 @@ class _RaceDetailScreenState extends State<RaceDetailScreen> {
                 FractionallySizedBox(
                   widthFactor: approvedProgress,
                   child: Container(
-                    height: 20,
+                    height: 26,
                     decoration: BoxDecoration(
-                      color: Colors.green,
+                      color: AppStyles.secondaryColor,
                       borderRadius: approvedProgress < 1
                           ? const BorderRadius.only(
                         topLeft: Radius.circular(10),
@@ -224,7 +237,7 @@ class _RaceDetailScreenState extends State<RaceDetailScreen> {
                     ),
                   );
                 },
-                child: const Text('Add'),
+                child: const Text('Add', textAlign: TextAlign.end,),
               ),
             ),
           ],
@@ -234,7 +247,9 @@ class _RaceDetailScreenState extends State<RaceDetailScreen> {
   }
 
   Widget _buildSubmissionListSection() {
-    return Column(
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child:Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text('Submissions',
@@ -277,6 +292,53 @@ class _RaceDetailScreenState extends State<RaceDetailScreen> {
           },
         ),
       ],
+    ));
+  }
+
+  Widget _buildRaceHeader() {
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.only(bottom: 5.0),
+      padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 20.0),
+        decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+            BoxShadow(
+            color: Colors.grey.withOpacity(0.3),
+            spreadRadius: 1,
+            blurRadius: 1,
+            offset: const Offset(0, 1),
+          ),
+        ]
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          CircleAvatar(
+            radius: 50,
+            backgroundColor: Colors.transparent,
+            child: ClipOval(
+              child: Image.network(
+                'http://97.74.90.63:8080/races/badges/${widget.race['race']['badgesPicturePath']}',
+                width: 100,
+                height: 100,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Image.network(
+                    'https://via.placeholder.com/100x100',
+                    width: 100,
+                    height: 100,
+                    fit: BoxFit.cover,
+                  );
+                },
+              ),
+            ),
+          ),
+          Text(widget.race['race']['raceName'], textAlign: TextAlign.center, style: AppStyles.vifitTextTheme.titleLarge),
+          const SizedBox(height: 30),
+          _buildStatsSection()
+        ],
+      ),
     );
   }
 
@@ -302,43 +364,44 @@ class _RaceDetailScreenState extends State<RaceDetailScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.race['race']['raceName']),
+        title: Text('About race'),
       ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
+        // padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Center(
-              child: Stack(
-                children: [
-                  CircleAvatar(
-                    radius: 50,
-                    backgroundColor: Colors.transparent,
-                    child: ClipOval(
-                      child: Image.network(
-                        'http://97.74.90.63:8080/races/badges/${widget.race['race']['badgesPicturePath']}',
-                        width: 100,
-                        height: 100,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Image.network(
-                            'https://via.placeholder.com/100x100',
-                            width: 100,
-                            height: 100,
-                            fit: BoxFit.cover,
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 20),
-            _buildStatsSection(),
+            // Center(
+            //   child: Stack(
+            //     children: [
+            //       CircleAvatar(
+            //         radius: 50,
+            //         backgroundColor: Colors.transparent,
+            //         child: ClipOval(
+            //           child: Image.network(
+            //             'http://97.74.90.63:8080/races/badges/${widget.race['race']['badgesPicturePath']}',
+            //             width: 100,
+            //             height: 100,
+            //             fit: BoxFit.cover,
+            //             errorBuilder: (context, error, stackTrace) {
+            //               return Image.network(
+            //                 'https://via.placeholder.com/100x100',
+            //                 width: 100,
+            //                 height: 100,
+            //                 fit: BoxFit.cover,
+            //               );
+            //             },
+            //           ),
+            //         ),
+            //       ),
+            //     ],
+            //   ),
+            // ),
+            _buildRaceHeader(),
+            // const SizedBox(height: 20),
+            // _buildStatsSection(),
             _buildProgressBarSection(),
             _buildSubmissionListSection(),
             const SizedBox(height: 20),
@@ -361,7 +424,7 @@ class ProfileStat extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Icon(icon, size: 30),
+        Icon(icon, size: 30, color: AppStyles.secondaryColor),
         Text(label,
             style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
         Text(subLabel, style: const TextStyle(color: Colors.grey)),
