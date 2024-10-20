@@ -329,7 +329,7 @@ class _MainPageScreenState extends State<MainPageScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         key: _scaffoldKey,
-        appBar: _buildAppBar(),
+        appBar: _selectedIndex != 2 ? _buildAppBar() : null,
         drawer: Drawer(
           backgroundColor: Colors.white,
           child: Column(

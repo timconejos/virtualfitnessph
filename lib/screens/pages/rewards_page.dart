@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:virtualfitnessph/models/rewards_items.dart';
+import 'package:virtualfitnessph/screens/reward_check_out_screen.dart';
 import 'package:virtualfitnessph/screens/rewards_detail_page.dart';
 import 'package:virtualfitnessph/styles/app_styles.dart';
 import 'package:virtualfitnessph/services/auth_service.dart';
@@ -12,12 +15,112 @@ class RewardsPage extends StatefulWidget {
 
 class _RewardsPageState extends State<RewardsPage> {
   final AuthService _authService = AuthService();
+  final TextEditingController _searchController = TextEditingController();
+  List<dynamic> _rewards = [];
+  bool _isLoading = false;
+
+  void _searchRewards() async {
+    String query = _searchController.text.trim();
+    if (query.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please enter a search query.')),
+      );
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+      _rewards = [];
+    });
+
+    List<dynamic> users = await _authService.searchRewards(query);
+
+    setState(() {
+      _rewards = users;
+      _isLoading = false;
+    });
+  }
+
+  // void _navigateBac() {
+  //   Navigator.push(
+  //     context,
+  //     MaterialPageRoute(builder: (context) => const PointsHistoryScreen()),
+  //   );
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {}, // Add search button
+        ),
+        actions: [
+          IconButton(
+          icon: const Icon(Icons.shopping_cart),
+          onPressed: () {
+             Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => RewardCheckOutScreen(),
+              ),
+            );
+          }, // Add search button
+        ),
+        ],
+        title: TextField(
+        controller: _searchController,
+        autofocus: true,
+        style: const TextStyle(color: Colors.white),
+        onSubmitted: (value) => _searchRewards(),
+        decoration: InputDecoration(
+          isDense: true,
+          isCollapsed: false,
+          filled: true,
+          fillColor: AppStyles.darkerPrimary,
+          hintText: 'Search rewards...',
+          hintStyle: TextStyle(color: Colors.white.withOpacity(0.7)),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide.none,
+          ),
+          focusedBorder:  OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide.none,
+          ),
+          errorBorder:  OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide.none,
+          ),
+          enabledBorder:  OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide.none,
+          ),
+          focusedErrorBorder:  OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide.none,
+          ),
+          disabledBorder:  OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide.none,
+          ),
+          floatingLabelBehavior: FloatingLabelBehavior.never,
+          suffixIcon: IconButton(
+                icon: const Icon(Icons.search),
+                onPressed: _searchRewards,
+                color: Colors.white,
+              ),
+        ),
+        onChanged: (value) {
+          // Implement search logic here
+          print("Searching for: $value");
+        },
+        cursorColor: Colors.white
+      ),
+      ),
       backgroundColor: AppStyles.scaffoldBgColor,
-      body: FutureBuilder<List<Map<String, dynamic>>>(
-        future: _authService.fetchRewards(),
+      body: FutureBuilder<List<RewardsItems>>(
+        future: _authService.fetchRewards(false),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const SizedBox(
@@ -40,7 +143,7 @@ class _RewardsPageState extends State<RewardsPage> {
             );
           }
 
-          List<Map<String, dynamic>> rewards = snapshot.data!;
+          List<RewardsItems> rewards = snapshot.data!;
           // Sorting
           // rewards.sort((a, b) => DateTime.parse(a.startDate).compareTo(DateTime.parse(b.startDate)));
 
@@ -48,7 +151,8 @@ class _RewardsPageState extends State<RewardsPage> {
             onRefresh: () async {
               setState(() {});
             },
-            child: ListView.builder(
+            child: rewards.isEmpty ? _buildEmptyRewardList() :
+             ListView.builder(
               itemCount: rewards.length,
               itemBuilder: (context, index) {
                 return FutureBuilder(
@@ -68,36 +172,37 @@ class _RewardsPageState extends State<RewardsPage> {
     );
   }
 
-  Widget rewardCard(dynamic rewards, String imageUrl) {
+  Widget rewardCard(RewardsItems reward, String imageUrl) {
     return GestureDetector(
       onTap: () {
         Navigator.of(context).push(
            MaterialPageRoute(
-            builder: (context) => RewardsDetailPage(),
+            builder: (context) => RewardsDetailPage(reward: reward),
           ),
         );
       },
       child: Container(
         margin: const EdgeInsets.only(bottom: 5.0),
-        decoration: BoxDecoration(
+        height: 170,
+        // width: double.infinity,
+        decoration: const BoxDecoration(
           color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.3),
-              spreadRadius: 1,
-              blurRadius: 1,
-              offset: const Offset(0, 1),
-            ),
-          ]
+          // boxShadow: [
+          //   BoxShadow(
+          //     color: Colors.grey.withOpacity(0.3),
+          //     spreadRadius: 1,
+          //     blurRadius: 1,
+          //     offset: const Offset(0, 1),
+          //   ),
+          // ]
         ),
 
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
+          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(
-
-              height: 150,
+            Flexible(child: SizedBox(
+              height: 170,
               width: 130,
               child: ClipRRect(
                   child: Image.network(
@@ -111,20 +216,56 @@ class _RewardsPageState extends State<RewardsPage> {
                     },
                   ),
                 ),
-            ),
+            )),
             const SizedBox(width: 15),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
+            Expanded(
+              flex: 2,
+              child: Stack(
+              fit: StackFit.expand,
+              // crossAxisAlignment: CrossAxisAlignment.start,
+              // mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                const SizedBox(height: 15),
-                Text(rewards['rewardsName'], style: AppStyles.vifitTextTheme.titleMedium),
-                Text('P ${rewards['price']}', style: AppStyles.vifitTextTheme.titleLarge?.copyWith(color: AppStyles.secondaryColor)),
+                // const SizedBox(height: 15),
+                Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Text(reward.rewardsName, 
+                  textAlign: TextAlign.left,
+                    style: AppStyles.vifitTextTheme.titleMedium, softWrap: true,
+                    overflow: TextOverflow.ellipsis, maxLines: 2)),
+                Positioned(
+                  bottom: 10,
+                  right: 10,
+                  child:  Container(
+                    padding: const EdgeInsets.all(10),
+                    
+                    child: Text('P ${formatNumber(reward.amount)}', style: AppStyles.vifitTextTheme.titleMedium?.copyWith(color: AppStyles.secondaryColor)),
+                  ), 
+                ),
               ],
-            )
+            ))
           ]
           )
       ),
     );
+  }
+
+  Widget _buildEmptyRewardList() {
+    return const Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.redeem, size: 100, color: Colors.grey),
+          SizedBox(height: 20),
+          Text(
+            'No listing yet',
+            style: TextStyle(fontSize: 24, color: Colors.grey),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String formatNumber(double price) {
+    return NumberFormat('#,###.##').format(price);
   }
 }

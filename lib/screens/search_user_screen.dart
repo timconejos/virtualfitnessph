@@ -179,9 +179,24 @@ class _SearchUserScreenState extends State<SearchUserScreen> {
             //   ),
             //   onSubmitted: (value) => _searchUsers(),
             // ),
-            const SizedBox(height: 20),
-            // Users List
-          
+            // const SizedBox(height: 20),
+            // // Users List
+            // Text('displayLarge', style: AppStyles.vifitTextTheme.displayLarge), 
+            // Text('displayMedium', style: AppStyles.vifitTextTheme.displayMedium), 
+            // Text('displaySmall', style: AppStyles.vifitTextTheme.displaySmall), 
+            // Text('headlineLarge', style: AppStyles.vifitTextTheme.headlineLarge), 
+            // Text('headlineMedium', style: AppStyles.vifitTextTheme.headlineMedium), 
+            // Text('headlineSmall', style: AppStyles.vifitTextTheme.headlineSmall), 
+            // Text('titleLarge', style: AppStyles.vifitTextTheme.titleLarge), 
+            // Text('titleMedium', style: AppStyles.vifitTextTheme.titleMedium), 
+            // Text('titleSmall', style: AppStyles.vifitTextTheme.titleSmall), 
+            // Text('labelLarge', style: AppStyles.vifitTextTheme.labelLarge), 
+            // Text('labelMedium', style: AppStyles.vifitTextTheme.labelMedium), 
+            // Text('labelSmall', style: AppStyles.vifitTextTheme.labelSmall), 
+            // Text('bodyLarge', style: AppStyles.vifitTextTheme.bodyLarge), 
+            // Text('bodyMedium', style: AppStyles.vifitTextTheme.bodyMedium), 
+            // Text('bodySmall', style: AppStyles.vifitTextTheme.bodySmall), 
+
 
             _isLoading
                 ? const CircularProgressIndicator()
