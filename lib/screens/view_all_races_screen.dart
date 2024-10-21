@@ -12,7 +12,7 @@ class ViewAllRacesScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('All Races'),
+        title: const Text('Assll Races'),
       ),
       body: ListView(
         children: [

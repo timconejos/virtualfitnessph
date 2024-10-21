@@ -131,7 +131,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return emailRegExp.hasMatch(email);
   }
 
-
   bool _validatePassword(String password) {
     final passwordRegExp = RegExp(r'^(?=.*[a-z])(?=.*\d).{7,}$');
     return passwordRegExp.hasMatch(password);

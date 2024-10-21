@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:virtualfitnessph/models/race.dart';
+import 'package:virtualfitnessph/models/rewards_items.dart';
 import 'package:virtualfitnessph/models/user.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:crypto/crypto.dart';
@@ -10,8 +11,8 @@ import 'package:crypto/crypto.dart';
 import '../screens/points_history_screen.dart';
 
 class AuthService {
-  static const String baseUrl = 'http://97.74.90.63:8080';
-  //static const String baseUrl = 'http://10.0.2.2:8080';
+  //static const String baseUrl = 'http://97.74.90.63:8080';
+  static const String baseUrl = 'http://10.0.2.2:8080';
 
   Future<String> getBaseUrl() async {
     // If you plan to allow dynamic base URL updates in the future,
@@ -515,6 +516,65 @@ class AuthService {
       return [];
     }
   }
+
+
+  //TODO: empty parameter is for testing only, remove param
+   Future<List<RewardsItems>> fetchRewards(bool empty) async {
+    List<RewardsItems> items = [];
+    items.add(RewardsItems(rewardsId: 3, rewardsName: 'The T-Shirt Spot [S-XL]', description: 'Discover the latest in t-shirt fashion with our Tee Trendsetters collection. From bold graphic prints to minimalist designs, we’ve curated a selection of tees that set the style standard. Whether you\'re looking for everyday comfort or a standout statement piece, these must-have tees combine quality, comfort, and cutting-edge style. Find your new favorite shirt today and lead the trend!', rewardsPicture: 'assets/post1.jpg', amount:  43.31,dateAdded: 'Nov 1' ));
+    items.add(RewardsItems(rewardsId: 4, rewardsName: 'The TPrint Perfect Tees', description: 'Discover the latest in t-shirt fashion with our Tee Trendsetters collection. From bold graphic prints to minimalist designs, we’ve curated a selection of tees that set the style standard. Whether you\'re looking for everyday comfort or a standout statement piece, these must-have tees combine quality, comfort, and cutting-edge style. Find your new favorite shirt today and lead the trend!', rewardsPicture: 'assets/post1.jpg', amount:  643.31,dateAdded: 'Nov 1' ));
+    items.add(RewardsItems(rewardsId: 5, rewardsName: 'Fresh Fits Tee Trendsetters collection | Bold style standard | [sm - xxl]', description: 'Discover the latest in t-shirt fashion with our Tee Trendsetters collection. From bold graphic prints to minimalist designs, we’ve curated a selection of tees that set the style standard. Whether you\'re looking for everyday comfort or a standout statement piece, these must-have tees combine quality, comfort, and cutting-edge style. Find your new favorite shirt today and lead the trend! Discover the latest in t-shirt fashion with our Tee Trendsetters collection. From bold graphic prints to minimalist designs, we’ve curated a selection of tees that set the style standard. Whether you\'re looking for everyday comfort or a standout statement piece, these must-have tees combine quality, comfort, and cutting-edge style. Find your new favorite shirt today and lead the trend', rewardsPicture: 'assets/post1.jpg', amount:  9743.31,dateAdded: 'Nov 1' ));
+
+    return empty ? [] : items;
+    
+  }
+
+   Future<String> fetchRewardsImage(String filename) async {
+      return 'assets/post1.jpg'; // Default image
+  }
+
+  Future<List<dynamic>> searchRewards(String query) async {
+
+    // TODO: Delete
+    List<RewardsItems> items = [];
+    items.add(RewardsItems(rewardsId: 3, rewardsName: 'The T-Shirt Spot [S-XL]', description: 'Discover the latest in t-shirt fashion with our Tee Trendsetters collection. From bold graphic prints to minimalist designs, we’ve curated a selection of tees that set the style standard. Whether you\'re looking for everyday comfort or a standout statement piece, these must-have tees combine quality, comfort, and cutting-edge style. Find your new favorite shirt today and lead the trend!', rewardsPicture: 'assets/post1.jpg', amount:  43.31,dateAdded: 'Nov 1' ));
+    items.add(RewardsItems(rewardsId: 4, rewardsName: 'The TPrint Perfect Tees', description: 'Discover the latest in t-shirt fashion with our Tee Trendsetters collection. From bold graphic prints to minimalist designs, we’ve curated a selection of tees that set the style standard. Whether you\'re looking for everyday comfort or a standout statement piece, these must-have tees combine quality, comfort, and cutting-edge style. Find your new favorite shirt today and lead the trend!', rewardsPicture: 'assets/post1.jpg', amount:  643.31,dateAdded: 'Nov 1' ));
+    items.add(RewardsItems(rewardsId: 5, rewardsName: 'Fresh Fits Tee Trendsetters collection | Bold style standard | [sm - xxl]', description: 'Discover the latest in t-shirt fashion with our Tee Trendsetters collection. From bold graphic prints to minimalist designs, we’ve curated a selection of tees that set the style standard. Whether you\'re looking for everyday comfort or a standout statement piece, these must-have tees combine quality, comfort, and cutting-edge style. Find your new favorite shirt today and lead the trend!', rewardsPicture: 'assets/post1.jpg', amount:  9743.31,dateAdded: 'Nov 1' ));
+
+    try {
+      if (query == 'test') {
+        return items;
+      } else {
+        print('Failed to search reward: ');
+        return [];
+      }
+    } catch (e) {
+      print('Error searching users: $e');
+      return [];
+    }
+  }
+
+  //TODO: empty parameter is for testing only, remove param
+  Future<List<RewardsItems>> fetchCart(bool empty) async {
+
+    // TODO: Delete
+    List<RewardsItems> items = [];
+    items.add(RewardsItems(rewardsId: 3, rewardsName: 'The T-Shirt Spot [S-XL]', description: 'Discover the latest in t-shirt fashion with our Tee Trendsetters collection. From bold graphic prints to minimalist designs, we’ve curated a selection of tees that set the style standard. Whether you\'re looking for everyday comfort or a standout statement piece, these must-have tees combine quality, comfort, and cutting-edge style. Find your new favorite shirt today and lead the trend!', rewardsPicture: 'assets/post1.jpg', amount:  43.31,dateAdded: 'Nov 1' ));
+    items.add(RewardsItems(rewardsId: 4, rewardsName: 'The TPrint Perfect Tees', description: 'Discover the latest in t-shirt fashion with our Tee Trendsetters collection. From bold graphic prints to minimalist designs, we’ve curated a selection of tees that set the style standard. Whether you\'re looking for everyday comfort or a standout statement piece, these must-have tees combine quality, comfort, and cutting-edge style. Find your new favorite shirt today and lead the trend!', rewardsPicture: 'assets/post1.jpg', amount:  643.31,dateAdded: 'Nov 1' ));
+    items.add(RewardsItems(rewardsId: 5, rewardsName: 'Fresh Fits Tee Trendsetters collection | Bold style standard | [sm - xxl]', description: 'Discover the latest in t-shirt fashion with our Tee Trendsetters collection. From bold graphic prints to minimalist designs, we’ve curated a selection of tees that set the style standard. Whether you\'re looking for everyday comfort or a standout statement piece, these must-have tees combine quality, comfort, and cutting-edge style. Find your new favorite shirt today and lead the trend! Discover the latest in t-shirt fashion with our Tee Trendsetters collection. From bold graphic prints to minimalist designs, we’ve curated a selection of tees that set the style standard. Whether you\'re looking for everyday comfort or a standout statement piece, these must-have tees combine quality, comfort, and cutting-edge style. Find your new favorite shirt today and lead the trend', rewardsPicture: 'assets/post1.jpg', amount:  9743.31,dateAdded: 'Nov 1' ));
+
+    try {
+      if (!empty) {
+        return items;
+      } else {
+        return [];
+      }
+    } catch (e) {
+      print('Error fetching cart: $e');
+      return [];
+    }
+  }
+
 
 
 }

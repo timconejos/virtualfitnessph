@@ -21,7 +21,7 @@ class PrimaryAppBar extends StatelessWidget implements PreferredSizeWidget{
     return AppBar(
       title: Text(
         title,
-        style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: AppStyles.primaryForeground), // Default text style
+        style: Theme.of(context).textTheme.titleMedium?.copyWith(color: AppStyles.primaryForeground), // Default text style
       ),
       backgroundColor: backgroundColor,
       foregroundColor: AppStyles.primaryForeground,

@@ -8,6 +8,7 @@ import 'package:virtualfitnessph/screens/pages/profile_page.dart';
 import 'package:virtualfitnessph/screens/add_race_data_screen.dart';
 import 'package:virtualfitnessph/screens/add_social_post_screen.dart';
 import 'package:virtualfitnessph/screens/pages/race_page.dart';
+import 'package:virtualfitnessph/screens/pages/rewards_page.dart';
 import '../services/auth_service.dart';
 import 'login_screen.dart';
 import 'package:virtualfitnessph/styles/app_styles.dart';
@@ -24,24 +25,25 @@ class MainPageScreen extends StatefulWidget {
 
 class _MainPageScreenState extends State<MainPageScreen> {
   int _selectedIndex = 0;
-  String _appBarTitle = 'Virtual Fitness PH';
+  String _appBarTitle = 'Virtual Fitness';
   final AuthService _authService = AuthService();
   String _currentPoints = "0";
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   static final List<Widget> _widgetOptions = <Widget>[
     const FeedPage(),
     const RacePage(),
-    // const RacePage(), // TODO: create rewards page
+    const RewardsPage(), // TODO: create rewards page
     const ActivityPage(),
     const ProfilePage(),
   ];
 
   void _onItemTapped(int index) {
-    // const tabs  = ['Home', 'Races', 'Rewards', 'Activity', 'Profile'];
-    const tabs  = ['Home', 'Races', 'Activity', 'Profile'];
+    const tabs  = ['Home', 'Races', 'Rewards', 'Activity', 'Profile'];
+    // const tabs  = ['Home', 'Races', 'Activity', 'Profile'];
     setState(() {
       _selectedIndex = index;
-      _appBarTitle = index > 0 ? tabs[index] : 'Virtual Fitness PH';
+      _appBarTitle = index > 0 ? tabs[index] : 'Virtual Fitness';
     });
     _fetchCurrentPoints();
     
@@ -278,6 +280,9 @@ class _MainPageScreenState extends State<MainPageScreen> {
   }
 
   void _navigateToSearchUser() {
+    // setState(() {
+    //   _isSearching = true;
+    // });
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const SearchUserScreen()),
@@ -291,57 +296,122 @@ class _MainPageScreenState extends State<MainPageScreen> {
     );
   }
 
+  AppBar _buildAppBar() {
+    return AppBar(
+      title: Text(_appBarTitle, style: AppStyles.vifitTextTheme.titleMedium),
+      titleSpacing: 1,
+      centerTitle: true,
+      leading: Row(
+        // mainAxisAlignmRnt: MainAxisAlignment.spaceEvenly,
+        mainAxisSize: MainAxisSize.min,
+        children:[
+          IconButton(
+          icon: const Icon(Icons.menu),
+          onPressed: () {
+            _scaffoldKey.currentState?.openDrawer();
+          },
+        ),
+        ]),
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.search),
+          onPressed: _navigateToSearchUser, // Add search button
+        ),
+        IconButton(
+          icon: const Icon(Icons.notifications),
+          onPressed: _showNotifications,
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: PrimaryAppBar(
-          title: _appBarTitle,
-          centerTitle: false,
-          actions: [
-            TextButton(
-              style: TextButton.styleFrom(foregroundColor: Colors.white),
-              onPressed: _navigateToPointsHistory, // Updated onPressed
-              child: Text("$_currentPoints coins"),
-            ),
-            IconButton(
-              icon: const Icon(Icons.notifications),
-              onPressed: _showNotifications,
-            ),
-            // IconButton(
-            //   icon: const Icon(Icons.search),
-            //   onPressed: _navigateToSearchUser, // Add search button
-            // ),
-          ],
-        ),
+        key: _scaffoldKey,
+        appBar: _selectedIndex != 2 ? _buildAppBar() : null,
         drawer: Drawer(
           backgroundColor: Colors.white,
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: [
-              const SizedBox(height: 100),
-              ListTile(
-                leading: const Icon(Icons.logout),
-                title: const Text('Logout'),
-                onTap: _logout,
+          child: Column(
+            children: [ 
+            Expanded(
+              child: ListView(
+                padding: EdgeInsets.zero,
+                children: [
+                    DrawerHeader(
+                    // padding: const EdgeInsets.symmetric(vertical: 60, horizontal: 10),
+                    padding: const EdgeInsets.fromLTRB(20, 16, 16, 16),
+                    decoration: const BoxDecoration(
+                    color: AppStyles.primaryColor,
+                    ),
+                    child:  GestureDetector(
+                          onTap: _navigateToPointsHistory, child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        const CircleAvatar(
+                          radius: 25,
+                          backgroundImage: AssetImage('assets/vifit-coin1.png'),
+                        ),
+                        const SizedBox(width: 15),
+                      Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                             Text(
+                              'Coin balance',
+                              style: AppStyles.vifitTextTheme.labelSmall?.copyWith(color: AppStyles.primaryForeground)
+                            ),
+                              Text(
+                              "$_currentPoints",
+                              style: AppStyles.vifitTextTheme.titleLarge?.copyWith(color: AppStyles.primaryForeground)
+                            ),
+                          ]
+                        ),
+
+                      ],
+                    )),
+                  ),
+                  // const SizedBox(height: 10),
+                  ListTile(
+                    leading: const Icon(Icons.history),
+                    title: const Text('View coin history'),
+                    onTap: _navigateToPointsHistory,
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.web),
+                    title: const Text('Visit Website'),
+                    onTap: () => _launchURL('https://virtualfitnessph.com'),
+                  ),
+                  const Divider(),
+                  ListTile(
+                    leading: const Icon(Icons.logout),
+                    title: const Text('Logout'),
+                    onTap: _logout,
+                  ),
+                ],
               ),
-              ListTile(
-                leading: const Icon(Icons.web),
-                title: const Text('Visit Website'),
-                onTap: () => _launchURL('https://virtualfitnessph.com'),
-              ),
-              const Divider(),
-              ListTile(
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Column(
+                children: [
+                  ListTile(
                 leading: const Icon(Icons.delete, color: Colors.red),
                 title: const Text('Deactivate Account', style: TextStyle(color: Colors.red)),
-                onTap: _deactivateAccount,
+                onTap: _deactivateAccount
               ),
-            ],
-          ),
+              const SizedBox(height: 30)
+                ]
+              ),
+            ),
+          ],
+          )
         ),
         body: Center(
           child: _widgetOptions.elementAt(_selectedIndex),
         ),
-        floatingActionButton: _selectedIndex != 1 ? Container(
+        floatingActionButton: _selectedIndex != 1 && _selectedIndex != 2  ?  Container(
           height: 70,
           width: 70,
           child: FloatingActionButton(
@@ -350,43 +420,45 @@ class _MainPageScreenState extends State<MainPageScreen> {
             foregroundColor: AppStyles.primaryForeground,
             backgroundColor: AppStyles.primaryColor,
             child: const Icon(Icons.add),
-            shape: CircleBorder(),
+            shape: const CircleBorder(),
             elevation: 6.0,
           ),
         ) : null,
-        bottomNavigationBar: Container(
-          height: 70,
-          child:  BottomNavigationBar(
-            items: const <BottomNavigationBarItem>[
-              BottomNavigationBarItem(
-                icon: Icon(Icons.home),
-                label: 'Home',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.calendar_today),
-                label: 'Races',
-              ),
-              // BottomNavigationBarItem(
-              //   icon: Icon(Icons.military_tech),
-              //   label: 'Rewards',
-              // ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.directions_run),
-                label: 'Activity',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.person),
-                label: 'Profile',
-              ),
-            ],
-            currentIndex: _selectedIndex,
-            selectedItemColor: AppStyles.buttonColor,
-            unselectedItemColor: Colors.grey[400],
-            backgroundColor: AppStyles.primaryColor,
-            onTap: _onItemTapped,
-            iconSize: 35,
-            type: BottomNavigationBarType.fixed,
-          ),
+        bottomNavigationBar: SafeArea(
+            child: Container(
+            height: 70,
+            child:  BottomNavigationBar(
+              items: const <BottomNavigationBarItem>[
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.home),
+                  label: 'Home',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.calendar_today),
+                  label: 'Races',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.military_tech),
+                  label: 'Rewards',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.directions_run),
+                  label: 'Activity',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.person),
+                  label: 'Profile',
+                ),
+              ],
+              currentIndex: _selectedIndex,
+              selectedItemColor: AppStyles.buttonColor,
+              unselectedItemColor: Colors.grey[400],
+              backgroundColor: AppStyles.primaryColor,
+              onTap: _onItemTapped,
+              iconSize: 35,
+              type: BottomNavigationBarType.fixed,
+            ),
+          )
         )
     );
   }

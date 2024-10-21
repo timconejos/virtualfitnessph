@@ -49,8 +49,8 @@ class MyApp extends StatelessWidget {
         appBarTheme: AppBarTheme(
           backgroundColor: AppStyles.primaryColor,
           foregroundColor: AppStyles.primaryForeground,
-          centerTitle: false,
-          titleTextStyle: AppStyles.vifitTextTheme.headlineMedium,
+          centerTitle: true,
+          titleTextStyle: AppStyles.vifitTextTheme.titleMedium,
         ),
         popupMenuTheme: const PopupMenuThemeData(
           color: Colors.white
@@ -74,7 +74,7 @@ class MyApp extends StatelessWidget {
               backgroundColor: AppStyles.primaryColor,
               foregroundColor: AppStyles.primaryForeground,
               disabledBackgroundColor: AppStyles.primaryColor.withOpacity(0.4),
-              disabledForegroundColor: Colors.grey,
+              disabledForegroundColor: Colors.white,
               padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
               textStyle: AppStyles.vifitTextTheme.labelLarge,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
@@ -90,7 +90,15 @@ class MyApp extends StatelessWidget {
           //   borderSide: BorderSide(color: AppStyles.primaryColor), // Default border color
           //   // borderRadius: BorderRadius.circular(8.0),
           // ),
-          focusColor: AppStyles.primaryColor
+          filled: true,
+          fillColor: Colors.white,
+          border: const OutlineInputBorder(),
+          focusColor: AppStyles.primaryColor,
+          enabledBorder: OutlineInputBorder(
+            borderSide: const BorderSide(color: Colors.grey, width: 1.0),
+            borderRadius: BorderRadius.circular(8.0)
+          ),
+          // contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 10)
         )
 
       ),

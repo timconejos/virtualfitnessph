@@ -154,7 +154,7 @@ class _PointsHistoryScreenState extends State<PointsHistoryScreen> {
     return Scaffold(
       backgroundColor: AppStyles.scaffoldBgColor,
       appBar: AppBar(
-        title: const Text('Points History'),
+        title: const Text('Coin History'),
         backgroundColor: AppStyles.primaryColor,
       ),
       body: SingleChildScrollView(
@@ -183,7 +183,7 @@ class _PointsHistoryScreenState extends State<PointsHistoryScreen> {
                 child: _isLoading
                     ? const Center(child: CircularProgressIndicator())
                     : _transactions.isEmpty
-                    ? const Center(child: Text('No points history available.'))
+                    ? const Center(child: Text('No coin history available.'))
                     : ListView.separated(
                       itemCount: _transactions.length,
                       itemBuilder: (context, index) {

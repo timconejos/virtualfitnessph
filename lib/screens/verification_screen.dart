@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:virtualfitnessph/screens/login_screen.dart';
+import 'package:virtualfitnessph/styles/app_styles.dart';
 
 class VerificationScreen extends StatelessWidget {
   const VerificationScreen({super.key});
@@ -14,12 +15,14 @@ class VerificationScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              const Icon(Icons.check, size: 150, color: Colors.green,),
+              const SizedBox(height: 30),
               const Text(
                 'Registration Success!',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 5),
               const Text(
                 'Please check your email for verification.',
                 style: TextStyle(fontSize: 16),
@@ -34,7 +37,7 @@ class VerificationScreen extends StatelessWidget {
                         (Route<dynamic> route) => false,
                   );
                 },
-                child: const Text('Go to Login Page'),
+                child: const Text('Go to Login page'),
               ),
             ],
           ),

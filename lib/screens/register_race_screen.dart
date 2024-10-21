@@ -55,6 +55,8 @@ class _RegisterRaceScreenState extends State<RegisterRaceScreen> {
       racetype: _selectedRaceType ?? 'Default Race Type',
       tshirtSize: _selectedSize ?? 'NONE',
       raceDistance: double.tryParse(_selectedRange ?? '0') ?? 0,
+      firstname: _firstNameController.text,
+      lastname: _lastNameController.text,
       address: _addressController.text,
       contactNumber: _contactController.text,
       referenceNumber: _referenceController.text,
@@ -126,7 +128,7 @@ class _RegisterRaceScreenState extends State<RegisterRaceScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Register for ${widget.race.raceName}')
+        title: Text('Registration')
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -136,21 +138,32 @@ class _RegisterRaceScreenState extends State<RegisterRaceScreen> {
           key: _formKey,
           child: Column(
             children: [
+              Text('${widget.race.raceName}', 
+                textAlign: TextAlign.start,
+                style: AppStyles.vifitTextTheme.headlineSmall),
+              const SizedBox(height: 20),
               buildTextField(_firstNameController, 'First Name'),
+              const SizedBox(height: 15),
               buildTextField(_lastNameController, 'Last Name'),
+              const SizedBox(height: 15),
               buildTextField(_emailController, 'Email', keyboardType: TextInputType.emailAddress),
+              const SizedBox(height: 15),
               buildTextField(_addressController, 'Address'),
+              const SizedBox(height: 15),
               buildTextField(_contactController, 'Contact Number', keyboardType: TextInputType.number, validator: _validateContactNumber),
+              const SizedBox(height: 15),
               buildDropdown('T-shirt Size', _selectedSize, sizes, (newValue) {
                 setState(() {
                   _selectedSize = newValue;
                 });
               }),
+              const SizedBox(height: 15),
               buildDropdown('Race Distance (KM)', _selectedRange, widget.race.distance, (newValue) {
                 setState(() {
                   _selectedRange = newValue;
                 });
               }),
+              const SizedBox(height: 15),
               buildRaceTypeDropdown(),
               CheckboxListTile(
                 title: Row(
@@ -167,10 +180,14 @@ class _RegisterRaceScreenState extends State<RegisterRaceScreen> {
                 onChanged: (value) => setState(() => _agreedToTerms = value!),
                 controlAffinity: ListTileControlAffinity.leading,
               ),
-              ElevatedButton(
-                onPressed: _agreedToTerms ? _register : null,
-                style: AppStyles.primaryButtonStyle,
-                child: const Text('REGISTER'),
+              const SizedBox(height: 15),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: _agreedToTerms ? _register : null,
+                  style: AppStyles.primaryButtonStyle,
+                  child: const Text('REGISTER'),
+                )
               ),
             ],
           ),
@@ -244,6 +261,8 @@ class Registration {
   String userId;
   int raceId;
   String racetype;
+  String firstname;
+  String lastname;
   String contactNumber;
   String address;
   String tshirtSize;
@@ -259,6 +278,8 @@ class Registration {
     required this.userId,
     required this.raceId,
     required this.racetype,
+    required this. firstname,
+    required this.lastname,
     required this.contactNumber,
     required this.address,
     required this.tshirtSize,
@@ -276,6 +297,8 @@ class Registration {
       'userId': userId,
       'raceId': raceId,
       'racetype': racetype,
+      'firstname': firstname,
+      'lastname': lastname,
       'contactNumber': contactNumber,
       'address': address,
       'tshirtSize': tshirtSize,
@@ -294,6 +317,8 @@ class Registration {
       userId: json['userId'],
       raceId: json['raceId'],
       racetype: json['racetype'],
+      firstname: json['firstname'],
+      lastname: json['lastname'],
       contactNumber: json['contactNumber'],
       address: json['address'],
       tshirtSize: json['tshirtSize'],

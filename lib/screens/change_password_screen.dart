@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:virtualfitnessph/services/auth_service.dart';
+import 'package:virtualfitnessph/styles/app_styles.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
   const ChangePasswordScreen({Key? key}) : super(key: key);
@@ -171,17 +172,19 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Change Password'),
+        title: const Text('Update password'),
       ),
-      body: SingleChildScrollView(
+      body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            // crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               _buildPasswordField(
                 controller: _oldPasswordController,
-                labelText: 'Old Password',
+                labelText: 'Old password',
                 isPasswordVisible: _isOldPasswordVisible,
                 toggleVisibility: () {
                   setState(() {
@@ -189,10 +192,10 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   });
                 },
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 15),
               _buildPasswordField(
                 controller: _newPasswordController,
-                labelText: 'New Password',
+                labelText: 'New password',
                 isPasswordVisible: _isNewPasswordVisible,
                 toggleVisibility: () {
                   setState(() {
@@ -200,10 +203,10 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   });
                 },
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 15),
               _buildPasswordField(
                 controller: _confirmNewPasswordController,
-                labelText: 'Confirm New Password',
+                labelText: 'Confirm new password',
                 isPasswordVisible: _isNewPasswordVisible,
                 toggleVisibility: () {
                   setState(() {
@@ -214,10 +217,12 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               const SizedBox(height: 20),
               _buildPasswordRequirements(),
               const SizedBox(height: 20),
-              ElevatedButton(
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
                 onPressed: _changePassword,
-                child: const Text('Change Password'),
-              ),
+                child: const Text('Update password'),
+              )),
             ],
           ),
         ),
