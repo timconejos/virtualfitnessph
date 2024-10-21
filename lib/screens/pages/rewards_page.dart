@@ -59,7 +59,7 @@ class _RewardsPageState extends State<RewardsPage> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-             Navigator.push(context, MaterialPageRoute(builder: (context) => const MainPageScreen()));
+             Navigator.push(context, MaterialPageRoute(builder: (context) => const MainPageScreen(tab: 0)));
           }, // Add search button
         ),
         actions: [

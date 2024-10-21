@@ -17,7 +17,8 @@ import 'package:virtualfitnessph/screens/search_user_screen.dart'; // Import Sea
 import 'package:virtualfitnessph/screens/points_history_screen.dart'; // Import PointsHistoryScreen
 
 class MainPageScreen extends StatefulWidget {
-  const MainPageScreen({super.key});
+  final int tab;
+  const MainPageScreen({super.key, required this.tab});
 
   @override
   _MainPageScreenState createState() => _MainPageScreenState();
@@ -53,6 +54,9 @@ class _MainPageScreenState extends State<MainPageScreen> {
   void initState() {
     super.initState();
     _checkLogin();
+    setState(() {
+      _selectedIndex = widget.tab ?? 0;
+    });
   }
 
   void _checkLogin() async {
@@ -327,6 +331,7 @@ class _MainPageScreenState extends State<MainPageScreen> {
 
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
         key: _scaffoldKey,
         appBar: _selectedIndex != 2 ? _buildAppBar() : null,

@@ -7,6 +7,7 @@ import 'package:virtualfitnessph/styles/app_styles.dart';
 import 'package:virtualfitnessph/components/outline_button.dart';
 import 'package:virtualfitnessph/components/primary_button.dart';
 import 'package:virtualfitnessph/components/circular_progress_bar.dart';
+import 'package:virtualfitnessph/screens/main_page_screen.dart';
 import '../all_races_screen.dart';
 import '../edit_profile_screen.dart';
 import '../login_screen.dart';
@@ -240,24 +241,25 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   void _redeemPoints() {
+    Navigator.push(context, MaterialPageRoute(builder: (context) => const MainPageScreen(tab: 2)));
       // Currently not implemented. Show a placeholder dialog.
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Redeem Points'),
-            content: const Text('Redeem functionality is coming soon!'),
-            actions: <Widget>[
-              TextButton(
-                child: const Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
+      // showDialog(
+      //   context: context,
+      //   builder: (BuildContext context) {
+      //     return AlertDialog(
+      //       title: const Text('Redeem Points'),
+      //       content: const Text('Redeem functionality is coming soon!'),
+      //       actions: <Widget>[
+      //         TextButton(
+      //           child: const Text('OK'),
+      //           onPressed: () {
+      //             Navigator.of(context).pop();
+      //           },
+      //         ),
+      //       ],
+      //     );
+      //   },
+      // );
     }
 
 

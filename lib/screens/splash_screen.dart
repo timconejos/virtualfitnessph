@@ -26,7 +26,7 @@ class _SplashScreenState extends State<SplashScreen> {
     if (!mounted) return; // Ensure the widget is still mounted
     if (isLoggedIn) {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const MainPageScreen()),
+        MaterialPageRoute(builder: (_) => const MainPageScreen(tab: 0)),
       );
     } else {
       Navigator.of(context).pushReplacement(

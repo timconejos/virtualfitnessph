@@ -202,6 +202,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       //   leading: BackButton(onPressed: () => Navigator.pop(context)),
       //   title: const Text('Register'),
       // ),
+      backgroundColor: Colors.white,
       body: Padding(
         padding: const EdgeInsets.fromLTRB(50.0, 10.0, 50.0, 0.0),
         child: Column(

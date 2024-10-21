@@ -26,7 +26,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     });
 
     await _authService.forgotPassword(
-      _usernameController.text,
+     '',
       _emailController.text,
     );
 
@@ -59,6 +59,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       // appBar: AppBar(
       //   title: const Text('Forgot Password'),
       // ),
+      backgroundColor: Colors.white,
       body: Center(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(50.0, 10.0, 50.0, 0.0),
@@ -77,16 +78,16 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   style: TextStyle(fontSize: 16.0),
                 ),
                 const SizedBox(height: 16.0),
-                PrimaryTextField(
-                  labelText: 'Username',
-                  controller: _usernameController,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your username';
-                    }
-                    return null;
-                  },
-                ),
+                // PrimaryTextField(
+                //   labelText: 'Username',
+                //   controller: _usernameController,
+                //   validator: (value) {
+                //     if (value == null || value.isEmpty) {
+                //       return 'Please enter your username';
+                //     }
+                //     return null;
+                //   },
+                // ),
 
                 const SizedBox(height: 16.0),
                 PrimaryTextField(

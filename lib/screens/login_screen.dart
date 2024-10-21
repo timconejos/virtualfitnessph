@@ -55,7 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _redirectToMainPage() {
     Navigator.of(context).pushReplacement(MaterialPageRoute(
-      builder: (context) => const MainPageScreen(),
+      builder: (context) => const MainPageScreen(tab: 0),
     ));
   }
 

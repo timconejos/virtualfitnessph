@@ -35,7 +35,7 @@ class _OrderPlacedScreenState extends State<OrderPlacedScreen> {
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => const MainPageScreen()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const MainPageScreen(tab: 0)));
                 },
                 child: const Text('Go to Home'),
               ),
