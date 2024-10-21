@@ -55,6 +55,8 @@ class _RegisterRaceScreenState extends State<RegisterRaceScreen> {
       racetype: _selectedRaceType ?? 'Default Race Type',
       tshirtSize: _selectedSize ?? 'NONE',
       raceDistance: double.tryParse(_selectedRange ?? '0') ?? 0,
+      firstname: _firstNameController.text,
+      lastname: _lastNameController.text,
       address: _addressController.text,
       contactNumber: _contactController.text,
       referenceNumber: _referenceController.text,
@@ -259,6 +261,8 @@ class Registration {
   String userId;
   int raceId;
   String racetype;
+  String firstname;
+  String lastname;
   String contactNumber;
   String address;
   String tshirtSize;
@@ -274,6 +278,8 @@ class Registration {
     required this.userId,
     required this.raceId,
     required this.racetype,
+    required this. firstname,
+    required this.lastname,
     required this.contactNumber,
     required this.address,
     required this.tshirtSize,
@@ -291,6 +297,8 @@ class Registration {
       'userId': userId,
       'raceId': raceId,
       'racetype': racetype,
+      'firstname': firstname,
+      'lastname': lastname,
       'contactNumber': contactNumber,
       'address': address,
       'tshirtSize': tshirtSize,
@@ -309,6 +317,8 @@ class Registration {
       userId: json['userId'],
       raceId: json['raceId'],
       racetype: json['racetype'],
+      firstname: json['firstname'],
+      lastname: json['lastname'],
       contactNumber: json['contactNumber'],
       address: json['address'],
       tshirtSize: json['tshirtSize'],

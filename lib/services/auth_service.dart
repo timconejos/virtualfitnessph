@@ -11,8 +11,8 @@ import 'package:crypto/crypto.dart';
 import '../screens/points_history_screen.dart';
 
 class AuthService {
-  static const String baseUrl = 'http://97.74.90.63:8080';
-  //static const String baseUrl = 'http://10.0.2.2:8080';
+  //static const String baseUrl = 'http://97.74.90.63:8080';
+  static const String baseUrl = 'http://10.0.2.2:8080';
 
   Future<String> getBaseUrl() async {
     // If you plan to allow dynamic base URL updates in the future,
