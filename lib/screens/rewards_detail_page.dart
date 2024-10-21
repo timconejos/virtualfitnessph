@@ -76,7 +76,7 @@ class _RewardsDetailPageState extends State<RewardsDetailPage> {
                       width: double.infinity,
                       fit: BoxFit.contain,
                       errorBuilder: (context, error, stackTrace) {
-                        return Image.asset('assets/post1.jpg',
+                        return Image.asset('assets/login.jpg',
                           width: double.infinity, fit: BoxFit.cover);
                       },
                     ),

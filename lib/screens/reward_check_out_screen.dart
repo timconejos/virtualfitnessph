@@ -89,28 +89,29 @@ class _RewardCheckOutScreenState extends State<RewardCheckOutScreen> {
                   bottom: 0,
                   left: 0,
                   right: 0,
-                  child: Expanded (child:Container(
-                    padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      mainAxisSize: MainAxisSize.min, // Add this line
-                      children: [
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => RewardAddAddressScreen(),
-                                ),
-                              );
-                        }, child: const Text('Check out', textAlign: TextAlign.end,),)
-                      ],
-                    ),
-                  )),
-                ),
+                  child:Container(
+                    width: double.infinity,
+                      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        mainAxisSize: MainAxisSize.min, // Add this line
+                        children: [
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => RewardAddAddressScreen(),
+                                  ),
+                                );
+                          }, child: const Text('Check out', textAlign: TextAlign.end,),)
+                        ],
+                      ),
+                    )
+                  ),
             ]
           );
         }
@@ -129,22 +130,24 @@ class _RewardCheckOutScreenState extends State<RewardCheckOutScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-            Flexible(child: SizedBox(
-              height: 131,
-              width: 100,
-              child: ClipRRect(
-                  child: Image.network(
-                    imageUrl,
-                    height: 131,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                    alignment: Alignment.topCenter,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Image.asset('assets/post1.jpg', height: 131, width: double.infinity, fit: BoxFit.cover);
-                    },
+            Flexible(
+              child: SizedBox(
+                height: 131,
+                width: 100,
+                child: ClipRRect(
+                    child: Image.network(
+                      imageUrl,
+                      height: 131,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                      alignment: Alignment.topCenter,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Image.asset('assets/login.jpg', height: 131, width: double.infinity, fit: BoxFit.cover);
+                      },
+                    ),
                   ),
-                ),
-            )),
+              )
+            ),
             Expanded(child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
