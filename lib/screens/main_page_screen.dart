@@ -411,7 +411,7 @@ class _MainPageScreenState extends State<MainPageScreen> {
         body: Center(
           child: _widgetOptions.elementAt(_selectedIndex),
         ),
-        floatingActionButton: _selectedIndex != 1 ? Container(
+        floatingActionButton: _selectedIndex != 1 && _selectedIndex != 2  ?  Container(
           height: 70,
           width: 70,
           child: FloatingActionButton(

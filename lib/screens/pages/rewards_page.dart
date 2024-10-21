@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:virtualfitnessph/models/rewards_items.dart';
+import 'package:virtualfitnessph/screens/main_page_screen.dart';
 import 'package:virtualfitnessph/screens/reward_check_out_screen.dart';
 import 'package:virtualfitnessph/screens/rewards_detail_page.dart';
 import 'package:virtualfitnessph/styles/app_styles.dart';
 import 'package:virtualfitnessph/services/auth_service.dart';
 
 class RewardsPage extends StatefulWidget {
+  // final Function(int) changeTab;
+
   const RewardsPage({super.key});
   
   @override
@@ -18,6 +21,7 @@ class _RewardsPageState extends State<RewardsPage> {
   final TextEditingController _searchController = TextEditingController();
   List<dynamic> _rewards = [];
   bool _isLoading = false;
+  
 
   void _searchRewards() async {
     String query = _searchController.text.trim();
@@ -54,7 +58,9 @@ class _RewardsPageState extends State<RewardsPage> {
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () {}, // Add search button
+          onPressed: () {
+             Navigator.push(context, MaterialPageRoute(builder: (context) => const MainPageScreen()));
+          }, // Add search button
         ),
         actions: [
           IconButton(

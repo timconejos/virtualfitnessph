@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:virtualfitnessph/screens/main_page_screen.dart';
 import 'package:virtualfitnessph/screens/pages/feed_page.dart';
 
 class OrderPlacedScreen extends StatefulWidget {
@@ -34,11 +35,7 @@ class _OrderPlacedScreenState extends State<OrderPlacedScreen> {
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(builder: (context) => const FeedPage()), // Replace MainPage with your main page widget
-                        (Route<dynamic> route) => false,
-                  );
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const MainPageScreen()));
                 },
                 child: const Text('Go to Home'),
               ),
