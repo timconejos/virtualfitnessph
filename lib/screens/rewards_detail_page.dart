@@ -2,19 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:virtualfitnessph/models/rewards_items.dart';
 import 'package:virtualfitnessph/screens/reward_check_out_screen.dart';
+import 'package:virtualfitnessph/services/auth_service.dart';
 import 'package:virtualfitnessph/styles/app_styles.dart';
 
 class RewardsDetailPage extends StatefulWidget {
   final RewardsItems reward;
 
   const RewardsDetailPage({super.key, required this.reward});
-  
+
   @override
   _RewardsDetailPageState createState() => _RewardsDetailPageState();
 }
 
 class _RewardsDetailPageState extends State<RewardsDetailPage> {
   late ScrollController _scrollController;
+  final AuthService _authService = AuthService();
 
   @override
   void initState() {
@@ -28,17 +30,20 @@ class _RewardsDetailPageState extends State<RewardsDetailPage> {
     super.dispose();
   }
 
-  void _addToCart() {
-    // Add method to add to cart
+  void _addToCart() async {
+    await _authService.addToCart(widget.reward);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('${widget.reward.rewardsName} added to cart!')),
+    );
   }
 
   void _checkOut() {
     Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => RewardCheckOutScreen(),
-        ),
-      );
+      context,
+      MaterialPageRoute(
+        builder: (context) => RewardCheckOutScreen(),
+      ),
+    );
   }
 
 
@@ -65,13 +70,13 @@ class _RewardsDetailPageState extends State<RewardsDetailPage> {
                         MaterialPageRoute(
                           builder: (_) => FullScreenImage(
                             imageUrl:
-                                'assets/post1.jpg',
+                            'http://97.74.90.63:8080/rewards/images/${widget.reward.rewardsPicture}',
                           ),
                         ),
                       );
                     },
-                    child: Image.network(
-                      'assets/post1.jpg',
+                  child: Image.network(
+                    'http://97.74.90.63:8080/rewards/images/${widget.reward.rewardsPicture}',
                       // height: double.,
                       width: double.infinity,
                       fit: BoxFit.contain,
@@ -135,7 +140,7 @@ class _RewardsDetailPageState extends State<RewardsDetailPage> {
                   mainAxisSize: MainAxisSize.min, // Add this line
                   children: [
                     ElevatedButton(
-                      onPressed: _addToCart, 
+                      onPressed: _addToCart,
                       style: ElevatedButton.styleFrom(backgroundColor: AppStyles.buttonColor, foregroundColor: AppStyles.buttonTextColor),
                       child: const Text('Add to cart', textAlign: TextAlign.end,),),
                     const SizedBox(width: 5),
@@ -147,7 +152,7 @@ class _RewardsDetailPageState extends State<RewardsDetailPage> {
             ),
         ],
       )
-      
+
     );
   }
 

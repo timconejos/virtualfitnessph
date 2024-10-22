@@ -27,4 +27,15 @@ class RewardsItems {
       dateAdded: json['dateAdded'],
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': rewardsId,
+      'name': rewardsName,
+      'description': description,
+      'imageUrl': rewardsPicture,
+      'amount': amount,
+      'dateAdded': dateAdded,
+    };
+  }
 }

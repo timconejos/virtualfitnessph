@@ -11,8 +11,9 @@ import 'package:crypto/crypto.dart';
 import '../screens/points_history_screen.dart';
 
 class AuthService {
-  //static const String baseUrl = 'http://97.74.90.63:8080';
-  static const String baseUrl = 'http://10.0.2.2:8080';
+  static const String baseUrl = 'http://97.74.90.63:8080';
+  static const String cartKey = 'user_cart';
+  // static const String baseUrl = 'http://10.0.2.2:8080';
 
   Future<String> getBaseUrl() async {
     // If you plan to allow dynamic base URL updates in the future,
@@ -519,18 +520,30 @@ class AuthService {
 
 
   //TODO: empty parameter is for testing only, remove param
-   Future<List<RewardsItems>> fetchRewards(bool empty) async {
-    List<RewardsItems> items = [];
-    items.add(RewardsItems(rewardsId: 3, rewardsName: 'The T-Shirt Spot [S-XL]', description: 'Discover the latest in t-shirt fashion with our Tee Trendsetters collection. From bold graphic prints to minimalist designs, we’ve curated a selection of tees that set the style standard. Whether you\'re looking for everyday comfort or a standout statement piece, these must-have tees combine quality, comfort, and cutting-edge style. Find your new favorite shirt today and lead the trend!', rewardsPicture: 'assets/post1.jpg', amount:  43.31,dateAdded: 'Nov 1' ));
-    items.add(RewardsItems(rewardsId: 4, rewardsName: 'The TPrint Perfect Tees', description: 'Discover the latest in t-shirt fashion with our Tee Trendsetters collection. From bold graphic prints to minimalist designs, we’ve curated a selection of tees that set the style standard. Whether you\'re looking for everyday comfort or a standout statement piece, these must-have tees combine quality, comfort, and cutting-edge style. Find your new favorite shirt today and lead the trend!', rewardsPicture: 'assets/post1.jpg', amount:  643.31,dateAdded: 'Nov 1' ));
-    items.add(RewardsItems(rewardsId: 5, rewardsName: 'Fresh Fits Tee Trendsetters collection | Bold style standard | [sm - xxl]', description: 'Discover the latest in t-shirt fashion with our Tee Trendsetters collection. From bold graphic prints to minimalist designs, we’ve curated a selection of tees that set the style standard. Whether you\'re looking for everyday comfort or a standout statement piece, these must-have tees combine quality, comfort, and cutting-edge style. Find your new favorite shirt today and lead the trend! Discover the latest in t-shirt fashion with our Tee Trendsetters collection. From bold graphic prints to minimalist designs, we’ve curated a selection of tees that set the style standard. Whether you\'re looking for everyday comfort or a standout statement piece, these must-have tees combine quality, comfort, and cutting-edge style. Find your new favorite shirt today and lead the trend', rewardsPicture: 'assets/post1.jpg', amount:  9743.31,dateAdded: 'Nov 1' ));
+  Future<List<RewardsItems>> fetchRewards(bool empty) async {
+    if (empty) {
+      return [];
+    }
 
-    return empty ? [] : items;
-    
+    final String url = '$baseUrl/rewards';
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      List<dynamic> jsonList = json.decode(response.body);
+      return jsonList.map((json) => RewardsItems.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to load rewards');
+    }
   }
 
    Future<String> fetchRewardsImage(String filename) async {
-      return 'assets/post1.jpg'; // Default image
+     final response = await http.head(Uri.parse('$baseUrl/rewards/images/$filename'));
+
+     if (response.statusCode == 200) {
+       return Uri.parse('$baseUrl/rewards/images/$filename').toString();
+     } else {
+       return 'assets/login.jpg'; // Default image
+     }
   }
 
   Future<List<dynamic>> searchRewards(String query) async {
@@ -575,6 +588,83 @@ class AuthService {
     }
   }
 
+  // Add item to cart
+  Future<void> addToCart(RewardsItems rewardItem) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> cartItems = prefs.getStringList(cartKey) ?? [];
+
+    cartItems.add(jsonEncode(rewardItem.toJson()));
+
+    await prefs.setStringList(cartKey, cartItems);
+  }
+
+  // Get all cart items
+  Future<List<RewardsItems>> getCartItems() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> cartItems = prefs.getStringList(cartKey) ?? [];
+
+    return cartItems.map((item) => RewardsItems.fromJson(jsonDecode(item))).toList();
+  }
+
+  // Clear the cart
+  Future<void> clearCart() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove(cartKey);
+  }
+
+  // Remove a specific item from cart
+  Future<void> removeFromCart(RewardsItems rewardItem) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> cartItems = prefs.getStringList(cartKey) ?? [];
+
+    // Find the first instance of the item and remove it
+    final index = cartItems.indexWhere((item) => jsonDecode(item)['id'] == rewardItem.rewardsId);
+
+    if (index != -1) {
+      cartItems.removeAt(index); // Remove only the first found instance
+    }
+
+    await prefs.setStringList(cartKey, cartItems);
+  }
+
+  Future<bool> createShopItem({
+    required String userId,
+    required String username,
+    required String name,
+    required String email,
+    required String contactNumber,
+    required double totalAmount,
+    required List<int> purchasedItems,
+  }) async {
+    try {
+      // Join the list of purchased item IDs into a comma-separated string
+      String itemIds = purchasedItems.join(',');
+
+      // Make the HTTP POST request
+      final response = await http.post(
+        Uri.parse('$baseUrl/shop/create'),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'userId': userId,
+          'username': username,
+          'name': name,
+          'email': email,
+          'contactNumber': contactNumber,
+          'totalAmount': totalAmount,
+          'itemIds': itemIds,  // Sending itemIds as a comma-separated string
+        }),
+      );
+
+      return response.statusCode == 200;
+    } catch (e) {
+      print('Error creating shop item: $e');
+      return false;
+    }
+  }
+
 
 
 }
+

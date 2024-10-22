@@ -22,12 +22,44 @@ class _RewardCheckOutScreenState extends State<RewardCheckOutScreen> {
   void initState() {
     super.initState();
     _scrollController = ScrollController();
+    _loadCartItems(); // Load cart items when the screen initializes
   }
 
   @override
   void dispose() {
     _scrollController.dispose();
     super.dispose();
+  }
+
+  Future<void> _loadCartItems() async {
+    setState(() {
+      _isLoading = true;
+    });
+    _items = await _authService.getCartItems(); // Fetch cart items from AuthService
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  Future<void> _removeItem(RewardsItems rewardItem) async {
+    final shouldDelete = await _showConfirmationDialog(
+      title: 'Remove item?',
+      content: 'Are you sure you want to remove this item?',
+    );
+
+    if (shouldDelete) {
+      await _authService.removeFromCart(rewardItem); // Remove item from cart using AuthService
+      await _loadCartItems(); // Reload cart items after removal
+    }
+  }
+
+  void _checkOut() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const RewardAddAddressScreen(),
+      ),
+    );
   }
 
   @override
@@ -37,84 +69,48 @@ class _RewardCheckOutScreenState extends State<RewardCheckOutScreen> {
         title: Text('Cart (${_items.length})'),
       ),
       backgroundColor: AppStyles.scaffoldBgColor,
-      body: FutureBuilder<List<RewardsItems>>(
-        future: _authService.fetchCart(false),
-        builder:  (context, snapshot) { 
-         if (snapshot.connectionState == ConnectionState.waiting) {
-            return const SizedBox(
-              height: 200,
-              child: Center(child: CircularProgressIndicator()),
-            );
-          } else if (snapshot.hasError) {  
-            return const Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.cloud_off, size: 100, color: Colors.grey),
-                  SizedBox(height: 20),
-                  Text(
-                    "Network connection is not available",
-                    style: TextStyle(fontSize: 18, color: Colors.grey),
-                  ),
-                ],
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : Stack(
+        fit: StackFit.expand,
+        children: [
+          _items.isEmpty
+              ? _buildEmptyRewardList()
+              : RefreshIndicator(
+            onRefresh: _loadCartItems,
+            child: ListView.builder(
+              itemCount: _items.length,
+              itemBuilder: (context, index) {
+                return FutureBuilder(
+                  future: _authService.fetchRewardsImage(_items[index].rewardsPicture),
+                  builder: (context, imageSnapshot) {
+                    if (imageSnapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (imageSnapshot.hasError) {
+                      return _buildItem(_items[index], 'assets/login.jpg'); // Default image
+                    }
+                    return _buildItem(_items[index], imageSnapshot.data!);
+                  },
+                );
+              },
+            ),
+          ),
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+              decoration: const BoxDecoration(
+                color: Colors.white,
               ),
-            ); 
-          }
-          List<RewardsItems> rewards = snapshot.data!;
-
-          return Stack(
-            fit:  StackFit.expand,
-            children:[
-              RefreshIndicator(
-                onRefresh: () async {
-                  setState(() {});
-                },
-                child: rewards.isEmpty ? _buildEmptyRewardList() :
-                ListView.builder(
-                  itemCount: rewards.length,
-                  itemBuilder: (context, index) {
-                    return FutureBuilder(
-                      future: _authService.fetchRewardsImage('filename'), 
-                      builder: (context, imageSnapshot) {
-                        if (imageSnapshot.connectionState == ConnectionState.waiting) {
-                          return const Center(child: CircularProgressIndicator());
-                        } else if (imageSnapshot.hasError) {
-                          return _buildItem(rewards[index], 'assets/login.jpg'); // Default image
-                        }
-                        return _buildItem(rewards[index], imageSnapshot.data!);
-                      });
-                  }),
+              child: ElevatedButton(
+                onPressed: _checkOut,
+                child: const Text('Check out', textAlign: TextAlign.end),
               ),
-              Positioned(
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  child:Container(
-                    width: double.infinity,
-                      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        mainAxisSize: MainAxisSize.min, // Add this line
-                        children: [
-                          ElevatedButton(
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => RewardAddAddressScreen(),
-                                  ),
-                                );
-                          }, child: const Text('Check out', textAlign: TextAlign.end,),)
-                        ],
-                      ),
-                    )
-                  ),
-            ]
-          );
-        }
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -124,51 +120,60 @@ class _RewardCheckOutScreenState extends State<RewardCheckOutScreen> {
       padding: const EdgeInsets.all(15),
       height: 131,
       decoration: const BoxDecoration(
-          color: Colors.white,
+        color: Colors.white,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-            Flexible(
-              child: SizedBox(
-                height: 131,
-                width: 100,
-                child: ClipRRect(
-                    child: Image.network(
-                      imageUrl,
-                      height: 131,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                      alignment: Alignment.topCenter,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Image.asset('assets/login.jpg', height: 131, width: double.infinity, fit: BoxFit.cover);
-                      },
-                    ),
-                  ),
-              )
+          Flexible(
+            child: SizedBox(
+              height: 131,
+              width: 100,
+              child: ClipRRect(
+                child: Image.network(
+                  imageUrl,
+                  height: 131,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                  alignment: Alignment.topCenter,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Image.asset('assets/post1.jpg',
+                        height: 131, width: double.infinity, fit: BoxFit.cover);
+                  },
+                ),
+              ),
             ),
-            Expanded(child: Column(
+          ),
+          Expanded(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                // const SizedBox(height: 15),
-                Text(reward.rewardsName, 
-                  style: AppStyles.vifitTextTheme.labelLarge, softWrap: true,
-                  overflow: TextOverflow.ellipsis, maxLines: 2),
+                Text(
+                  reward.rewardsName,
+                  style: AppStyles.vifitTextTheme.labelLarge,
+                  softWrap: true,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
+                ),
                 const SizedBox(height: 5),
-                Text('P ${formatNumber(reward.amount)}', style: AppStyles.vifitTextTheme.titleMedium?.copyWith(color: AppStyles.secondaryColor)),
-                
+                Text(
+                  'P ${formatNumber(reward.amount)}',
+                  style: AppStyles.vifitTextTheme.titleMedium
+                      ?.copyWith(color: AppStyles.secondaryColor),
+                ),
               ],
-            )),
-            GestureDetector(
-              onTap: () => _removeItem(reward.rewardsId),
-              child: const Icon(Icons.close),
-            )
-      ],),
+            ),
+          ),
+          GestureDetector(
+            onTap: () => _removeItem(reward),
+            child: const Icon(Icons.close),
+          )
+        ],
+      ),
     );
   }
-
 
   Widget _buildEmptyRewardList() {
     return const Center(
@@ -184,16 +189,6 @@ class _RewardCheckOutScreenState extends State<RewardCheckOutScreen> {
         ],
       ),
     );
-  }
-
-  Future<void> _removeItem(int rewardId) async {
-    final shouldDelete = await _showConfirmationDialog(
-      title: 'Remove item?',
-      content: 'Are you sure you want to remove this item?');
-
-    if(shouldDelete) {
-      // Add delete method
-    }
   }
 
   Future<bool> _showConfirmationDialog(
