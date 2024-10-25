@@ -1,6 +1,7 @@
 // lib/screens/points_history_screen.dart
 
 import 'package:flutter/material.dart';
+import 'package:virtualfitnessph/screens/main_page_screen.dart';
 import '../services/auth_service.dart';
 import '../styles/app_styles.dart';
 import 'pass_points_screen.dart'; // Import PassPointsScreen
@@ -74,24 +75,7 @@ class _PointsHistoryScreenState extends State<PointsHistoryScreen> {
   }
 
   void _redeemPoints() {
-    // Currently not implemented. Show a placeholder dialog.
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Redeem Points'),
-          content: const Text('Redeem functionality is coming soon!'),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('OK'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
+    Navigator.push(context, MaterialPageRoute(builder: (context) => const MainPageScreen(tab: 2)));
   }
 
   Widget _buildTransactionItem(PointsTransaction transaction) {

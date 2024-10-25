@@ -242,25 +242,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   void _redeemPoints() {
     Navigator.push(context, MaterialPageRoute(builder: (context) => const MainPageScreen(tab: 2)));
-      // Currently not implemented. Show a placeholder dialog.
-      // showDialog(
-      //   context: context,
-      //   builder: (BuildContext context) {
-      //     return AlertDialog(
-      //       title: const Text('Redeem Points'),
-      //       content: const Text('Redeem functionality is coming soon!'),
-      //       actions: <Widget>[
-      //         TextButton(
-      //           child: const Text('OK'),
-      //           onPressed: () {
-      //             Navigator.of(context).pop();
-      //           },
-      //         ),
-      //       ],
-      //     );
-      //   },
-      // );
-    }
+  }
 
 
   @override

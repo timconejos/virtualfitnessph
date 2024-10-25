@@ -59,7 +59,9 @@ class _RewardsPageState extends State<RewardsPage> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-             Navigator.push(context, MaterialPageRoute(builder: (context) => const MainPageScreen(tab: 0)));
+             Navigator.pushAndRemoveUntil(context, 
+             MaterialPageRoute(builder: (context) => const MainPageScreen(tab: 0)),
+             (Route<dynamic> route) => false);
           }, // Add search button
         ),
         actions: [
