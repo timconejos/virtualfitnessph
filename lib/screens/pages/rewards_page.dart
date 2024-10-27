@@ -164,7 +164,7 @@ class _RewardsPageState extends State<RewardsPage> {
               itemCount: rewards.length,
               itemBuilder: (context, index) {
                 return FutureBuilder(
-                  future: _authService.fetchRewardsImage('filename'), 
+                  future: _authService.fetchRewardsImage(rewards[index].rewardsPicture),
                   builder: (context, imageSnapshot) {
                      if (imageSnapshot.connectionState == ConnectionState.waiting) {
                       return const Center(child: CircularProgressIndicator());

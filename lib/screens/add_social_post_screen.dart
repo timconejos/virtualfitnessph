@@ -29,7 +29,7 @@ class _AddSocialPostScreenState extends State<AddSocialPostScreen> {
     final XFile? image = await _picker.pickImage(
         source: source,
         maxWidth: screenWidth,
-        imageQuality: 50  // Optionally reduce quality to further ensure file size reduction
+        imageQuality: 80  // Optionally reduce quality to further ensure file size reduction
     );
 
     if (image != null) {
