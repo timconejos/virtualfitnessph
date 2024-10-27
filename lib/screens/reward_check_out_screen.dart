@@ -105,8 +105,12 @@ class _RewardCheckOutScreenState extends State<RewardCheckOutScreen> {
                 color: Colors.white,
               ),
               child: ElevatedButton(
-                onPressed: _checkOut,
+                onPressed: _items.isNotEmpty ? _checkOut : null,
                 child: const Text('Check out', textAlign: TextAlign.end),
+                // style: _items.isNotEmpty ? AppStyles.primaryButtonStyle : ElevatedButton.styleFrom(
+                //   backgroundColor: Colors.grey,
+                //   foregroundColor: AppStyles.greyColor
+                // ),
               ),
             ),
           ),
@@ -159,7 +163,7 @@ class _RewardCheckOutScreenState extends State<RewardCheckOutScreen> {
                 ),
                 const SizedBox(height: 5),
                 Text(
-                  'P ${formatNumber(reward.amount)}',
+                  '₱ ${formatNumber(reward.amount)}',
                   style: AppStyles.vifitTextTheme.titleMedium
                       ?.copyWith(color: AppStyles.secondaryColor),
                 ),

@@ -62,7 +62,7 @@ class _SearchUserScreenState extends State<SearchUserScreen> {
       MaterialPageRoute(
         builder: (context) => ViewProfileScreen(
           userId: user['id'],
-          userName: _authService.decryptData(user['username']) ?? 'Unknown',
+          userName: user['username'],
         ),
       ),
     );
@@ -158,46 +158,10 @@ class _SearchUserScreenState extends State<SearchUserScreen> {
 
     return Scaffold(
       appBar: _buildSearchAppBar(),
-      // AppBar(
-      //   title: const Text('Search Users'),
-      //   backgroundColor: AppStyles.primaryColor,
-      // ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: <Widget>[
-            // // Search Bar
-            // TextField(
-            //   controller: _searchController,
-            //   decoration: InputDecoration(
-            //     labelText: 'Search by username, name, or email',
-            //     border: const OutlineInputBorder(),
-            //     suffixIcon: IconButton(
-            //       icon: const Icon(Icons.search),
-            //       onPressed: _searchUsers,
-            //     ),
-            //   ),
-            //   onSubmitted: (value) => _searchUsers(),
-            // ),
-            // const SizedBox(height: 20),
-            // // Users List
-            // Text('displayLarge', style: AppStyles.vifitTextTheme.displayLarge), 
-            // Text('displayMedium', style: AppStyles.vifitTextTheme.displayMedium), 
-            // Text('displaySmall', style: AppStyles.vifitTextTheme.displaySmall), 
-            // Text('headlineLarge', style: AppStyles.vifitTextTheme.headlineLarge), 
-            // Text('headlineMedium', style: AppStyles.vifitTextTheme.headlineMedium), 
-            // Text('headlineSmall', style: AppStyles.vifitTextTheme.headlineSmall), 
-            // Text('titleLarge', style: AppStyles.vifitTextTheme.titleLarge), 
-            // Text('titleMedium', style: AppStyles.vifitTextTheme.titleMedium), 
-            // Text('titleSmall', style: AppStyles.vifitTextTheme.titleSmall), 
-            // Text('labelLarge', style: AppStyles.vifitTextTheme.labelLarge), 
-            // Text('labelMedium', style: AppStyles.vifitTextTheme.labelMedium), 
-            // Text('labelSmall', style: AppStyles.vifitTextTheme.labelSmall), 
-            // Text('bodyLarge', style: AppStyles.vifitTextTheme.bodyLarge), 
-            // Text('bodyMedium', style: AppStyles.vifitTextTheme.bodyMedium), 
-            // Text('bodySmall', style: AppStyles.vifitTextTheme.bodySmall), 
-
-
             _isLoading
                 ? const CircularProgressIndicator()
                 : Expanded(

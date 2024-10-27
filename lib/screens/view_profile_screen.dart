@@ -376,10 +376,10 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                       color: AppStyles.darkerPrimary,
                     ),
                     child: _profilePicUrl == null
-                        ? CircleAvatar(
-                      radius: 45,
-                      backgroundColor: Colors.red.shade200,
-                      child: const Icon(Icons.person, size: 45),
+                        ? const CircleAvatar(
+                        radius: 45,
+                        backgroundImage: AssetImage('assets/profile.png'),
+                        backgroundColor: Color.fromARGB(255, 224, 224, 224),
                     )
                         : CircleAvatar(
                       radius: 45,
@@ -928,136 +928,44 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
   }
 
 
-  void _showImageDialog(String imageUrl) {
-    showDialog(
-      context: context,
-      builder: (context) => GestureDetector(
-        onTap: () => Navigator.of(context).pop(),
-        child: Dialog(
-          backgroundColor: Colors.transparent,
-          child: Stack(
-            children: [
-              GestureDetector(
-                onTap: () {},
-                child: Container(
-                  width: double.infinity,
-                  height: double.infinity,
-                  decoration: const BoxDecoration(
-                    color: Colors.transparent,
-                  ),
-                  child: InteractiveViewer(
-                    clipBehavior: Clip.none,
-                    minScale: 0.1,
-                    maxScale: 4.0,
+ void _showImageDialog(String imageUrl) {
+      showGeneralDialog(
+        context: context,
+        // barrierDismissible: true,
+        pageBuilder: (BuildContext ctx, Animation<double> animation,
+            Animation<double> secondaryAnimation) {
+          return Scaffold(
+            backgroundColor: Colors.black.withOpacity(0.8),
+            body: SafeArea (child: Stack(
+              children: [
+                InteractiveViewer(
+                  boundaryMargin: EdgeInsets.zero,
+                  minScale: 0.5,
+                  maxScale: 4.0,
+                  child: Center(
                     child: Image.network(
                       imageUrl,
-                      fit: BoxFit.contain,
-                      loadingBuilder: (BuildContext context, Widget child,
-                          ImageChunkEvent? loadingProgress) {
-                        if (loadingProgress == null) return child;
-                        return Center(
-                          child: CircularProgressIndicator(
-                            value: loadingProgress.expectedTotalBytes != null
-                                ? loadingProgress.cumulativeBytesLoaded /
-                                    (loadingProgress.expectedTotalBytes ?? 1)
-                                : null,
-                          ),
-                        );
-                      },
-                      errorBuilder: (context, error, stackTrace) {
-                        return const Center(
-                          child: Text(
-                            'Failed to load image',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ),
-              ),
-              Positioned(
-                top: 20,
-                right: 20,
-                child: GestureDetector(
-                  onTap: () => Navigator.of(context).pop(),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.7),
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(Icons.close, color: Colors.white),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  
-
-  Widget _buildProgressCard(String raceName, double progress, int raceId) {
-    progress = progress > 1
-        ? 1
-        : progress; // Ensure progress does not overflow past 1.0
-
-    return InkWell(
-      onTap: () {
-        // Navigate to race detail page
-      },
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(raceName,
-                style:
-                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-            const SizedBox(height: 5),
-            Stack(
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Container(
-                    height: 20,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade300,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                ),
-                LayoutBuilder(
-                  builder: (context, constraints) => ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Container(
-                      height: 20,
-                      width: constraints.maxWidth * progress,
-                      decoration: BoxDecoration(
-                        color: Colors.red.shade600,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
+                      fit: BoxFit.cover,
                     ),
                   ),
                 ),
                 Positioned(
+                  top: 10,
                   right: 10,
-                  top: 0,
-                  child: Text(
-                    '${(progress * 100).toStringAsFixed(1)}%',
-                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  child: IconButton(
+                    icon: Icon(Icons.close, color: Colors.white, size: 30),
+                    onPressed: () {
+                      Navigator.of(ctx).pop();
+                    },
                   ),
                 ),
               ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+            )),
+          );
+        },
+      );
+    }
+
 }
 
 class ProfileStat extends StatelessWidget {

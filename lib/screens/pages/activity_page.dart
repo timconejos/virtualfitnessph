@@ -84,15 +84,22 @@ class _ActivityPageState extends State<ActivityPage> {
                   var submission = submissions[index];
                   DateTime submissionDate = DateTime.parse(submission['submissionDate']);
                   return ListTile(
-                    leading: CircleAvatar(
-                      radius: 30,
-                      backgroundImage: NetworkImage('http://97.74.90.63:8080/profiles/${submission['userId']}.jpg'),
-                      backgroundColor: const Color.fromARGB(255, 224, 224, 224),
-                        onBackgroundImageError: (exception, stackTrace) {
-                        // Handle the image load error
-                        print('Error loading image: $exception');
-                      },
-                      // child:  const Icon(Icons.person, size: 30),
+                    leading: Container(
+                      width: 55,
+                      height: 55,
+                      decoration: const BoxDecoration(
+                        color: Color.fromARGB(255, 224, 224, 224),
+                        shape: BoxShape.circle,
+                      ),
+                      child: ClipOval(
+                        child: Image.network(
+                          'http://97.74.90.63:8080/profiles/${submission['userId']}.jpg',
+                          fit: BoxFit.cover,
+                          errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
+                            return Image.asset('assets/profile.png', height: 55, width: double.infinity, fit: BoxFit.cover);
+                          },
+                      ),
+                    )
                     ),
                     title: RichText(text: 
                       TextSpan(
@@ -110,7 +117,7 @@ class _ActivityPageState extends State<ActivityPage> {
                   );
                 },
                 separatorBuilder: (context, index) {
-                  return Divider();
+                  return const Divider();
                 },
               ),
       ),

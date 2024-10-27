@@ -95,7 +95,7 @@ class _RewardsDetailPageState extends State<RewardsDetailPage> {
                     child:  Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('P ${formatNumber(widget.reward.amount)}', style: AppStyles.vifitTextTheme.titleLarge?.copyWith(color: AppStyles.secondaryColor),),
+                        Text('₱ ${formatNumber(widget.reward.amount)}', style: AppStyles.vifitTextTheme.titleLarge?.copyWith(color: AppStyles.secondaryColor),),
                         const SizedBox(height: 5),
                         Text(widget.reward.rewardsName, style: AppStyles.vifitTextTheme.titleMedium)
                       ]

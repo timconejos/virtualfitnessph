@@ -153,7 +153,12 @@ class _ProfilePageState extends State<ProfilePage> {
     if (userId != null) {
       try {
         badges = await _authService.fetchBadges(userId!);
-        badges.sort((a, b) => b['completeDate'].compareTo(a['completeDate']));
+      badges.sort((a, b) {
+        if (a['completeDate'] == null) return 1; // Push null to the end
+        if (b['completeDate'] == null) return -1; // Push null to the end
+        return b['completeDate'].compareTo(a['completeDate']);
+      });
+      print(badges);
       } catch (e) {
         print('Error loading badges: $e');
       }
@@ -302,16 +307,16 @@ class _ProfilePageState extends State<ProfilePage> {
               children: [
                   Container(
                     padding: EdgeInsets.all(4.0),
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       shape: BoxShape.circle,
                       color: AppStyles.darkerPrimary
                     ),
                     child: 
                       _profilePicUrl == null
-                          ? CircleAvatar(
+                          ? const CircleAvatar(
                         radius: 45,
-                        backgroundColor: Colors.red.shade200,
-                        child: const Icon(Icons.person, size: 45),
+                        backgroundImage: AssetImage('assets/profile.png'),
+                        backgroundColor: Color.fromARGB(255, 224, 224, 224),
                       )
                           : CircleAvatar(
                         radius: 45,
@@ -441,7 +446,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Widget _buildRewardSection() {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+      padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -465,7 +470,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   borderRadius: BorderRadius.circular(13),
                   // color: Color(0xFFB4D7FF),
                   color: AppStyles.primaryColor,
-                    gradient: LinearGradient(
+                    gradient: const LinearGradient(
                     colors: [Color(0x80FFDB03), Color(0x30FFDB03)],
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,

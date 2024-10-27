@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:virtualfitnessph/styles/app_styles.dart';
 
 class ViewAllRacesScreen extends StatelessWidget {
   final List<dynamic> joinedRaces;
@@ -12,7 +13,7 @@ class ViewAllRacesScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Assll Races'),
+        title: const Text('All Races'),
       ),
       body: ListView(
         children: [
@@ -23,7 +24,7 @@ class ViewAllRacesScreen extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.directions_run, size: 48, color: Colors.blue),
+                  Icon(Icons.directions_run, size: 48, color: Colors.grey),
                   SizedBox(height: 10),
                   Text('No in-progress races yet.'),
                 ],
@@ -33,12 +34,12 @@ class ViewAllRacesScreen extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Padding(
-                  padding: EdgeInsets.all(16.0),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
                   child: Text('In-Progress Races',
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                      style: AppStyles.vifitTextTheme.labelMedium),
                 ),
-                ...inProgressRaces.map((race) => _buildProgressCard(
+                ...inProgressRaces.map((race) => _buildRaceCard(
                   race['race']['raceName'],
                   race['registration']['distanceProgress'] /
                       race['registration']['raceDistance'],
@@ -50,12 +51,12 @@ class ViewAllRacesScreen extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Padding(
-                  padding: EdgeInsets.all(16.0),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
                   child: Text('Completed Races',
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                      style: AppStyles.vifitTextTheme.labelMedium)
                 ),
-                ...completedRaces.map((race) => _buildProgressCard(
+                ...completedRaces.map((race) => _buildRaceCard(
                   race['race']['raceName'],
                   1.0,
                   race['registration']['id'],
@@ -63,6 +64,80 @@ class ViewAllRacesScreen extends StatelessWidget {
               ],
             ),
         ],
+      ),
+    );
+  }
+
+
+  Widget _buildRaceCard(String raceName, double progress, int raceId) {
+    // double progress = race['registration']['distanceProgress'] / race['registration']['raceDistance'];
+    progress = progress.clamp(0.0, 1.0); // Ensure progress does not overflow past 1.0
+
+    return InkWell(
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 5.0),
+        padding: const EdgeInsets.symmetric(vertical: 22.0, horizontal: 20.0),
+         decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+             BoxShadow(
+              color: Colors.grey.withOpacity(0.3),
+              spreadRadius: 1,
+              blurRadius: 1,
+              offset: const Offset(0, 1),
+            ),
+          ]
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              raceName,
+              style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 16),
+            ),
+            Text(
+              'Progress: ${(progress * 100).toStringAsFixed(1)}%',
+              // style: TextStyle(color: race['registration']['completed'] == true ? Colors.green : Colors.red),
+            ),
+            const SizedBox(height: 5),
+            Stack(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Container(
+                    height: 26,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade300,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                ),
+                LayoutBuilder(
+                  builder: (context, constraints) => ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Container(
+                      height: 26,
+                      width: constraints.maxWidth * progress,
+                      decoration: BoxDecoration(
+                        color: AppStyles.secondaryColor,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                  ),
+                ),
+                // Positioned(
+                //   right: 10,
+                //   top: 0,
+                //   child: Text(
+                //     '${(progress * 100).toStringAsFixed(1)}%',
+                //     style: const TextStyle(fontWeight: FontWeight.bold),
+                //   ),
+                // ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -11,10 +11,9 @@ class ViewAllBadgesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PrimaryAppBar(title: 'All Badges'),
-      // appBar: AppBar(
-      //   title: const Text('All Badges'),
-      // ),
+      appBar: AppBar(
+        title: const Text('All Badges'),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: ListView.builder(
@@ -33,8 +32,9 @@ class ViewAllBadgesScreen extends StatelessWidget {
                 },
               ),
               title: Text(badge['raceName'], style: AppStyles.vifitTextTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold)),
-              subtitle: Text(DateFormat('MMM dd, yyyy hh:mm:ss a')
-                  .format(DateTime.parse(badge['completeDate'])), style: AppStyles.vifitTextTheme.bodySmall?.copyWith(fontWeight: FontWeight.bold)),
+              subtitle:  Text(
+                badge['completeDate'] != null ? DateFormat('MMM dd, yyyy hh:mm:ss a').format(DateTime.parse(badge['completeDate'])) : '-', style: AppStyles.vifitTextTheme.bodySmall?.copyWith(fontWeight: FontWeight.bold)),
+                contentPadding: const EdgeInsets.all(10),
               onTap: () {
                 Navigator.push(
                   context,

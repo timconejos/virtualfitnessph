@@ -98,12 +98,6 @@ class _AllRacesScreenState extends State<AllRacesScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-          //  RichText(text:  TextSpan(style: const TextStyle(color: AppStyles.textColor, fontSize: 18),
-          //               children: [
-          //               TextSpan(text: race['race']['raceName'], style: TextStyle(fontWeight: FontWeight.bold)),
-          //               TextSpan(text:  'Completed: ${race['registration']['completed'] == true ? 'Yes' : '${(progress * 100).toStringAsFixed(1)}%'}', style: TextStyle(fontWeight: FontWeight.bold)),
-          //             ]
-          //           )),
             Text(
               race['race']['raceName'],
               style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 16),

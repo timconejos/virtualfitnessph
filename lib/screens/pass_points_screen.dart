@@ -249,14 +249,25 @@ class _PassPointsScreenState extends State<PassPointsScreen> {
                   itemBuilder: (context, index) {
                     var user = displayList[index];
                     return ListTile(
-                      leading: CircleAvatar(
-                        backgroundImage: NetworkImage(
-                          user['id'] != null
+                      leading: Container(
+                      width: 40,
+                      height: 40,
+                      decoration: const BoxDecoration(
+                        color: Color.fromARGB(255, 224, 224, 224),
+                        shape: BoxShape.circle,
+                      ),
+                      child: ClipOval(
+                        child: Image.network(
+                           user['id'] != null
                               ? '$_baseUrl/profiles/${user['id']}.jpg'
                               : 'https://via.placeholder.com/100x100',
-                        ),
-                        backgroundColor: Colors.grey.shade200,
+                          fit: BoxFit.cover,
+                          errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
+                            return Image.asset('assets/profile.png', height: 40, width: double.infinity, fit: BoxFit.cover);
+                          },
                       ),
+                    )
+                    ),
                       title: Text(_authService.decryptData(user['username'])),
                       trailing: _selectedUserId == user['id']
                           ? const Icon(Icons.check, color: Colors.green)

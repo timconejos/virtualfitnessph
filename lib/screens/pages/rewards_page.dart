@@ -78,7 +78,7 @@ class _RewardsPageState extends State<RewardsPage> {
         ],
         title: TextField(
         controller: _searchController,
-        autofocus: true,
+        autofocus: false,
         style: const TextStyle(color: Colors.white),
         onSubmitted: (value) => _searchRewards(),
         decoration: InputDecoration(
@@ -246,7 +246,7 @@ class _RewardsPageState extends State<RewardsPage> {
                   child:  Container(
                     padding: const EdgeInsets.all(10),
                     
-                    child: Text('P ${formatNumber(reward.amount)}', style: AppStyles.vifitTextTheme.titleMedium?.copyWith(color: AppStyles.secondaryColor)),
+                    child: Text('₱ ${formatNumber(reward.amount)}', style: AppStyles.vifitTextTheme.titleMedium?.copyWith(color: AppStyles.secondaryColor)),
                   ), 
                 ),
               ],
