@@ -159,7 +159,7 @@ class _RacePageState extends State<RacePage> {
                     },
                     icon: const Icon(Icons.directions_run, size: 20),
                     // style: AppStyles.secondaryButtonStyleSmall,
-                    style: OutlinedButton.styleFrom(foregroundColor: AppStyles.secondaryColor, side: BorderSide(color: AppStyles.secondaryColor, width: 1)),
+                    style: OutlinedButton.styleFrom(foregroundColor: AppStyles.secondaryColor, side: const BorderSide(color: AppStyles.secondaryColor, width: 1)),
                     label: Text('Join', style: AppStyles.vifitTextTheme.titleMedium),
                   )]),
                 

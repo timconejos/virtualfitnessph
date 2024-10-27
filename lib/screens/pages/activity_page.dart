@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import '../../services/auth_service.dart';
 import 'package:virtualfitnessph/styles/app_styles.dart';
 
 class ActivityPage extends StatefulWidget {
@@ -13,7 +12,6 @@ class ActivityPage extends StatefulWidget {
 }
 
 class _ActivityPageState extends State<ActivityPage> {
-  final AuthService _authService = AuthService();
   List<dynamic> submissions = [];
   bool isLoading = false;
 
@@ -79,11 +77,13 @@ class _ActivityPageState extends State<ActivityPage> {
           ),
         )
             : ListView.separated(
+              padding: const EdgeInsets.only(top: 10.0),
                 itemCount: submissions.length,
                 itemBuilder: (context, index) {
                   var submission = submissions[index];
                   DateTime submissionDate = DateTime.parse(submission['submissionDate']);
                   return ListTile(
+                    // minVerticalPadding: 15,
                     leading: Container(
                       width: 55,
                       height: 55,
@@ -105,14 +105,13 @@ class _ActivityPageState extends State<ActivityPage> {
                       TextSpan(
                         style: AppStyles.vifitTextTheme.bodyMedium?.copyWith(color: AppStyles.textColor),
                         children: [
-                        TextSpan(text: '${submission['username']}', style: TextStyle(fontWeight: FontWeight.w900)),
+                        TextSpan(text: '${submission['username']}', style: const TextStyle(fontWeight: FontWeight.w900)),
                         TextSpan(text: ' submitted ${submission['distanceKm']} KM for '),
                         TextSpan(text: '${submission['raceName']} in ${submission['location']}'),
 
 
                       ]
                     )),
-                    // title: Text('${submission['username']} submitted ${submission['distanceKm']} KM for ${submission['raceName']} in ${submission['location']}'),
                     trailing: Text(_timeAgo(submissionDate)),
                   );
                 },

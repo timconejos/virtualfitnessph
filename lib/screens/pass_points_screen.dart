@@ -6,7 +6,6 @@ import 'package:virtualfitnessph/components/primary_text_field.dart';
 import '../components/confirm_pass_points_dialog.dart'; // Import the confirmation dialog
 import '../services/auth_service.dart';
 import '../styles/app_styles.dart';
-import '../components/primary_button.dart';
 import '../screens/view_profile_screen.dart';
 
 class PassPointsScreen extends StatefulWidget {
@@ -343,7 +342,7 @@ class _PassPointsScreenState extends State<PassPointsScreen> {
       children: [
         Expanded(
           child: Container (
-            padding: EdgeInsets.all(30),
+            padding: const EdgeInsets.all(30),
             decoration: BoxDecoration(
               color: Colors.white,
               boxShadow: [

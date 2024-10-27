@@ -45,13 +45,6 @@ class _RewardsPageState extends State<RewardsPage> {
     });
   }
 
-  // void _navigateBac() {
-  //   Navigator.push(
-  //     context,
-  //     MaterialPageRoute(builder: (context) => const PointsHistoryScreen()),
-  //   );
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,7 +63,7 @@ class _RewardsPageState extends State<RewardsPage> {
           onPressed: () {
              Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => RewardCheckOutScreen(),
+                builder: (context) => const RewardCheckOutScreen(),
               ),
             );
           }, // Add search button

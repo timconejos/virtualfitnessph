@@ -108,8 +108,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     ? const CircularProgressIndicator()
                     : ElevatedButton(
                   onPressed: _forgotPassword,
-                  child: const Text('Reset Password'),
                   style: AppStyles.primaryButtonStyle,
+                  child: const Text('Reset Password'),
                 ),
                 const SizedBox(height: 20),
                 Row(

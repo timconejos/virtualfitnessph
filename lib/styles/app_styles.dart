@@ -31,7 +31,7 @@ class AppStyles {
   static ButtonStyle primaryButtonStyle = ElevatedButton.styleFrom(
     backgroundColor: primaryColor,
     foregroundColor: Colors.white,
-    minimumSize: Size(double.infinity, 50),
+    minimumSize: const Size(double.infinity, 50),
     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
     textStyle: vifitTextTheme.titleMedium,
      shape: RoundedRectangleBorder(
@@ -54,7 +54,7 @@ class AppStyles {
   static ButtonStyle secondaryButtonStyle = ElevatedButton.styleFrom(
     backgroundColor: secondaryColor,
     foregroundColor: Colors.white,
-    minimumSize: Size(double.infinity, 30),
+    minimumSize: const Size(double.infinity, 30),
     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
     textStyle: vifitTextTheme.titleMedium,
      shape: RoundedRectangleBorder(
@@ -65,7 +65,7 @@ class AppStyles {
   static ButtonStyle secondaryButtonStyleSmall = ElevatedButton.styleFrom(
     backgroundColor: secondaryColor,
     foregroundColor: Colors.white,
-    minimumSize: Size(double.infinity, 30),
+    minimumSize: const Size(double.infinity, 30),
     elevation: 0,
     padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
     textStyle: vifitTextTheme.titleSmall,

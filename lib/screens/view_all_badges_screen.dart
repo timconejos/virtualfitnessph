@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:virtualfitnessph/components/primary_app_bar.dart';
 import 'package:virtualfitnessph/styles/app_styles.dart';
 
 class ViewAllBadgesScreen extends StatelessWidget {

@@ -13,7 +13,7 @@ class ViewAllRacesScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('All Races'),
+        title: const Text('All races'),
       ),
       body: ListView(
         children: [
@@ -70,7 +70,6 @@ class ViewAllRacesScreen extends StatelessWidget {
 
 
   Widget _buildRaceCard(String raceName, double progress, int raceId) {
-    // double progress = race['registration']['distanceProgress'] / race['registration']['raceDistance'];
     progress = progress.clamp(0.0, 1.0); // Ensure progress does not overflow past 1.0
 
     return InkWell(
@@ -97,7 +96,6 @@ class ViewAllRacesScreen extends StatelessWidget {
             ),
             Text(
               'Progress: ${(progress * 100).toStringAsFixed(1)}%',
-              // style: TextStyle(color: race['registration']['completed'] == true ? Colors.green : Colors.red),
             ),
             const SizedBox(height: 5),
             Stack(
@@ -126,14 +124,6 @@ class ViewAllRacesScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                // Positioned(
-                //   right: 10,
-                //   top: 0,
-                //   child: Text(
-                //     '${(progress * 100).toStringAsFixed(1)}%',
-                //     style: const TextStyle(fontWeight: FontWeight.bold),
-                //   ),
-                // ),
               ],
             ),
           ],
@@ -142,60 +132,4 @@ class ViewAllRacesScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildProgressCard(String raceName, double progress, int raceId) {
-    progress = progress > 1 ? 1 : progress; // Ensure progress does not overflow past 1.0
-
-    return InkWell(
-      onTap: () {
-        // Navigate to race detail page
-      },
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(raceName,
-                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-            const SizedBox(height: 5),
-            Stack(
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Container(
-                    height: 20,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade300,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                ),
-                LayoutBuilder(
-                  builder: (context, constraints) => ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Container(
-                      height: 20,
-                      width: constraints.maxWidth * progress,
-                      decoration: BoxDecoration(
-                        color: Colors.red.shade600,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  right: 10,
-                  top: 0,
-                  child: Text(
-                    '${(progress * 100).toStringAsFixed(1)}%',
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 }

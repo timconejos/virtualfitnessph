@@ -404,7 +404,7 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                         ),
                       ),
                       Text(
-                        '@${_userName}' ?? 'Unknown User',
+                        '@$_userName' ?? 'Unknown User',
                         style: AppStyles.vifitTextTheme.titleMedium?.copyWith(
                           color: AppStyles.primaryForeground,
                         ),
@@ -687,7 +687,7 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                                     color: Colors.white,
                                     // elevation: 2,
                                     margin: const EdgeInsets.symmetric(vertical: 3, horizontal: 3),
-                                    child: Padding(padding: EdgeInsets.all(8),
+                                    child: Padding(padding: const EdgeInsets.all(8),
                                     child: CircleAvatar(
                                     radius: 40,
                                     // backgroundColor: Colors.transparent,
@@ -741,7 +741,7 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
       .toList();
 
   return Container(
-    padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+    padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -782,7 +782,7 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                     children: [
                       Icon(Icons.directions_run, size: 48, color: Colors.grey),
                       SizedBox(height: 10),
-                      Text('No in-progress races yet. Start your journey now!'),
+                      Text('No in-progress races yet.'),
                     ],
                   ),
                 ) : Row(
@@ -845,7 +845,7 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
 
   Widget _buildPhotosSection() {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+      padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
       child: Column (
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -863,11 +863,11 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Expanded(child: Container(
-                margin: EdgeInsets.all(1),
-                padding: EdgeInsets.all(15),
+                margin: const EdgeInsets.all(1),
+                padding: const EdgeInsets.all(15),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(13),
-                  color: Color(0x80FFDB03),
+                  color: const Color(0x80FFDB03),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -953,7 +953,7 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                   top: 10,
                   right: 10,
                   child: IconButton(
-                    icon: Icon(Icons.close, color: Colors.white, size: 30),
+                    icon: const Icon(Icons.close, color: Colors.white, size: 30),
                     onPressed: () {
                       Navigator.of(ctx).pop();
                     },

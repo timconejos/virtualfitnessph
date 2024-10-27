@@ -41,7 +41,7 @@ class _RewardsDetailPageState extends State<RewardsDetailPage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => RewardCheckOutScreen(),
+        builder: (context) => const RewardCheckOutScreen(),
       ),
     );
   }
@@ -49,10 +49,9 @@ class _RewardsDetailPageState extends State<RewardsDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
       appBar: AppBar(
-        title: Text('Rewards')
+        title: const Text('Rewards')
       ),
       body: Stack(
         fit: StackFit.expand,
@@ -132,7 +131,7 @@ class _RewardsDetailPageState extends State<RewardsDetailPage> {
               right: 0,
               child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: Colors.white,
                 ),
                 child: Row(

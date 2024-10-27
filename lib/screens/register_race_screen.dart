@@ -128,7 +128,7 @@ class _RegisterRaceScreenState extends State<RegisterRaceScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Registration')
+        title: const Text('Registration')
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
