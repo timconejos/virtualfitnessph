@@ -105,7 +105,7 @@ class _ActivityPageState extends State<ActivityPage> {
                       TextSpan(
                         style: AppStyles.vifitTextTheme.bodyMedium?.copyWith(color: AppStyles.textColor),
                         children: [
-                        TextSpan(text: '${submission['username']}', style: const TextStyle(fontWeight: FontWeight.w900)),
+                        TextSpan(text: '${submission['username']}', style: const TextStyle(fontFamily: 'NunitoSans-Bold', fontWeight: FontWeight.w900)),
                         TextSpan(text: ' submitted ${submission['distanceKm']} KM for '),
                         TextSpan(text: '${submission['raceName']} in ${submission['location']}'),
 
