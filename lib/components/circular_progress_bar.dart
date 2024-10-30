@@ -7,7 +7,7 @@ class CustomCircularProgressBar extends StatelessWidget {
   final double strokeWidth;  // Thickness of the circular progress bar
   final Color color;     // Color of the progress arc
 
-  CustomCircularProgressBar({
+  const CustomCircularProgressBar({
     required this.progress,
     required this.size,
     this.strokeWidth = 8.0,
@@ -55,7 +55,7 @@ class _CircularProgressPainter extends CustomPainter {
 
     // Draw background circle
     Paint backgroundPaint = Paint()
-      ..color = AppStyles.buttonColor!  // Background color
+      ..color = AppStyles.buttonColor  // Background color
       ..strokeWidth = strokeWidth/2
       ..style = PaintingStyle.stroke;
 

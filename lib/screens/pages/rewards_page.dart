@@ -45,13 +45,6 @@ class _RewardsPageState extends State<RewardsPage> {
     });
   }
 
-  // void _navigateBac() {
-  //   Navigator.push(
-  //     context,
-  //     MaterialPageRoute(builder: (context) => const PointsHistoryScreen()),
-  //   );
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,7 +52,9 @@ class _RewardsPageState extends State<RewardsPage> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-             Navigator.push(context, MaterialPageRoute(builder: (context) => const MainPageScreen(tab: 0)));
+             Navigator.pushAndRemoveUntil(context, 
+             MaterialPageRoute(builder: (context) => const MainPageScreen(tab: 0)),
+             (Route<dynamic> route) => false);
           }, // Add search button
         ),
         actions: [
@@ -68,7 +63,7 @@ class _RewardsPageState extends State<RewardsPage> {
           onPressed: () {
              Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => RewardCheckOutScreen(),
+                builder: (context) => const RewardCheckOutScreen(),
               ),
             );
           }, // Add search button
@@ -76,7 +71,7 @@ class _RewardsPageState extends State<RewardsPage> {
         ],
         title: TextField(
         controller: _searchController,
-        autofocus: true,
+        autofocus: false,
         style: const TextStyle(color: Colors.white),
         onSubmitted: (value) => _searchRewards(),
         decoration: InputDecoration(
@@ -189,7 +184,7 @@ class _RewardsPageState extends State<RewardsPage> {
       },
       child: Container(
         margin: const EdgeInsets.only(bottom: 5.0),
-        height: 170,
+        // height: 170,
         // width: double.infinity,
         decoration: const BoxDecoration(
           color: Colors.white,
@@ -203,13 +198,13 @@ class _RewardsPageState extends State<RewardsPage> {
           // ]
         ),
 
-        child: Row(
+        child: Column(
           // mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Flexible(child: SizedBox(
+            SizedBox(
               height: 170,
-              width: 130,
+              width: double.infinity,
               child: ClipRRect(
                   child: Image.network(
                     imageUrl,
@@ -222,33 +217,33 @@ class _RewardsPageState extends State<RewardsPage> {
                     },
                   ),
                 ),
-            )),
+            ),
             const SizedBox(width: 15),
-            Expanded(
-              flex: 2,
-              child: Stack(
-              fit: StackFit.expand,
-              // crossAxisAlignment: CrossAxisAlignment.start,
-              // mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                // const SizedBox(height: 15),
-                Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Text(reward.rewardsName, 
-                  textAlign: TextAlign.left,
-                    style: AppStyles.vifitTextTheme.titleMedium, softWrap: true,
-                    overflow: TextOverflow.ellipsis, maxLines: 2)),
-                Positioned(
-                  bottom: 10,
-                  right: 10,
-                  child:  Container(
-                    padding: const EdgeInsets.all(10),
-                    
-                    child: Text('P ${formatNumber(reward.amount)}', style: AppStyles.vifitTextTheme.titleMedium?.copyWith(color: AppStyles.secondaryColor)),
-                  ), 
-                ),
+            Container(
+              padding:  const EdgeInsets.all(15.0),
+              child: Column (
+                crossAxisAlignment: CrossAxisAlignment.start,
+               children: [
+                const SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Flexible(child:
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(reward.rewardsName, style: AppStyles.vifitTextTheme.titleMedium?.copyWith(color: AppStyles.textColor), maxLines: 2, overflow: TextOverflow.visible,),
+                      ],
+                    )),
+                    const SizedBox(width: 15),
+                    Text('${formatNumber(reward.amount)} ViFit coins', style: AppStyles.vifitTextTheme.titleMedium?.copyWith(color: AppStyles.secondaryColor))
+        
+                  ]),
+                
+
               ],
-            ))
+              )
+            ),
           ]
           )
       ),

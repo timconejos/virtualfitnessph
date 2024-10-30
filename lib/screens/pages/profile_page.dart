@@ -153,7 +153,11 @@ class _ProfilePageState extends State<ProfilePage> {
     if (userId != null) {
       try {
         badges = await _authService.fetchBadges(userId!);
-        badges.sort((a, b) => b['completeDate'].compareTo(a['completeDate']));
+      badges.sort((a, b) {
+        if (a['completeDate'] == null) return 1; // Push null to the end
+        if (b['completeDate'] == null) return -1; // Push null to the end
+        return b['completeDate'].compareTo(a['completeDate']);
+      });
       } catch (e) {
         print('Error loading badges: $e');
       }
@@ -242,25 +246,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   void _redeemPoints() {
     Navigator.push(context, MaterialPageRoute(builder: (context) => const MainPageScreen(tab: 2)));
-      // Currently not implemented. Show a placeholder dialog.
-      // showDialog(
-      //   context: context,
-      //   builder: (BuildContext context) {
-      //     return AlertDialog(
-      //       title: const Text('Redeem Points'),
-      //       content: const Text('Redeem functionality is coming soon!'),
-      //       actions: <Widget>[
-      //         TextButton(
-      //           child: const Text('OK'),
-      //           onPressed: () {
-      //             Navigator.of(context).pop();
-      //           },
-      //         ),
-      //       ],
-      //     );
-      //   },
-      // );
-    }
+  }
 
 
   @override
@@ -304,8 +290,8 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget _buildProfileHeader() {
     return Container(
       height: 200,
-      padding: EdgeInsets.only(left: 25, right: 25, top: 25, bottom: 5),
-      decoration: BoxDecoration(color: AppStyles.primaryColor,
+      padding: const EdgeInsets.only(left: 25, right: 25, top: 25, bottom: 5),
+      decoration: const BoxDecoration(color: AppStyles.primaryColor,
           gradient: LinearGradient(
           colors: [AppStyles.primaryColor, AppStyles.unselectedColor],
           begin: Alignment.topCenter,
@@ -319,17 +305,17 @@ class _ProfilePageState extends State<ProfilePage> {
             Column(
               children: [
                   Container(
-                    padding: EdgeInsets.all(4.0),
-                    decoration: BoxDecoration(
+                    padding: const EdgeInsets.all(4.0),
+                    decoration: const BoxDecoration(
                       shape: BoxShape.circle,
                       color: AppStyles.darkerPrimary
                     ),
                     child: 
                       _profilePicUrl == null
-                          ? CircleAvatar(
+                          ? const CircleAvatar(
                         radius: 45,
-                        backgroundColor: Colors.red.shade200,
-                        child: const Icon(Icons.person, size: 45),
+                        backgroundImage: AssetImage('assets/profile.png'),
+                        backgroundColor: Color.fromARGB(255, 224, 224, 224),
                       )
                           : CircleAvatar(
                         radius: 45,
@@ -374,7 +360,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           () => _navigateToList(
                           context, 'Followers'),
                     ),
-                    SizedBox(width: 16),
+                    const SizedBox(width: 16),
                     _buildStatColumn(
                       "Following",
                       profileData['followingCount']?.toString() ?? '0',
@@ -459,7 +445,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Widget _buildRewardSection() {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+      padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -477,13 +463,13 @@ class _ProfilePageState extends State<ProfilePage> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Expanded(child: Container(
-                margin: EdgeInsets.all(1),
-                padding: EdgeInsets.all(15),
+                margin: const EdgeInsets.all(1),
+                padding: const EdgeInsets.all(15),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(13),
                   // color: Color(0xFFB4D7FF),
                   color: AppStyles.primaryColor,
-                    gradient: LinearGradient(
+                    gradient: const LinearGradient(
                     colors: [Color(0x80FFDB03), Color(0x30FFDB03)],
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
@@ -501,28 +487,14 @@ class _ProfilePageState extends State<ProfilePage> {
                               color: Colors.grey.withOpacity(0.5),  // Shadow color
                               spreadRadius: 1,   // How far the shadow spreads
                               blurRadius: 0,     // Softness of the shadow
-                              offset: Offset(1, 1),  // Position of the shadow (x, y)
+                              offset: const Offset(1, 1),  // Position of the shadow (x, y)
                             ),
                           ],
                         ),
-                        child: 
-                        // Container(
-                        //   width: 50,
-                        //   height: 50, 
-                        //   decoration: BoxDecoration(
-                        //     shape: BoxShape.circle,
-                        //     image: DecorationImage(
-                        //     image: AssetImage('assets/vifit-coin1.png'),
-                        //     fit: BoxFit.fill, // Change to BoxFit.contain, BoxFit.fill, etc. based on your need
-                        //   ),
-                        // )
-                        // )
-                        CircleAvatar(
+                        child: const CircleAvatar(
                           radius: 40,
                           backgroundColor: AppStyles.buttonColor,
                           backgroundImage: AssetImage('assets/vifit-coin1.png'),
-                          // child: const Icon(Icons.monetization_on, size: 50),
-                          // backgroundImage: NetworkImage('https://example.com/image.jpg'), // Add your image URL
                         ),
                       ),
                     ],),
@@ -534,7 +506,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [Text(
                           "Vifit coins: $_currentPoints",
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                         ),
                       ],),
                       Row(children: [
@@ -564,7 +536,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Widget _buildStatsSection() {
     return Container(
-       padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+       padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
        child: Column(
          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -743,7 +715,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     color: Colors.white,
                                     // elevation: 2,
                                     margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-                                    child: Padding(padding: EdgeInsets.all(8),
+                                    child: Padding(padding: const EdgeInsets.all(8),
                                     child: CircleAvatar(
                                     radius: 40,
                                     // backgroundColor: Colors.transparent,
@@ -843,7 +815,7 @@ class _ProfilePageState extends State<ProfilePage> {
         .toList();
 
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+      padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -904,7 +876,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Widget _buildPhotosSection() {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+      padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
       child: Column (
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -922,11 +894,11 @@ class _ProfilePageState extends State<ProfilePage> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Expanded(child: Container(
-                margin: EdgeInsets.all(1),
-                padding: EdgeInsets.all(15),
+                margin: const EdgeInsets.all(1),
+                padding: const EdgeInsets.all(15),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(13),
-                  color: Color(0x80FFDB03),
+                  color: const Color(0x80FFDB03),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -1011,7 +983,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   top: 10,
                   right: 10,
                   child: IconButton(
-                    icon: Icon(Icons.close, color: Colors.white, size: 30),
+                    icon: const Icon(Icons.close, color: Colors.white, size: 30),
                     onPressed: () {
                       Navigator.of(ctx).pop();
                     },
@@ -1069,78 +1041,6 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Widget _buildProgressCard(Map<String, dynamic> race) {
-    double progress = race['registration']['distanceProgress'] /
-        race['registration']['raceDistance'];
-    progress = min(progress, 1.0); // Ensure progress does not overflow past 1.0
-
-    return InkWell(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => RaceDetailScreen(race: race),
-          ),
-        );
-      },
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              race['race']['raceName'],
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-            ),
-            const SizedBox(height: 5),
-            Stack(
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Container(
-                    height: 20,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade300,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                ),
-                LayoutBuilder(
-                  builder: (context, constraints) => ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Container(
-                      height: 20,
-                      width: constraints.maxWidth * progress,
-                      decoration: BoxDecoration(
-                        color: Colors.green.shade600,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  right: 10,
-                  top: 0,
-                  child: Text(
-                    '${(progress * 100).toStringAsFixed(1)}%',
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void _logout() {
-    _authService.logout();
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (context) => const LoginScreen()),
-    );
-  }
 }
 
 class ProfileStat extends StatelessWidget {

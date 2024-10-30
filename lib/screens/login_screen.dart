@@ -11,7 +11,6 @@ import 'dart:io';
 import 'register_screen.dart';
 import 'forgot_password_screen.dart';
 import 'package:virtualfitnessph/components/primary_text_field.dart';
-import 'package:virtualfitnessph/components/primary_button.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -89,16 +88,6 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  // Future<void> _registerToken() async {
-  //   final userId = await _authService.getUserId();
-  //   if (userId != null) {
-  //     final token = await NotificationService().getToken();
-  //     if (token != null) {
-  //       await _authService.sendTokenToServer(userId, token);
-  //     }
-  //   }
-  // }
-
   Map<String, String> _encryptData({required String username, required String password}) {
     final key = encrypt.Key.fromUtf8(sha256.convert(utf8.encode('my32lengthsupersecretnooneknows1')).toString().substring(0, 32));
     final iv = encrypt.IV.fromUtf8('myivforvrphtimco');
@@ -158,11 +147,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Image.asset('assets/icon-transparentx410.png', height: 150), // Add your image asset here
-                  SizedBox(height: 40),
+                  const SizedBox(height: 40),
                   PrimaryTextField(
                     labelText: 'Username', 
                     controller: _usernameController),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   PrimaryTextField(
                     labelText: 'Password', 
                     controller: _passwordController, 
@@ -177,7 +166,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           });
                         },
                       )),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(

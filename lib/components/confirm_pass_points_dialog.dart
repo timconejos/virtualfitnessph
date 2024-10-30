@@ -25,11 +25,28 @@ class ConfirmPassPointsDialog extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           // Enlarged Profile Picture
-          CircleAvatar(
-            radius: 50, // Adjust the radius as needed
-            backgroundImage: NetworkImage(profileImageUrl),
-            backgroundColor: Colors.grey.shade200,
-          ),
+          Container(
+              width: 100,
+              height: 100,
+              decoration: const BoxDecoration(
+                color: Color.fromARGB(255, 224, 224, 224),
+                shape: BoxShape.circle,
+              ),
+              child: ClipOval(
+                child: Image.network(
+                  profileImageUrl,
+                  fit: BoxFit.cover,
+                  errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
+                    return Image.asset('assets/profile.png', height: 100, width: double.infinity, fit: BoxFit.cover);
+                  },
+              ),
+            )
+            ),
+          // CircleAvatar(
+          //   radius: 50, // Adjust the radius as needed
+          //   backgroundImage: NetworkImage(profileImageUrl),
+          //   backgroundColor: Colors.grey.shade200,
+          // ),
           const SizedBox(height: 20),
           // Username Display
           Text(

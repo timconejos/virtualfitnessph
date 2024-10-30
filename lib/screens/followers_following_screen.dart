@@ -33,11 +33,23 @@ class FollowersFollowingScreen extends StatelessWidget {
               itemCount: users.length,
               itemBuilder: (context, index) {
                 return ListTile(
-                  leading: CircleAvatar(
-                    backgroundImage: NetworkImage(
-                      '$baseUrl/profiles/${users[index]['id']}.jpg',
+                  leading: Container(
+                      width: 40,
+                      height: 40,
+                      decoration: const BoxDecoration(
+                        color: Color.fromARGB(255, 224, 224, 224),
+                        shape: BoxShape.circle,
+                      ),
+                      child: ClipOval(
+                        child: Image.network(
+                          '$baseUrl/profiles/${users[index]['id']}.jpg',
+                          fit: BoxFit.cover,
+                          errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
+                            return Image.asset('assets/profile.png', height: 40, width: double.infinity, fit: BoxFit.cover);
+                          },
+                      ),
+                    )
                     ),
-                  ),
                   title: Text(_authService.decryptData(users[index]['username'])),
                   onTap: () => onUserTap(users[index]),
                 );

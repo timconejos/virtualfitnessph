@@ -115,6 +115,10 @@ flutter:
         - asset: assets/fonts/NunitoSans.ttf
         - asset: assets/fonts/NunitoSans-Italic.ttf
           style: italic
+    - family: NunitoSans-Bold
+      fonts:
+        - asset: assets/fonts/NunitoSans-Bold.ttf
+          weight: 900
 
 flutter_icons:
   android: true

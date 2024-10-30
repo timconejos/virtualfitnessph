@@ -283,8 +283,8 @@ void _showUploadOptions(BuildContext context) {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Container(
-                padding: EdgeInsets.only(left: 20),
-                child: Text('Change profile picture', style: TextStyle(color: AppStyles.greyColor))
+                padding: const EdgeInsets.only(left: 20),
+                child: const Text('Change profile picture', style: TextStyle(color: AppStyles.greyColor))
               ),
               const SizedBox(height: 10),
               ListTile(

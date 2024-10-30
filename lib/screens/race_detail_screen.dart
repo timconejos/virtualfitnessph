@@ -149,7 +149,7 @@ class _RaceDetailScreenState extends State<RaceDetailScreen> {
             //   'Race Progress',
             //   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
             // ),
-            Text('Race Progress',
+            Text('Race Progress (${(totalProgress * 100).toStringAsFixed(1)}%)',
                 style: AppStyles.vifitTextTheme.labelMedium?.copyWith(color: AppStyles.greyColor)),
             const SizedBox(height: 10),
             Row(
@@ -212,14 +212,14 @@ class _RaceDetailScreenState extends State<RaceDetailScreen> {
                   ),
                 ),
                 // Centered text showing the percentage of the progress
-                Positioned.fill(
-                  child: Center(
-                    child: Text(
-                      '${(totalProgress * 100).toStringAsFixed(1)}%',
-                      style: const TextStyle(color: Colors.black),
-                    ),
-                  ),
-                ),
+                // Positioned.fill(
+                //   child: Center(
+                //     child: Text(
+                //       '${(totalProgress * 100).toStringAsFixed(1)}%',
+                //       style: const TextStyle(color: Colors.black),
+                //     ),
+                //   ),
+                // ),
               ],
             ),
             const SizedBox(height: 10),
@@ -364,12 +364,11 @@ class _RaceDetailScreenState extends State<RaceDetailScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('About race'),
+        title: const Text('About race'),
       ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
-        // padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

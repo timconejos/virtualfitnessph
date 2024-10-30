@@ -47,7 +47,7 @@ class OutlineButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(8.0), 
         ),
         padding: EdgeInsets.symmetric(horizontal: hPadding, vertical: vPadding), 
-        minimumSize: Size(0,0),
+        minimumSize: const Size(0,0),
         textStyle: TextStyle(
           fontSize: fontSize,
           color: color, 
@@ -58,9 +58,9 @@ class OutlineButton extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           if (iconAlignment == IconAlignment.start) Icon(icon, size: iconSize),
-          if (iconAlignment == IconAlignment.start) SizedBox(width: 8),
+          if (iconAlignment == IconAlignment.start) const SizedBox(width: 8),
           Text(text), 
-          if (iconAlignment == IconAlignment.end) SizedBox(width: 8),
+          if (iconAlignment == IconAlignment.end) const SizedBox(width: 8),
           if (iconAlignment == IconAlignment.end) Icon(icon, size: iconSize), 
         ],
       ),

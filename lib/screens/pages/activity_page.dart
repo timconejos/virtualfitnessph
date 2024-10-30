@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import '../../services/auth_service.dart';
 import 'package:virtualfitnessph/styles/app_styles.dart';
 
 class ActivityPage extends StatefulWidget {
@@ -13,7 +12,6 @@ class ActivityPage extends StatefulWidget {
 }
 
 class _ActivityPageState extends State<ActivityPage> {
-  final AuthService _authService = AuthService();
   List<dynamic> submissions = [];
   bool isLoading = false;
 
@@ -79,38 +77,46 @@ class _ActivityPageState extends State<ActivityPage> {
           ),
         )
             : ListView.separated(
+              padding: const EdgeInsets.only(top: 10.0),
                 itemCount: submissions.length,
                 itemBuilder: (context, index) {
                   var submission = submissions[index];
                   DateTime submissionDate = DateTime.parse(submission['submissionDate']);
                   return ListTile(
-                    leading: CircleAvatar(
-                      radius: 30,
-                      backgroundImage: NetworkImage('http://97.74.90.63:8080/profiles/${submission['userId']}.jpg'),
-                      backgroundColor: const Color.fromARGB(255, 224, 224, 224),
-                        onBackgroundImageError: (exception, stackTrace) {
-                        // Handle the image load error
-                        print('Error loading image: $exception');
-                      },
-                      // child:  const Icon(Icons.person, size: 30),
+                    // minVerticalPadding: 15,
+                    leading: Container(
+                      width: 55,
+                      height: 55,
+                      decoration: const BoxDecoration(
+                        color: Color.fromARGB(255, 224, 224, 224),
+                        shape: BoxShape.circle,
+                      ),
+                      child: ClipOval(
+                        child: Image.network(
+                          'http://97.74.90.63:8080/profiles/${submission['userId']}.jpg',
+                          fit: BoxFit.cover,
+                          errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
+                            return Image.asset('assets/profile.png', height: 55, width: double.infinity, fit: BoxFit.cover);
+                          },
+                      ),
+                    )
                     ),
                     title: RichText(text: 
                       TextSpan(
                         style: AppStyles.vifitTextTheme.bodyMedium?.copyWith(color: AppStyles.textColor),
                         children: [
-                        TextSpan(text: '${submission['username']}', style: TextStyle(fontWeight: FontWeight.w900)),
+                        TextSpan(text: '${submission['username']}', style: const TextStyle(fontFamily: 'NunitoSans-Bold', fontWeight: FontWeight.w900)),
                         TextSpan(text: ' submitted ${submission['distanceKm']} KM for '),
                         TextSpan(text: '${submission['raceName']} in ${submission['location']}'),
 
 
                       ]
                     )),
-                    // title: Text('${submission['username']} submitted ${submission['distanceKm']} KM for ${submission['raceName']} in ${submission['location']}'),
                     trailing: Text(_timeAgo(submissionDate)),
                   );
                 },
                 separatorBuilder: (context, index) {
-                  return Divider();
+                  return const Divider();
                 },
               ),
       ),

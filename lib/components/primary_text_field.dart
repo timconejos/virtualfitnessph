@@ -13,7 +13,7 @@ class PrimaryTextField extends StatelessWidget {
   final ValueChanged? onChanged;
   final Function(String)? onSubmitted;
 
-  PrimaryTextField({
+  const PrimaryTextField({
     required this.labelText,
     this.hintText,
     this.isPassword = false,
@@ -37,20 +37,20 @@ class PrimaryTextField extends StatelessWidget {
       decoration: InputDecoration(
         labelText: labelText,
         hintText: hintText,
-        border: OutlineInputBorder(),
+        border: const OutlineInputBorder(),
         suffixIcon: suffixIcon_,
         prefixIcon: prefixIcon_,
         focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: AppStyles.primaryColor, width: 2.0),
+          borderSide: const BorderSide(color: AppStyles.primaryColor, width: 2.0),
           borderRadius: BorderRadius.circular(8.0)
         ),
         enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.grey, width: 1.0),
+          borderSide: const BorderSide(color: Colors.grey, width: 1.0),
           borderRadius: BorderRadius.circular(8.0)
         ),
         focusColor: AppStyles.primaryColor,
         // labelStyle: TextStyle(color: Colors.grey),
-        hintStyle: TextStyle(color: Colors.grey),
+        hintStyle: const TextStyle(color: Colors.grey),
       ),
       validator: validator,
     );

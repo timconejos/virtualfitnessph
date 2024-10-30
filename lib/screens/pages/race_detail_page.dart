@@ -3,7 +3,6 @@ import 'package:intl/intl.dart';
 import 'package:timer_count_down/timer_count_down.dart';
 import 'package:virtualfitnessph/models/race.dart';
 import 'package:virtualfitnessph/styles/app_styles.dart';
-import 'package:virtualfitnessph/styles/app_styles.dart';
 import '../register_race_screen.dart';
 
 class RaceDetailPage extends StatefulWidget {

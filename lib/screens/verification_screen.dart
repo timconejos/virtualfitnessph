@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:virtualfitnessph/screens/login_screen.dart';
-import 'package:virtualfitnessph/styles/app_styles.dart';
 
 class VerificationScreen extends StatelessWidget {
   const VerificationScreen({super.key});

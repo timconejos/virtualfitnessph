@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:virtualfitnessph/screens/main_page_screen.dart';
-import 'package:virtualfitnessph/screens/pages/feed_page.dart';
 
 class OrderPlacedScreen extends StatefulWidget {
   const OrderPlacedScreen({super.key});

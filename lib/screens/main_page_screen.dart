@@ -12,7 +12,6 @@ import 'package:virtualfitnessph/screens/pages/rewards_page.dart';
 import '../services/auth_service.dart';
 import 'login_screen.dart';
 import 'package:virtualfitnessph/styles/app_styles.dart';
-import 'package:virtualfitnessph/components/primary_app_bar.dart';
 import 'package:virtualfitnessph/screens/search_user_screen.dart'; // Import SearchUserScreen
 import 'package:virtualfitnessph/screens/points_history_screen.dart'; // Import PointsHistoryScreen
 
@@ -34,7 +33,7 @@ class _MainPageScreenState extends State<MainPageScreen> {
   static final List<Widget> _widgetOptions = <Widget>[
     const FeedPage(),
     const RacePage(),
-    const RewardsPage(), // TODO: create rewards page
+    const RewardsPage(),
     const ActivityPage(),
     const ProfilePage(),
   ];
@@ -55,7 +54,7 @@ class _MainPageScreenState extends State<MainPageScreen> {
     super.initState();
     _checkLogin();
     setState(() {
-      _selectedIndex = widget.tab ?? 0;
+      _selectedIndex = widget.tab;
     });
   }
 
@@ -368,7 +367,7 @@ class _MainPageScreenState extends State<MainPageScreen> {
                               style: AppStyles.vifitTextTheme.labelSmall?.copyWith(color: AppStyles.primaryForeground)
                             ),
                               Text(
-                              "$_currentPoints",
+                              _currentPoints,
                               style: AppStyles.vifitTextTheme.titleLarge?.copyWith(color: AppStyles.primaryForeground)
                             ),
                           ]
@@ -416,7 +415,7 @@ class _MainPageScreenState extends State<MainPageScreen> {
         body: Center(
           child: _widgetOptions.elementAt(_selectedIndex),
         ),
-        floatingActionButton: _selectedIndex != 1 && _selectedIndex != 2  ?  Container(
+        floatingActionButton: _selectedIndex != 1 && _selectedIndex != 2  ?  SizedBox(
           height: 70,
           width: 70,
           child: FloatingActionButton(
@@ -424,14 +423,17 @@ class _MainPageScreenState extends State<MainPageScreen> {
             tooltip: 'Add Options',
             foregroundColor: AppStyles.primaryForeground,
             backgroundColor: AppStyles.primaryColor,
-            child: const Icon(Icons.add),
             shape: const CircleBorder(),
             elevation: 6.0,
+            child: const Icon(Icons.add),
           ),
         ) : null,
         bottomNavigationBar: SafeArea(
             child: Container(
             height: 70,
+            decoration: const BoxDecoration(
+              color: AppStyles.primaryColor
+            ),
             child:  BottomNavigationBar(
               items: const <BottomNavigationBarItem>[
                 BottomNavigationBarItem(

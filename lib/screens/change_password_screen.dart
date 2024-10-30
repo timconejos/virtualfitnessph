@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:virtualfitnessph/services/auth_service.dart';
-import 'package:virtualfitnessph/styles/app_styles.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
   const ChangePasswordScreen({Key? key}) : super(key: key);

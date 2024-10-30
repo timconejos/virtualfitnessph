@@ -49,7 +49,7 @@ class _RewardAddAddressScreenState extends State<RewardAddAddressScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => OrderPlacedScreen(),
+            builder: (context) => const OrderPlacedScreen(),
           ),
         );
       } else {

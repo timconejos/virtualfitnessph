@@ -1,6 +1,7 @@
 // lib/screens/points_history_screen.dart
 
 import 'package:flutter/material.dart';
+import 'package:virtualfitnessph/screens/main_page_screen.dart';
 import '../services/auth_service.dart';
 import '../styles/app_styles.dart';
 import 'pass_points_screen.dart'; // Import PassPointsScreen
@@ -74,24 +75,7 @@ class _PointsHistoryScreenState extends State<PointsHistoryScreen> {
   }
 
   void _redeemPoints() {
-    // Currently not implemented. Show a placeholder dialog.
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Redeem Points'),
-          content: const Text('Redeem functionality is coming soon!'),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('OK'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
+    Navigator.push(context, MaterialPageRoute(builder: (context) => const MainPageScreen(tab: 2)));
   }
 
   Widget _buildTransactionItem(PointsTransaction transaction) {
@@ -190,7 +174,7 @@ class _PointsHistoryScreenState extends State<PointsHistoryScreen> {
                         return _buildTransactionItem(_transactions[index]);
                       },
                       separatorBuilder: (context, index) {
-                        return Divider();
+                        return const Divider();
                       },
                     ),
                 )
@@ -222,10 +206,10 @@ class _PointsHistoryScreenState extends State<PointsHistoryScreen> {
               children: [
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 25),
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(13.0)),
-                    gradient: const LinearGradient(
-                      colors: [Color(0xFFFFFDB03), Color.fromARGB(255, 255, 241, 159)],
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.vertical(top: Radius.circular(13.0)),
+                    gradient: LinearGradient(
+                      colors: [Color.fromRGBO(255, 219, 3, 1), Color.fromARGB(255, 255, 241, 159)],
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                       stops: [0.2, 0.8],

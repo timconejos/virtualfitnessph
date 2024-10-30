@@ -105,7 +105,7 @@ class _FeedPageState extends State<FeedPage> {
                 top: 10,
                 right: 10,
                 child: IconButton(
-                  icon: Icon(Icons.close, color: Colors.white, size: 30),
+                  icon: const Icon(Icons.close, color: Colors.white, size: 30),
                   onPressed: () {
                     Navigator.of(ctx).pop();
                   },
@@ -276,7 +276,7 @@ class _FeedPageState extends State<FeedPage> {
                   ? _buildLoadMoreButton()
                   : const SizedBox.shrink();
             }
-            return _buildFeedItem2(context, index);
+            return _buildFeedItem(context, index);
           },
         ),
       ),
@@ -308,7 +308,7 @@ class _FeedPageState extends State<FeedPage> {
     );
   }
 
-  Widget _buildFeedItem2(BuildContext context, int index) {
+  Widget _buildFeedItem(BuildContext context, int index) {
     final feedItem = _feedItems[index]['feed'];
     final isProfileClickable =
         feedItem['userId'] != null && feedItem['username'] != null;
@@ -453,115 +453,6 @@ class _FeedPageState extends State<FeedPage> {
     );
   }
 
-  Widget _buildFeedItem(BuildContext context, int index) {
-    final feedItem = _feedItems[index]['feed'];
-    final isProfileClickable =
-        feedItem['userId'] != null && feedItem['username'] != null;
-    final profileImageUrl = feedItem['userId']?.isNotEmpty ?? false
-        ? 'http://97.74.90.63:8080/profiles/${feedItem['userId']}.jpg'
-        : '';
-    final name = feedItem['username']?.isNotEmpty ?? false
-        ? _authService.decryptData(feedItem['username'])
-        : 'Anonymous user';
-    final datePosted = DateTime.parse(feedItem['datePosted'])
-        .toUtc()
-        .add(const Duration(hours: 8));
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        GestureDetector(
-          onTap: isProfileClickable
-              ? () => Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ViewProfileScreen(
-                userId: feedItem['userId'],
-                userName: feedItem['username'],
-              ),
-            ),
-          )
-              : null,
-          child: Row(
-            children: [
-              CircleAvatar(
-                backgroundImage: profileImageUrl.isNotEmpty
-                    ? NetworkImage(profileImageUrl)
-                    : null,
-                radius: 25,
-                backgroundColor: Colors.grey.shade300,
-                child:
-                profileImageUrl.isEmpty ? const Icon(Icons.person) : null,
-              ),
-              const SizedBox(width: 10),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    name,
-                    style: const TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 16),
-                  ),
-                  Text(
-                    DateFormat('MMM dd, yyyy hh:mm a').format(datePosted),
-                    style: const TextStyle(color: Colors.grey),
-                  ),
-                ],
-              ),
-              const Spacer(),
-              IconButton(
-                icon: const Icon(Icons.flag, color: Colors.grey),
-                onPressed: () => _reportFeed(feedItem['feedId']),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 10),
-        GestureDetector(
-          onTap: () {
-            _showImageDialog(
-                'http://97.74.90.63:8080/feed/images/${feedItem['imagePath']}');
-          },
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(8.0),
-            child: Image.network(
-              'http://97.74.90.63:8080/feed/images/${feedItem['imagePath']}',
-              fit: BoxFit.cover,
-            ),
-          ),
-        ),
-        const SizedBox(height: 10),
-        Text(feedItem['caption']),
-        Text(feedItem['location'], style: const TextStyle(color: Colors.grey)),
-        Row(
-          children: [
-            IconButton(
-              icon: Icon(
-                _feedItems[index]['likedByUser']
-                    ? Icons.favorite
-                    : Icons.favorite_border,
-                color: _feedItems[index]['likedByUser']
-                    ? Colors.red
-                    : Colors.grey,
-              ),
-              onPressed: () {
-                _toggleLike(
-                    feedItem['feedId'], _feedItems[index]['likedByUser']);
-              },
-            ),
-            Text(
-                '${feedItem['likes']} Like${feedItem['likes'] == 1 ? '' : 's'}'),
-            const Spacer(),
-            IconButton(
-              icon: const Icon(Icons.block, color: Colors.grey),
-              onPressed: () => _blockUser(feedItem['userId']),
-            ),
-          ],
-        ),
-        const Divider(),
-      ],
-    );
-  }
 
   Future<void> _blockUser(String blockedUserId) async {
     final userId = await _authService.getUserId();
