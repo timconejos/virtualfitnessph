@@ -236,7 +236,7 @@ class _RewardsPageState extends State<RewardsPage> {
                       ],
                     )),
                     const SizedBox(width: 15),
-                    Text('₱ ${formatNumber(reward.amount)}', style: AppStyles.vifitTextTheme.titleMedium?.copyWith(color: AppStyles.secondaryColor))
+                    Text('${formatNumber(reward.amount)} ViFit coins', style: AppStyles.vifitTextTheme.titleMedium?.copyWith(color: AppStyles.secondaryColor))
         
                   ]),
                 
