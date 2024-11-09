@@ -203,8 +203,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
       //   title: const Text('Register'),
       // ),
       backgroundColor: Colors.white,
-      body: Padding(
-        padding: const EdgeInsets.fromLTRB(50.0, 10.0, 50.0, 0.0),
+      body: SingleChildScrollView
+      (child: Padding(
+        padding: const EdgeInsets.fromLTRB(50.0, 120.0, 50.0, 30.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -275,7 +276,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
           ],
         ),
-      ),
+      )),
     );
   }
 }

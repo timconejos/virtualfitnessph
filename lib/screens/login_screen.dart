@@ -227,15 +227,20 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Text("Don't have an account? ", style: AppStyles.vifitTextTheme.titleMedium),
                       GestureDetector(
                         onTap: () {
                           _register(context);
                         },
-                        child: Text(
-                          "Sign up",
-                          style: AppStyles.vifitTextTheme.titleMedium?.copyWith(color: AppStyles.primaryColor, fontWeight: FontWeight.w900),
-                        ),
+                        child: RichText(text: 
+                          TextSpan(
+                            style: AppStyles.vifitTextTheme.titleMedium?.copyWith(color: AppStyles.textColor),
+                            children: [
+                            const TextSpan(text: "Don't have an account?"),
+                            TextSpan(text: ' Sign up',  style: AppStyles.vifitTextTheme.titleMedium?.copyWith(color: AppStyles.primaryColor, fontWeight: FontWeight.w900)),
+
+
+                          ]
+                        ))
                       ),
                     ],
                   )),
